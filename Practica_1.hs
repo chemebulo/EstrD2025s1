@@ -287,8 +287,9 @@ siempreSiete x = 7
 swap :: (a, b) -> (b, a)
 -- PRECOND: Ninguna.
 swap (x, y) = (y, x)
-{- Existen dos tipos de variables diferentes en el par, ya que sino no sería
-   posible diferenciar los componentes del mismo. -}
+{- Existen dos tipos de variables diferentes en el par, ya que las tuplas son estructuras de datos que
+   contienen 2 datos que no necesariamente deben ser del mismo tipo, y además, que sería imposible 
+   diferenciar los componentes del mismo. -}
 
 
 -- EJERCICIO 5.2:
