@@ -94,7 +94,7 @@ primerDiaDeSemana = Lunes
 
 ultimoDiaDeSemana :: DiaDeSemana
 -- PRECOND: Ninguna.
-ultimoDiaDeSemana = Domingo 
+ultimoDiaDeSemana = Domingo
 
 
 -- EJERCICIO 2, B:
@@ -110,7 +110,7 @@ empiezaConM _         = False
 
 vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
 -- PRECOND: Ninguna.
-vieneDespues dia1 dia2 = (numeroDeDia dia1 > numeroDeDia dia2)
+vieneDespues dia1 dia2 = numeroDeDia dia1 > numeroDeDia dia2
 
 numeroDeDia :: DiaDeSemana -> Int
 -- PRECOND: Ninguna.
@@ -144,9 +144,7 @@ negar False = True
 
 implica :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
-implica b1 b2 = if (esTrueYFalse b1 b2)
-                then False
-                else True
+implica b1 b2 = not (esTrueYFalse b1 b2)
 
 esTrueYFalse :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
@@ -158,9 +156,7 @@ esTrueYFalse _ _        = False
 
 yTambien :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
-yTambien b1 b2 = if (esTrueYTrue b1 b2)
-                 then True
-                 else False
+yTambien b1 b2 = esTrueYTrue b1 b2
 
 esTrueYTrue :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
@@ -172,9 +168,7 @@ esTrueYTrue _ _       = False
 
 oBien :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
-oBien b1 b2 = if (algunoEsTrue b1 b2)
-              then True
-              else False
+oBien b1 b2 = algunoEsTrue b1 b2
 
 algunoEsTrue :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
