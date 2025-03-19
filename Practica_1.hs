@@ -1,4 +1,3 @@
-import qualified Control.Applicative as Ninguna
 -- PUNTO 2: Números Enteros. 
 
 -- EJERCICIO 1, A:
