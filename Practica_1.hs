@@ -264,3 +264,34 @@ unoSiTipoEsMismoTipoQue _ _           = 0
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
 -- PRECOND: Ninguna.
 juntarPokemon ((Entr nom1 poke1 poke2), (Entr nom2 poke3 poke4)) = [poke1, poke2, poke3, poke4]
+
+
+-- PUNTO 5: Funciones polimórficas.
+
+
+-- EJERCICIO 5.1, A:
+
+loMismo :: a -> a
+-- PRECOND: Ninguna.
+loMismo x = x
+
+
+-- EJERCICIO 5.1, B:
+
+siempreSiete :: a -> Int
+-- PRECOND: Ninguna.
+siempreSiete x = 7
+
+-- EJERCICIO 5.1, C:
+
+swap :: (a, b) -> (b, a)
+-- PRECOND: Ninguna.
+swap (x, y) = (y, x)
+{- Existen dos tipos de variables diferentes en el par, ya que sino no sería
+   posible diferenciar los componentes del mismo. -}
+
+
+-- EJERCICIO 5.2:
+
+{- Estas funciones son polimórficas porque permiten definir una única función para cualquier tipo
+   de datos que se invoquen, por ende, no es necesario redefinir la misma función una y otra vez. -}
