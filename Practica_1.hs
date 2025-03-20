@@ -181,6 +181,10 @@ algunoEsTrue _ _    = False
 
 data Persona = P String Int
               -- Nombre Edad
+{- INV. REP:
+    - El campo nombre no puede ser vacío.
+    - El campo edad debe tener un número mayor o igual a cero. 
+-}
     deriving Show
 
 -- EJERCICIO 4.1:
@@ -221,11 +225,17 @@ laQueEsMayor (P nom1 edad1) (P nom2 edad2) = if esMayorQueLaOtra (P nom1 edad1) 
 
 data Pokemon = Poke TipoDePokemon Int
                                -- Porcentaje de energía.
+{- INV. REP:
+    - El campo porcentaje de energía debe tener un número mayor o igual a cero. 
+-}
     deriving Show
 
 
 data Entrenador = Entr String Pokemon Pokemon
                -- Nombre Pokemon1 Pokemon2
+{- INV. REP:
+    - El campo nombre no puede ser vacío. 
+-}
     deriving Show
 
 
