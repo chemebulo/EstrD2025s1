@@ -296,3 +296,38 @@ swap (x, y) = (y, x)
 
 {- Estas funciones son polimórficas porque permiten definir una única función para cualquier tipo
    de datos que se invoquen, por ende, no es necesario redefinir la misma función una y otra vez. -}
+
+
+-- PUNTO 6: Pattern matching sobre listas.
+
+
+-- EJERCICIO 6.1 (No es un ejercicio):
+
+
+-- EJERCICIO 6.2:
+
+estaVacia :: [a] -> Bool
+-- PRECOND: Ninguna.
+estaVacia [] = True
+estaVacia _  = False
+
+
+-- EJERCICIO 6.3:
+
+elPrimero :: [a] -> a
+-- PRECOND: La dada lista dada no debe ser vacía.
+elPrimero (x:_) = x
+
+
+-- EJERCICIO 6.4:
+
+sinElPrimero :: [a] -> [a]
+-- PRECOND: La dada lista no debe ser vacía.
+sinElPrimero (_:xs) = xs
+
+
+-- EJERCICIO 6.5:
+
+splitHead :: [a] -> (a, [a])
+-- PRECOND: La dada lista no debe ser vacía
+splitHead (x:xs) = ((elPrimero (x:xs)), (sinElPrimero (x:xs)))
