@@ -329,5 +329,5 @@ sinElPrimero (_:xs) = xs
 -- EJERCICIO 6.5:
 
 splitHead :: [a] -> (a, [a])
--- PRECOND: La dada lista no debe ser vacía
+-- PRECOND: La dada lista no debe ser vacía.
 splitHead (x:xs) = ((elPrimero (x:xs)), (sinElPrimero (x:xs)))
