@@ -75,13 +75,13 @@ siguiente Norte = Este
 siguiente Este  = Sur
 siguiente Sur   = Oeste
 {- Entiendo que es una función parcial ya que una de las posibles direcciones 
-   a utilizar (Oeste) no es tenida en cuenta como posible valor, por ende, debe 
-   quedar explícita tal restricción para no dar lugar a un error involuntario en la invocación. -}
+a utilizar (Oeste) no es tenida en cuenta como posible valor, por ende, debe 
+quedar explícita tal restricción para no dar lugar a un error involuntario en la invocación. -}
 
 
 -- EJERCICIO 3.2, A:
 
-data DiaDeSemana = Lunes | Martes | Miércoles | Jueves | Viernes | Sábado | Domingo
+data DiaDeSemana = Lunes | Martes | Miercoles | Jueves | Viernes | Sabado | Domingo
     deriving Show
 
 primeroYUltimoDia :: (DiaDeSemana, DiaDeSemana)
@@ -102,7 +102,7 @@ ultimoDiaDeSemana = Domingo
 empiezaConM :: DiaDeSemana -> Bool
 -- PRECOND: Ninguna.
 empiezaConM Martes    = True
-empiezaConM Miércoles = True
+empiezaConM Miercoles = True
 empiezaConM _         = False
 
 
@@ -116,10 +116,10 @@ numeroDeDia :: DiaDeSemana -> Int
 -- PRECOND: Ninguna.
 numeroDeDia Lunes     = 1
 numeroDeDia Martes    = 2
-numeroDeDia Miércoles = 3
+numeroDeDia Miercoles = 3
 numeroDeDia Jueves    = 4
 numeroDeDia Viernes   = 5
-numeroDeDia Sábado    = 6
+numeroDeDia Sabado    = 6
 numeroDeDia Domingo   = 7
 
 
@@ -186,17 +186,17 @@ data Persona = P String Int
 -- EJERCICIO 4.1:
 
 nombre :: Persona -> String
--- PRECOND: El campo "n" de la persona a utilizar debe tener un nombre válido.
+-- PRECOND: Ninguna.
 nombre (P n e) = n
 
 
 edad :: Persona -> Int
--- PRECOND: El campo "e" de la persona a utilizar debe ser mayor o igual a 0.
+-- PRECOND: Ninguna.
 edad (P n e) = e
 
 
 crecer :: Persona -> Persona
--- PRECOND: El campo "e" de la persona a utilizar debe ser mayor o igual a 0.
+-- PRECOND: Ninguna.
 crecer (P n e) = P n (e + 1)
 
 
