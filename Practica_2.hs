@@ -18,10 +18,6 @@ longitud (x:xs) = 1 + longitud xs
 
 -- EJERCICIO 1.3:
 
-sucesores :: [Int] -> [Int]
--- PRECOND: La lista dada no puede ser vacía.
-sucesores []     = 0
-sucesores (x:xs) = (x+1) sucesores xs
 
 -- EJERCICIO 1.4:
 
