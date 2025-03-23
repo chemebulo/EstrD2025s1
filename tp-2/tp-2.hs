@@ -19,6 +19,7 @@ longitud (x:xs) = 1 + longitud xs
 -- EJERCICIO 1.3:
 
 
+
 -- EJERCICIO 1.4:
 
 
