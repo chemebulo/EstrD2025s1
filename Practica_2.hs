@@ -5,7 +5,7 @@
 sumatoria :: [Int] -> Int
 -- PRECOND: Ninguna.
 sumatoria []     = 0
-sumatoria (x:xs) = x + (sumatoria xs)
+sumatoria (x:xs) = x + sumatoria xs
 
 
 -- EJERCICIO 1.2:

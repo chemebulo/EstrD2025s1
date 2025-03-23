@@ -25,7 +25,7 @@ divisionYResto x y = (div x y, mod x y)
 
 maxDelPar :: (Int, Int) -> Int
 -- PRECOND: Ninguna.
-maxDelPar (x, y) = if (x >= y)
+maxDelPar (x, y) = if   x >= y
                    then x
                    else y
                    {- Una extensión del Visual Studio me recomienda usar la función max, 
@@ -216,7 +216,7 @@ esMayorQueLaOtra (P nom1 edad1) (P nom2 edad2) = edad (P nom1 edad1) > edad (P n
 
 laQueEsMayor :: Persona -> Persona -> Persona
 -- PERCOND: Ninguna.
-laQueEsMayor (P nom1 edad1) (P nom2 edad2) = if esMayorQueLaOtra (P nom1 edad1) (P nom2 edad2)
+laQueEsMayor (P nom1 edad1) (P nom2 edad2) = if   esMayorQueLaOtra (P nom1 edad1) (P nom2 edad2)
                                              then P nom1 edad1
                                              else P nom2 edad2
 
@@ -257,7 +257,7 @@ tipoDeEsSuperiorQue _ _          = False
 
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
 -- PRECOND: Ninguna.
-cantidadDePokemonDe tipo (Entr nomb poke1 poke2) = (unoSiPokemonEsTipoCeroSino poke1 tipo) + (unoSiPokemonEsTipoCeroSino poke2 tipo)
+cantidadDePokemonDe tipo (Entr nomb poke1 poke2) = unoSiPokemonEsTipoCeroSino poke1 tipo + unoSiPokemonEsTipoCeroSino poke2 tipo
 
 unoSiPokemonEsTipoCeroSino :: Pokemon -> TipoDePokemon -> Int
 -- PRECOND: Ninguna.
@@ -273,7 +273,7 @@ unoSiTipoEsMismoTipoQue _ _           = 0
 
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
 -- PRECOND: Ninguna.
-juntarPokemon ((Entr nom1 poke1 poke2), (Entr nom2 poke3 poke4)) = [poke1, poke2, poke3, poke4]
+juntarPokemon (Entr nom1 poke1 poke2, Entr nom2 poke3 poke4) = [poke1, poke2, poke3, poke4]
 
 
 -- PUNTO 5: Funciones polimórficas.
