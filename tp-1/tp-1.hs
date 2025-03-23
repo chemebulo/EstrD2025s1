@@ -4,30 +4,30 @@
 
 sucesor :: Int -> Int
 -- PRECOND: Ninguna.
-sucesor x = x + 1
+sucesor n = n + 1
 
 
 -- EJERCICIO 2.1, B:
 
 sumar :: Int -> Int -> Int
 -- PRECOND: Ninguna. 
-sumar x y = x + y
+sumar n m = n + m
 
 
 -- EJERCICIO 2.1, C:
 
 divisionYResto :: Int -> Int -> (Int, Int)
 -- PRECOND: El valor del parámetro "y" tiene que ser diferente de cero.
-divisionYResto x y = (div x y, mod x y)
+divisionYResto n m = (div n m, mod n m)
 
 
 -- EJERCICIO 2.1, D (Usando Alternativa condicional):
 
 maxDelPar :: (Int, Int) -> Int
 -- PRECOND: Ninguna.
-maxDelPar (x, y) = if   x >= y
-                   then x
-                   else y
+maxDelPar (n, m) = if   n >= m
+                   then n
+                   else m
                    {- Una extensión del Visual Studio me recomienda usar la función max, 
                       pero yo preferí hacerlo con Alternativa condicional. -}
 
@@ -110,7 +110,7 @@ empiezaConM _         = False
 
 vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
 -- PRECOND: Ninguna.
-vieneDespues dia1 dia2 = numeroDeDia dia1 > numeroDeDia dia2
+vieneDespues d1 d2 = numeroDeDia d1 > numeroDeDia d2
 
 numeroDeDia :: DiaDeSemana -> Int
 -- PRECOND: Ninguna.
@@ -136,7 +136,7 @@ estaEnElMedio _       = True
 
 negar :: Bool -> Bool
 -- PRECOND: Ninguna.
-negar True = False
+negar True  = False
 negar False = True
 
 
@@ -149,7 +149,7 @@ implica b1 b2 = not (esTrueYFalse b1 b2)
 esTrueYFalse :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
 esTrueYFalse True False = True
-esTrueYFalse _ _        = False
+esTrueYFalse _    _     = False
 
 
 -- EJERCICIO 3.3, C:
@@ -161,7 +161,7 @@ yTambien b1 b2 = esTrueYTrue b1 b2
 esTrueYTrue :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
 esTrueYTrue True True = True
-esTrueYTrue _ _       = False
+esTrueYTrue _    _    = False
 
 
 -- EJERCICIO 3.3, D:
@@ -172,9 +172,9 @@ oBien b1 b2 = algunoEsTrue b1 b2
 
 algunoEsTrue :: Bool -> Bool -> Bool
 -- PRECOND: Ninguna.
-algunoEsTrue True _ = True
-algunoEsTrue _ True = True
-algunoEsTrue _ _    = False
+algunoEsTrue True _    = True
+algunoEsTrue _    True = True
+algunoEsTrue _    _    = False
 
 
 -- PUNTO 4: Registros.
@@ -182,8 +182,8 @@ algunoEsTrue _ _    = False
 data Persona = P String Int
               -- Nombre Edad
 {- INV. REP:
-    - El campo nombre no puede ser vacío.
-    - El campo edad debe tener un número mayor o igual a cero. 
+    - El nombre no puede ser vacío.
+    - La  edad debe tener un número mayor o igual a cero. 
 -}
     deriving Show
 
@@ -226,15 +226,15 @@ laQueEsMayor (P nom1 edad1) (P nom2 edad2) = if   esMayorQueLaOtra (P nom1 edad1
 data Pokemon = Poke TipoDePokemon Int
                                -- Porcentaje de energía.
 {- INV. REP:
-    - El campo porcentaje de energía debe tener un número mayor o igual a cero. 
+    - El porcentaje de energía debe tener un número mayor o igual a cero. 
 -}
     deriving Show
 
 
 data Entrenador = Entr String Pokemon Pokemon
-               -- Nombre Pokemon1 Pokemon2
+                    -- Nombre Pokemon1 Pokemon2
 {- INV. REP:
-    - El campo nombre no puede ser vacío. 
+    - El nombre no puede ser vacío. 
 -}
     deriving Show
 
@@ -249,10 +249,10 @@ superaA (Poke tipo1 porcen1) (Poke tipo2 porcen2) = tipoDeEsSuperiorQue tipo1 ti
 
 tipoDeEsSuperiorQue :: TipoDePokemon -> TipoDePokemon -> Bool
 -- PRECOND: Ninguna.
-tipoDeEsSuperiorQue Agua Fuego   = True
-tipoDeEsSuperiorQue Fuego Planta = True
-tipoDeEsSuperiorQue Planta Agua  = True
-tipoDeEsSuperiorQue _ _          = False
+tipoDeEsSuperiorQue Agua   Fuego  = True
+tipoDeEsSuperiorQue Fuego  Planta = True
+tipoDeEsSuperiorQue Planta Agua   = True
+tipoDeEsSuperiorQue _      _      = False
 
 
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
@@ -265,10 +265,10 @@ unoSiPokemonEsTipoCeroSino (Poke tipo1 porcen1) tipo2 = unoSiTipoEsMismoTipoQue 
 
 unoSiTipoEsMismoTipoQue :: TipoDePokemon -> TipoDePokemon -> Int
 -- PRECOND: Ninguna.
-unoSiTipoEsMismoTipoQue Agua Agua     = 1
-unoSiTipoEsMismoTipoQue Fuego Fuego   = 1
+unoSiTipoEsMismoTipoQue Agua   Agua   = 1
+unoSiTipoEsMismoTipoQue Fuego  Fuego  = 1
 unoSiTipoEsMismoTipoQue Planta Planta = 1
-unoSiTipoEsMismoTipoQue _ _           = 0
+unoSiTipoEsMismoTipoQue _      _      = 0
 
 
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
@@ -340,4 +340,4 @@ sinElPrimero (_:xs) = xs
 
 splitHead :: [a] -> (a, [a])
 -- PRECOND: La dada lista no debe ser vacía.
-splitHead (x:xs) = ((elPrimero (x:xs)), (sinElPrimero (x:xs)))
+splitHead (x:xs) = (elPrimero (x:xs), sinElPrimero (x:xs))
