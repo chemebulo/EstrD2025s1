@@ -184,15 +184,32 @@ sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
 
 -- EJERCICIO 3.1:
 
+data Persona = P String Int
+              -- Nombre Edad
+{- INV. REP:
+    - El nombre no puede ser vacío.
+    - La  edad debe tener un número mayor o igual a cero. 
+-}
+    deriving Show
 
+mayoresA :: Int -> [Persona] -> [Persona]
+-- PRECOND: El número debe ser mayor o igual a cero.
+mayoresA 0 _      = []
+mayoresA _ []     = []
+mayoresA n (x:xs) = if 
 
 
 -- EJERCICIO 3.2:
 
-
+data TipoDePokemon = Agua | Fuego | Planta
+data Pokemon = ConsPokemon TipoDePokemon Int
+data Entrenador = ConsEntrenador String [Pokemon]
 
 
 -- EJERCICIO 3.3:
 
-
+data Seniority = Junior | SemiSenior | Senior
+data Proyecto = ConsProyecto String
+data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
+data Empresa = ConsEmpresa [Rol]
 
