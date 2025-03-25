@@ -52,18 +52,18 @@ aplanar (x:xs) = x ++ aplanar xs
 
 pertenece :: Eq a => a -> [a] -> Bool
 -- PRECOND: Ninguna.
-pertenece y []     = False
-pertenece y (x:xs) = y == x || pertenece y xs
+pertenece e []     = False
+pertenece e (x:xs) = e == x || pertenece e xs
 
 
 -- EJERCICIO 1.8:
 
 apariciones :: Eq a => a -> [a] -> Int
 -- PRECOND: Ninguna.
-apariciones y []     = 0
-apariciones y (x:xs) = if y == x
-                       then 1 + apariciones y xs
-                       else apariciones y xs
+apariciones e []     = 0
+apariciones e (x:xs) = if e == x
+                       then 1 + apariciones e xs
+                       else apariciones e xs
 
 
 -- EJERCICIO 1.9:
@@ -138,22 +138,45 @@ elMinimo (x:xs) = if x < elMinimo xs
 
 -- EJERCICIO 2.1:
 
+factorial :: Int -> Int
+-- PRECOND: El número dado debe ser mayor o igual a 0.
+factorial 0 = 1
+factorial n = n * factorial (n-1)
 
 
 -- EJERCICIO 2.2:
 
+cuentaRegresiva :: Int -> [Int]
+-- PRECOND: El número dado debe ser mayor o igual a 0.
+cuentaRegresiva n = if n >= 1
+                    then n : cuentaRegresiva (n-1)
+                    else []
 
 
 -- EJERCICIO 2.3:
 
+repetir :: Int -> a -> [a]
+-- PRECOND: El número dado debe ser mayor o igual a 0.
+repetir 0 e = []
+repetir n e = e : repetir (n-1) e
 
 
 -- EJERCICIO 2.4:
 
+losPrimeros :: Int -> [a] -> [a]
+-- PRECOND: El número dado debe ser mayor o igual a 0.
+losPrimeros 0 _      = []
+losPrimeros _ []     = []
+losPrimeros n (x:xs) = x : (losPrimeros (n-1) xs)
 
 
 -- EJERCICIO 2.5:
 
+sinLosPrimeros :: Int -> [a] -> [a]
+-- PRECOND: El número dado debe ser mayor o igual a 0.
+sinLosPrimeros 0 xs     = xs
+sinLosPrimeros _ []     = []
+sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
 
 
 -- PUNTO 3: Registros.
@@ -163,7 +186,13 @@ elMinimo (x:xs) = if x < elMinimo xs
 
 
 
+
 -- EJERCICIO 3.2:
 
 
+
+
 -- EJERCICIO 3.3:
+
+
+
