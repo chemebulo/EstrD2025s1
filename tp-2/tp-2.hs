@@ -79,7 +79,7 @@ losMenoresA n (ns:nss) = if ns < n
 -- EJERCICIO 1.10:
 
 lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
--- PRECOND: El número dado debe ser mayor o igual a 0.
+-- PRECOND: El número es mayor o igual a 0.
 lasDeLongitudMayorA n []     = []
 lasDeLongitudMayorA n (x:xs) = if longitud x > n
                                then x : lasDeLongitudMayorA n xs
@@ -126,7 +126,7 @@ zipMaximos (x:xs) (y:ys) = if x >= y
 -- EJERCICIO 1.15:
 
 elMinimo :: Ord a => [a] -> a
--- PRECOND: La lista dada no puede ser vacía.
+-- PRECOND: La lista no es vacía.
 elMinimo (x:[])  =  x
 elMinimo (x:xs) = if x < elMinimo xs
                   then x
@@ -139,7 +139,7 @@ elMinimo (x:xs) = if x < elMinimo xs
 -- EJERCICIO 2.1:
 
 factorial :: Int -> Int
--- PRECOND: El número dado debe ser mayor o igual a 0.
+-- PRECOND: El número es mayor o igual a 0.
 factorial 0 = 1
 factorial n = n * factorial (n-1)
 
@@ -147,7 +147,7 @@ factorial n = n * factorial (n-1)
 -- EJERCICIO 2.2:
 
 cuentaRegresiva :: Int -> [Int]
--- PRECOND: El número dado debe ser mayor o igual a 0.
+-- PRECOND: El número es mayor o igual a 0.
 cuentaRegresiva n = if n >= 1
                     then n : cuentaRegresiva (n-1)
                     else []
@@ -156,7 +156,7 @@ cuentaRegresiva n = if n >= 1
 -- EJERCICIO 2.3:
 
 repetir :: Int -> a -> [a]
--- PRECOND: El número dado debe ser mayor o igual a 0.
+-- PRECOND: El número es mayor o igual a 0.
 repetir 0 e = []
 repetir n e = e : repetir (n-1) e
 
@@ -164,7 +164,7 @@ repetir n e = e : repetir (n-1) e
 -- EJERCICIO 2.4:
 
 losPrimeros :: Int -> [a] -> [a]
--- PRECOND: El número dado debe ser mayor o igual a 0.
+-- PRECOND: El número es mayor o igual a 0.
 losPrimeros 0 _      = []
 losPrimeros _ []     = []
 losPrimeros n (x:xs) = x : (losPrimeros (n-1) xs)
@@ -173,7 +173,7 @@ losPrimeros n (x:xs) = x : (losPrimeros (n-1) xs)
 -- EJERCICIO 2.5:
 
 sinLosPrimeros :: Int -> [a] -> [a]
--- PRECOND: El número dado debe ser mayor o igual a 0.
+-- PRECOND: El número es mayor o igual a 0.
 sinLosPrimeros 0 xs     = xs
 sinLosPrimeros _ []     = []
 sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
@@ -187,16 +187,41 @@ sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
 data Persona = P String Int
               -- Nombre Edad
 {- INV. REP:
-    - El nombre no puede ser vacío.
-    - La  edad debe tener un número mayor o igual a cero. 
+    - El nombre no es vacío.
+    - La edad tiene un número mayor o igual a cero. 
 -}
     deriving Show
 
+
 mayoresA :: Int -> [Persona] -> [Persona]
--- PRECOND: El número debe ser mayor o igual a cero.
+-- PRECOND: El número es mayor o igual a cero.
 mayoresA 0 _      = []
 mayoresA _ []     = []
-mayoresA n (x:xs) = if 
+mayoresA n (x:xs) = if edad x > n
+                    then x : mayoresA n xs
+                    else mayoresA n xs
+
+edad :: Persona -> Int
+-- PRECOND: Ninguna.
+edad (P n e) = e
+
+
+promedioEdad :: [Persona] -> Int
+-- PRECOND: La lista al menos posee una persona.
+promedioEdad xs = div (sumatoriaDeEdades xs) (longitud xs)
+
+sumatoriaDeEdades :: [Persona] -> Int
+-- PRECOND: Ninguna.
+sumatoriaDeEdades []     = 0
+sumatoriaDeEdades (x:xs) = edad x + sumatoriaDeEdades xs
+
+
+elMasViejo :: [Persona] -> Persona
+-- PRECOND: La lista al menos posee una persona.
+elMasViejo [x]    = x
+elMasViejo (x:xs) = if edad x > edad (elMasViejo xs)
+                    then x
+                    else elMasViejo xs
 
 
 -- EJERCICIO 3.2:
