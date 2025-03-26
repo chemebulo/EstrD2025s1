@@ -182,8 +182,8 @@ algunoEsTrue _    _    = False
 data Persona = P String Int
               -- Nombre Edad
 {- INV. REP:
-    - El nombre no puede ser vacío.
-    - La  edad debe tener un número mayor o igual a cero. 
+    - El nombre no es vacío.
+    - La edad tiene un número mayor o igual a cero. 
 -}
     deriving Show
 
@@ -226,7 +226,7 @@ laQueEsMayor (P nom1 edad1) (P nom2 edad2) = if   esMayorQueLaOtra (P nom1 edad1
 data Pokemon = Poke TipoDePokemon Int
                                -- Porcentaje de energía.
 {- INV. REP:
-    - El porcentaje de energía debe tener un número mayor o igual a cero. 
+    - El porcentaje de energía es un número mayor o igual a cero. 
 -}
     deriving Show
 
@@ -234,7 +234,7 @@ data Pokemon = Poke TipoDePokemon Int
 data Entrenador = Entr String Pokemon Pokemon
                     -- Nombre Pokemon1 Pokemon2
 {- INV. REP:
-    - El nombre no puede ser vacío. 
+    - El nombre no es vacío. 
 -}
     deriving Show
 
@@ -325,19 +325,19 @@ estaVacia _  = False
 -- EJERCICIO 6.3:
 
 elPrimero :: [a] -> a
--- PRECOND: La dada lista dada no debe ser vacía.
+-- PRECOND: La lista no es vacía.
 elPrimero (x:_) = x
 
 
 -- EJERCICIO 6.4:
 
 sinElPrimero :: [a] -> [a]
--- PRECOND: La dada lista no debe ser vacía.
+-- PRECOND: La lista no es vacía.
 sinElPrimero (_:xs) = xs
 
 
 -- EJERCICIO 6.5:
 
 splitHead :: [a] -> (a, [a])
--- PRECOND: La dada lista no debe ser vacía.
+-- PRECOND: La lista no es vacía.
 splitHead (x:xs) = (elPrimero (x:xs), sinElPrimero (x:xs))
