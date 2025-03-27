@@ -206,6 +206,7 @@ edad :: Persona -> Int
 edad (P n e) = e
 
 
+
 promedioEdad :: [Persona] -> Int
 -- PRECOND: La lista al menos posee una persona.
 promedioEdad xs = div (sumatoriaDeEdades xs) (longitud xs)
@@ -214,6 +215,7 @@ sumatoriaDeEdades :: [Persona] -> Int
 -- PRECOND: Ninguna.
 sumatoriaDeEdades []     = 0
 sumatoriaDeEdades (x:xs) = edad x + sumatoriaDeEdades xs
+
 
 
 elMasViejo :: [Persona] -> Persona
@@ -229,6 +231,51 @@ elMasViejo (x:xs) = if edad x > edad (elMasViejo xs)
 data TipoDePokemon = Agua | Fuego | Planta
 data Pokemon = ConsPokemon TipoDePokemon Int
 data Entrenador = ConsEntrenador String [Pokemon]
+
+
+cantPokemon :: Entrenador -> Int
+-- PRECOND: Ninguna.
+cantPokemon (ConsEntrenador n p) = sumatoriaDePokemones p
+
+sumatoriaDePokemones :: [Pokemon] -> Int
+-- PRECOND: Ninguna.
+sumatoriaDePokemones []     = 0
+sumatoriaDePokemones (p:ps) = 1 + sumatoriaDePokemones ps 
+
+
+
+cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
+-- PRECOND: Ninguna.
+cantPokemonDe t (ConsEntrenador n p) = sumatoriaDePokemonesDe t p
+
+sumatoriaDePokemonesDe :: TipoDePokemon -> [Pokemon] -> Int
+-- PRECOND: Ninguna
+sumatoriaDePokemonesDe t []     = 0
+sumatoriaDePokemonesDe t (p:ps) = unoSiPokemonEsTipoCeroSino t p + sumatoriaDePokemonesDe t ps
+
+unoSiPokemonEsTipoCeroSino :: TipoDePokemon -> Pokemon -> Int
+-- PRECOND: Ninguna.
+unoSiPokemonEsTipoCeroSino t (ConsPokemon tp e)  = unoSiTipoEsMismoTipoQue t tp
+
+unoSiTipoEsMismoTipoQue :: TipoDePokemon -> TipoDePokemon -> Int
+-- PRECOND: Ninguna.
+unoSiTipoEsMismoTipoQue Agua   Agua   = 1
+unoSiTipoEsMismoTipoQue Fuego  Fuego  = 1
+unoSiTipoEsMismoTipoQue Planta Planta = 1
+unoSiTipoEsMismoTipoQue _      _      = 0
+
+
+jorge :: Entrenador
+jorge = ConsEntrenador "Jorge" [pikachu, charmander, ricardopolis]
+
+pikachu :: Pokemon
+pikachu = ConsPokemon Agua 90
+
+charmander :: Pokemon
+charmander = ConsPokemon Fuego 45
+
+ricardopolis :: Pokemon
+ricardopolis = ConsPokemon Planta 30
 
 
 -- EJERCICIO 3.3:
