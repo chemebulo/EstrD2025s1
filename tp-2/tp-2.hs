@@ -265,8 +265,59 @@ unoSiTipoEsMismoTipoQue Planta Planta = 1
 unoSiTipoEsMismoTipoQue _      _      = 0
 
 
+
+cuantoDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
+-- PRECOND: Ninguna.
+cuantoDeTipo_De_LeGananATodosLosDe_ tp (ConsEntrenador n1 p1) (ConsEntrenador n2 p2) = cantidadDePokemonQueLeGanarianA (soloLosPokemonesDeTipoEn tp p1) p2
+
+cantidadDePokemonQueLeGanarianA :: [Pokemon] -> [Pokemon] -> Int
+-- PRECOND: Ninguna.
+cantidadDePokemonQueLeGanarianA []      []    = 0
+cantidadDePokemonQueLeGanarianA _       []    = 0
+cantidadDePokemonQueLeGanarianA []      _     = 0
+cantidadDePokemonQueLeGanarianA (x:xs) (y:ys) = unoSiPokemonSuperaAPokemon x y + cantidadDePokemonQueLeGanarianA xs ys  
+
+unoSiPokemonSuperaAPokemon :: Pokemon -> Pokemon -> Int
+-- PRECOND: Ninguna.
+unoSiPokemonSuperaAPokemon p1 p2 = if superaA p1 p2
+                                   then 1
+                                   else 0
+
+superaA :: Pokemon -> Pokemon -> Bool
+-- PRECOND: Ninguna.
+superaA (ConsPokemon t1 _) (ConsPokemon t2 _) = tipoDeEsSuperiorQue t1 t2
+
+tipoDeEsSuperiorQue :: TipoDePokemon -> TipoDePokemon -> Bool
+-- PRECOND: Ninguna.
+tipoDeEsSuperiorQue Agua   Fuego  = True
+tipoDeEsSuperiorQue Fuego  Planta = True
+tipoDeEsSuperiorQue Planta Agua   = True
+tipoDeEsSuperiorQue _      _      = False
+
+soloLosPokemonesDeTipoEn :: TipoDePokemon -> [Pokemon] -> [Pokemon]
+-- PRECOND: Ninguna.
+soloLosPokemonesDeTipoEn tp []     = []
+soloLosPokemonesDeTipoEn tp (p:ps) = if esDeTipo tp (tipoDePokemon p)
+                                     then p : soloLosPokemonesDeTipoEn tp ps
+                                     else soloLosPokemonesDeTipoEn tp ps
+
+tipoDePokemon :: Pokemon -> TipoDePokemon
+-- PRECOND: Ninguna.
+tipoDePokemon (ConsPokemon t p) = t
+
+esDeTipo :: TipoDePokemon -> TipoDePokemon -> Bool
+-- PRECOND: Ninguna.
+esDeTipo Agua   Agua   = True
+esDeTipo Fuego  Fuego  = True
+esDeTipo Planta Planta = True
+esDeTipo _      _      = False
+
+
 jorge :: Entrenador
 jorge = ConsEntrenador "Jorge" [pikachu, charmander, ricardopolis]
+
+john :: Entrenador
+john = ConsEntrenador "John" [pikachu, pikachu, pikachu]
 
 pikachu :: Pokemon
 pikachu = ConsPokemon Agua 90
