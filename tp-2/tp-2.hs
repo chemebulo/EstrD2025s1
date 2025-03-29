@@ -415,35 +415,15 @@ empleadoTrabajaEnAlgunProyectoDe r (p:ps) = esElMismoProyecto (proyectoDelRol r)
 
 
 
-------------------------------------------------------------------------------------
-gobstones2 :: Proyecto
-gobstones2 = ConsProyecto "Gobstones 2"
+asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+asignadosPorProyecto (ConsEmpresa xs) = paresDeCadaProyectoConSusIntegrantes xs []
 
-gtavi :: Proyecto
-gtavi = ConsProyecto "GTA VI"
+paresDeCadaProyectoConSusIntegrantes :: [Rol] -> [(Proyecto, Int)] -> [(Proyecto, Int)]
+paresDeCadaProyectoConSusIntegrantes []     ys = ys
+paresDeCadaProyectoConSusIntegrantes (x:xs) ys = paresDeCadaProyectoConSusIntegrantes xs (parDeProyectoConSusIntegrantes x ys)
 
-rocketleague :: Proyecto
-rocketleague = ConsProyecto "Rocket League"
-
-juan :: Rol
-juan = Developer Senior gobstones2
-
-ricardo :: Rol
-ricardo = Developer Senior gobstones2
-
-gabriel :: Rol
-gabriel = Management Junior gobstones2
-
-marcos :: Rol
-marcos = Management Junior gtavi
-
-felipe :: Rol
-felipe = Management Junior gtavi
-
-michael :: Rol
-michael = Management Junior rocketleague
-
-google :: Empresa
-google = ConsEmpresa [juan, ricardo, gabriel, marcos, felipe, michael]
-
-------------------------------------------------------------------------------------
+parDeProyectoConSusIntegrantes :: Rol -> [(Proyecto, Int)] -> [(Proyecto, Int)]
+parDeProyectoConSusIntegrantes r []         = [(proyectoDelRol r, 1)]
+parDeProyectoConSusIntegrantes r ((x, y):xs) = if esElMismoProyecto (proyectoDelRol r) x
+                                              then (x, y+1):xs
+                                              else (x, y) : parDeProyectoConSusIntegrantes r xs
