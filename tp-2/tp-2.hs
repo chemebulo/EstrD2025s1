@@ -98,10 +98,8 @@ agregarAlFinal (x:xs) y = x : agregarAlFinal xs y
 
 agregar :: [a] -> [a] -> [a]
 -- PRECOND: Ninguna.
-agregar []     []     = []
-agregar (x:xs) []     = x:xs
-agregar []     (y:ys) = y:ys
-agregar (x:xs) (y:ys) = x : agregar xs (y:ys)
+agregar []     ys = ys
+agregar (x:xs) ys = x : agregar xs ys
 
 
 -- EJERCICIO 1.13:
@@ -167,7 +165,7 @@ losPrimeros :: Int -> [a] -> [a]
 -- PRECOND: El número es mayor o igual a 0.
 losPrimeros 0 _      = []
 losPrimeros _ []     = []
-losPrimeros n (x:xs) = x : (losPrimeros (n-1) xs)
+losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
 
 
 -- EJERCICIO 2.5:
@@ -184,8 +182,8 @@ sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
 
 -- EJERCICIO 3.1:
 
-data Persona = P String Int
-              -- Nombre Edad
+data Persona = ConsPersona String Int
+--                         Nombre Edad
 {- INV. REP:
     - El nombre no es vacío.
     - La edad tiene un número mayor o igual a cero. 
@@ -203,7 +201,7 @@ mayoresA n (x:xs) = if edad x > n
 
 edad :: Persona -> Int
 -- PRECOND: Ninguna.
-edad (P n e) = e
+edad (ConsPersona n e) = e
 
 
 
@@ -232,11 +230,18 @@ data TipoDePokemon = Agua | Fuego | Planta
     deriving Show
 
 data Pokemon = ConsPokemon TipoDePokemon Int
+--                                       Porcentaje de energía.
+{- INV. REP:
+    - El porcentaje de energía tiene un número mayor o igual a cero. 
+-}
     deriving Show
 
 data Entrenador = ConsEntrenador String [Pokemon]
+--                               Nombre 
+{- INV. REP:
+    - El nombre no es vacío.
+-}
     deriving Show
-
 
 
 cantPokemon :: Entrenador -> Int
@@ -336,6 +341,10 @@ data Seniority = Junior | SemiSenior | Senior
     deriving Show
 
 data Proyecto = ConsProyecto String
+--                           Nombre del proyecto
+{- INV. REP:
+    - El nombre del proyecto no es vacío. 
+-}
     deriving Show
 
 data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
@@ -416,14 +425,17 @@ empleadoTrabajaEnAlgunProyectoDe r (p:ps) = esElMismoProyecto (proyectoDelRol r)
 
 
 asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+-- PRECOND: Ninguna.
 asignadosPorProyecto (ConsEmpresa xs) = paresDeCadaProyectoConSusIntegrantes xs []
 
 paresDeCadaProyectoConSusIntegrantes :: [Rol] -> [(Proyecto, Int)] -> [(Proyecto, Int)]
+-- PRECOND: Ninguna.
 paresDeCadaProyectoConSusIntegrantes []     ys = ys
 paresDeCadaProyectoConSusIntegrantes (x:xs) ys = paresDeCadaProyectoConSusIntegrantes xs (parDeProyectoConSusIntegrantes x ys)
 
 parDeProyectoConSusIntegrantes :: Rol -> [(Proyecto, Int)] -> [(Proyecto, Int)]
+-- PRECOND: Ninguna.
 parDeProyectoConSusIntegrantes r []         = [(proyectoDelRol r, 1)]
 parDeProyectoConSusIntegrantes r ((x, y):xs) = if esElMismoProyecto (proyectoDelRol r) x
-                                              then (x, y+1):xs
-                                              else (x, y) : parDeProyectoConSusIntegrantes r xs
+                                               then (x, y+1):xs
+                                               else (x, y) : parDeProyectoConSusIntegrantes r xs
