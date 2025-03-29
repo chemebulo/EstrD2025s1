@@ -229,8 +229,14 @@ elMasViejo (x:xs) = if edad x > edad (elMasViejo xs)
 -- EJERCICIO 3.2:
 
 data TipoDePokemon = Agua | Fuego | Planta
+    deriving Show
+
 data Pokemon = ConsPokemon TipoDePokemon Int
+    deriving Show
+
 data Entrenador = ConsEntrenador String [Pokemon]
+    deriving Show
+
 
 
 cantPokemon :: Entrenador -> Int
@@ -240,7 +246,7 @@ cantPokemon (ConsEntrenador n p) = sumatoriaDePokemones p
 sumatoriaDePokemones :: [Pokemon] -> Int
 -- PRECOND: Ninguna.
 sumatoriaDePokemones []     = 0
-sumatoriaDePokemones (p:ps) = 1 + sumatoriaDePokemones ps 
+sumatoriaDePokemones (p:ps) = 1 + sumatoriaDePokemones ps
 
 
 
@@ -272,22 +278,21 @@ cuantoDeTipo_De_LeGananATodosLosDe_ tp (ConsEntrenador n1 p1) (ConsEntrenador n2
 
 nroDePokemonDeTipoQueLeGanarianALosDe :: TipoDePokemon -> [Pokemon] -> [Pokemon] -> Int
 -- PRECOND: Ninguna.
-nroDePokemonDeTipoQueLeGanarianALosDe _  (x:xs) _  = 0 -- ¿Por qué esto si funciona y lo anterior no?
-nroDePokemonDeTipoQueLeGanarianALosDe tp (x:xs) ys = if (esDelMismoTipo tp (tipoDePoke x)) && (leGanaAtodos x ys)
+nroDePokemonDeTipoQueLeGanarianALosDe tp []     _  = 0
+nroDePokemonDeTipoQueLeGanarianALosDe tp _      [] = 0
+nroDePokemonDeTipoQueLeGanarianALosDe tp (x:xs) ys = if esDelMismoTipo tp (tipoDePoke x) && leGanaATodos x ys
                                                      then 1 + nroDePokemonDeTipoQueLeGanarianALosDe tp xs ys
                                                      else nroDePokemonDeTipoQueLeGanarianALosDe tp xs ys
 
-leGanaAtodos :: Pokemon -> [Pokemon] -> Bool
+leGanaATodos :: Pokemon -> [Pokemon] -> Bool
 -- PRECOND: Ninguna.
-leGanaAtodos p []     = True
-leGanaAtodos p (x:xs) = if tipoDeEsSuperiorQue (tipoDePoke p) (tipoDePoke x)
-                        then leGanaAtodos p xs
-                        else False
+leGanaATodos p []     = True
+leGanaATodos p (x:xs) = tipoDeEsSuperiorQue (tipoDePoke p) (tipoDePoke x) && leGanaATodos p xs
 
 tipoDeEsSuperiorQue :: TipoDePokemon -> TipoDePokemon -> Bool
 -- PRECOND: Ninguna.
 tipoDeEsSuperiorQue Agua   Fuego  = True
-tipoDeEsSuperiorQue Fuego  Planta = True   
+tipoDeEsSuperiorQue Fuego  Planta = True
 tipoDeEsSuperiorQue Planta Agua   = True
 tipoDeEsSuperiorQue _      _      = False
 
@@ -303,26 +308,40 @@ tipoDePoke :: Pokemon -> TipoDePokemon
 tipoDePoke (ConsPokemon t p) = t
 
 
-jorge :: Entrenador
-jorge = ConsEntrenador "Jorge" [pikachu, charmander, ricardopolis]
 
-john :: Entrenador
-john = ConsEntrenador "John" [pikachu, pikachu, pikachu]
+esMaestroPokemon :: Entrenador -> Bool
+-- PRECOND: Ninguna.
+esMaestroPokemon (ConsEntrenador n p) = tieneAlMenosUnPokemonDeCada p
 
-pikachu :: Pokemon
-pikachu = ConsPokemon Agua 90
+tieneAlMenosUnPokemonDeCada :: [Pokemon] -> Bool
+-- PRECOND: Ninguna.
+tieneAlMenosUnPokemonDeCada p = longitud (tiposDiferentesEn p) == 3
 
-charmander :: Pokemon
-charmander = ConsPokemon Fuego 45
+tiposDiferentesEn :: [Pokemon] -> [TipoDePokemon]
+-- PRECOND: Ninguna.
+tiposDiferentesEn []     = []
+tiposDiferentesEn (p:ps) = if not (estaElTipoEn (tipoDePoke p) (tiposDiferentesEn ps))
+                           then tipoDePoke p : tiposDiferentesEn ps
+                           else tiposDiferentesEn ps
 
-ricardopolis :: Pokemon
-ricardopolis = ConsPokemon Planta 30
+estaElTipoEn :: TipoDePokemon -> [TipoDePokemon] -> Bool
+-- PRECOND: Ninguna.
+estaElTipoEn tp []     = False
+estaElTipoEn tp (t:ts) = esDelMismoTipo tp t || estaElTipoEn tp ts
 
 
 -- EJERCICIO 3.3:
 
 data Seniority = Junior | SemiSenior | Senior
+    deriving Show
+
 data Proyecto = ConsProyecto String
+    deriving Show
+
 data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
+    deriving Show
+
 data Empresa = ConsEmpresa [Rol]
+    deriving Show
+
 
