@@ -345,3 +345,105 @@ data Empresa = ConsEmpresa [Rol]
     deriving Show
 
 
+proyectos :: Empresa -> [Proyecto]
+-- PRECOND: Ninguna.
+proyectos (ConsEmpresa r) = proyectosEnLosQueTrabaja r
+
+proyectosEnLosQueTrabaja :: [Rol] -> [Proyecto]
+-- PRECOND: Ninguna.
+proyectosEnLosQueTrabaja []     = []
+proyectosEnLosQueTrabaja (r:rs) = if not (estaElProyectoDeEn (proyectoDelRol r) (proyectosEnLosQueTrabaja rs))
+                                  then proyectoDelRol r : proyectosEnLosQueTrabaja rs
+                                  else proyectosEnLosQueTrabaja rs
+
+proyectoDelRol :: Rol -> Proyecto
+-- PRECOND: Ninguna.
+proyectoDelRol (Developer  _ p) = p
+proyectoDelRol (Management _ p) = p
+
+estaElProyectoDeEn :: Proyecto -> [Proyecto] -> Bool
+-- PRECOND: Ninguna.
+estaElProyectoDeEn po []     = False
+estaElProyectoDeEn po (p:ps) = esElMismoProyecto po p || estaElProyectoDeEn po ps
+
+esElMismoProyecto :: Proyecto -> Proyecto -> Bool
+-- PRECOND: Ninguna.
+esElMismoProyecto (ConsProyecto n1) (ConsProyecto n2) = n1 == n2
+
+
+
+losDevSenior :: Empresa -> [Proyecto] -> Int
+-- PRECOND: Ninguna.
+losDevSenior (ConsEmpresa r) ps = longitud (seniorsDeQueTrabajanEn r ps)
+
+seniorsDeQueTrabajanEn :: [Rol] -> [Proyecto] -> [Rol]
+-- PRECOND: Ninguna.
+seniorsDeQueTrabajanEn []     _      = []
+seniorsDeQueTrabajanEn _      []     = []
+seniorsDeQueTrabajanEn (r:rs) (p:ps) = if esSenior r && perteneceAProyecto r p
+                                       then r : seniorsDeQueTrabajanEn rs ps
+                                       else seniorsDeQueTrabajanEn rs ps
+
+esSenior :: Rol -> Bool
+-- PRECOND: Ninguna.
+esSenior (Developer  Senior _) = True
+esSenior (Management Senior _) = True
+esSenior (Developer  _      _) = False
+esSenior (Management _      _) = False
+
+perteneceAProyecto :: Rol -> Proyecto -> Bool
+-- PRECOND: Ninguna.
+perteneceAProyecto r p = esElMismoProyecto (proyectoDelRol r) p
+
+
+
+cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
+-- PRECOND: Ninguna.
+cantQueTrabajanEn ps (ConsEmpresa r) = longitud (empleadosDeQueTrabajanAlMenosEnAlgun r ps)
+
+empleadosDeQueTrabajanAlMenosEnAlgun :: [Rol] -> [Proyecto] -> [Rol]
+-- PRECOND: Ninguna.
+empleadosDeQueTrabajanAlMenosEnAlgun []     _  = []
+empleadosDeQueTrabajanAlMenosEnAlgun (r:rs) ps = if empleadoTrabajaEnAlgunProyectoDe r ps
+                                                 then r : empleadosDeQueTrabajanAlMenosEnAlgun rs ps
+                                                 else empleadosDeQueTrabajanAlMenosEnAlgun rs ps
+
+empleadoTrabajaEnAlgunProyectoDe :: Rol -> [Proyecto] -> Bool
+-- PRECOND: Ninguna.
+empleadoTrabajaEnAlgunProyectoDe r []     = False
+empleadoTrabajaEnAlgunProyectoDe r (p:ps) = esElMismoProyecto (proyectoDelRol r) p || empleadoTrabajaEnAlgunProyectoDe r ps
+
+
+
+------------------------------------------------------------------------------------
+gobstones2 :: Proyecto
+gobstones2 = ConsProyecto "Gobstones 2"
+
+gtavi :: Proyecto
+gtavi = ConsProyecto "GTA VI"
+
+rocketleague :: Proyecto
+rocketleague = ConsProyecto "Rocket League"
+
+juan :: Rol
+juan = Developer Senior gobstones2
+
+ricardo :: Rol
+ricardo = Developer Senior gobstones2
+
+gabriel :: Rol
+gabriel = Management Junior gobstones2
+
+marcos :: Rol
+marcos = Management Junior gtavi
+
+felipe :: Rol
+felipe = Management Junior gtavi
+
+michael :: Rol
+michael = Management Junior rocketleague
+
+google :: Empresa
+google = ConsEmpresa [juan, ricardo, gabriel, marcos, felipe, michael]
+
+------------------------------------------------------------------------------------
