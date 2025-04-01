@@ -62,8 +62,8 @@ apariciones :: Eq a => a -> [a] -> Int
 -- PRECOND: Ninguna.
 apariciones e []     = 0
 apariciones e (x:xs) = if e == x
-                       then 1 + apariciones e xs
-                       else apariciones e xs
+                          then 1 + apariciones e xs
+                          else apariciones e xs
 
 
 -- EJERCICIO 1.9:
@@ -72,8 +72,8 @@ losMenoresA :: Int -> [Int] -> [Int]
 -- PRECOND: Ninguna.
 losMenoresA n []     = []
 losMenoresA n (ns:nss) = if ns < n
-                         then ns : losMenoresA n nss
-                         else losMenoresA n nss
+                            then ns : losMenoresA n nss
+                            else losMenoresA n nss
 
 
 -- EJERCICIO 1.10:
@@ -82,8 +82,8 @@ lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
 -- PRECOND: El número es mayor o igual a 0.
 lasDeLongitudMayorA n []     = []
 lasDeLongitudMayorA n (x:xs) = if longitud x > n
-                               then x : lasDeLongitudMayorA n xs
-                               else lasDeLongitudMayorA n xs
+                                  then x : lasDeLongitudMayorA n xs
+                                  else lasDeLongitudMayorA n xs
 
 
 -- EJERCICIO 1.11:
@@ -117,8 +117,8 @@ zipMaximos :: [Int] -> [Int] -> [Int]
 zipMaximos []     ys     = ys
 zipMaximos xs     []     = xs
 zipMaximos (x:xs) (y:ys) = if x >= y
-                           then x : zipMaximos xs ys
-                           else y : zipMaximos xs ys
+                              then x : zipMaximos xs ys
+                              else y : zipMaximos xs ys
 
 
 -- EJERCICIO 1.15:
@@ -127,8 +127,8 @@ elMinimo :: Ord a => [a] -> a
 -- PRECOND: La lista no es vacía.
 elMinimo (x:[])  =  x
 elMinimo (x:xs) = if x < elMinimo xs
-                  then x
-                  else elMinimo xs
+                     then x
+                     else elMinimo xs
 
 
 -- PUNTO 2: Recusión sobre números.
@@ -147,8 +147,8 @@ factorial n = n * factorial (n-1)
 cuentaRegresiva :: Int -> [Int]
 -- PRECOND: El número es mayor o igual a 0.
 cuentaRegresiva n = if n >= 1
-                    then n : cuentaRegresiva (n-1)
-                    else []
+                       then n : cuentaRegresiva (n-1)
+                       else []
 
 
 -- EJERCICIO 2.3:
@@ -196,8 +196,8 @@ mayoresA :: Int -> [Persona] -> [Persona]
 mayoresA 0 _      = []
 mayoresA _ []     = []
 mayoresA n (x:xs) = if edad x > n
-                    then x : mayoresA n xs
-                    else mayoresA n xs
+                       then x : mayoresA n xs
+                       else mayoresA n xs
 
 edad :: Persona -> Int
 -- PRECOND: Ninguna.
@@ -220,8 +220,8 @@ elMasViejo :: [Persona] -> Persona
 -- PRECOND: La lista al menos posee una persona.
 elMasViejo [x]    = x
 elMasViejo (x:xs) = if edad x > edad (elMasViejo xs)
-                    then x
-                    else elMasViejo xs
+                       then x
+                       else elMasViejo xs
 
 
 -- EJERCICIO 3.2:
@@ -286,8 +286,8 @@ nroDePokemonDeTipoQueLeGanarianALosDe :: TipoDePokemon -> [Pokemon] -> [Pokemon]
 nroDePokemonDeTipoQueLeGanarianALosDe tp []     _  = 0
 nroDePokemonDeTipoQueLeGanarianALosDe tp _      [] = 0
 nroDePokemonDeTipoQueLeGanarianALosDe tp (x:xs) ys = if esDelMismoTipo tp (tipoDePoke x) && leGanaATodos x ys
-                                                     then 1 + nroDePokemonDeTipoQueLeGanarianALosDe tp xs ys
-                                                     else nroDePokemonDeTipoQueLeGanarianALosDe tp xs ys
+                                                        then 1 + nroDePokemonDeTipoQueLeGanarianALosDe tp xs ys
+                                                        else nroDePokemonDeTipoQueLeGanarianALosDe tp xs ys
 
 leGanaATodos :: Pokemon -> [Pokemon] -> Bool
 -- PRECOND: Ninguna.
@@ -326,8 +326,8 @@ tiposDiferentesEn :: [Pokemon] -> [TipoDePokemon]
 -- PRECOND: Ninguna.
 tiposDiferentesEn []     = []
 tiposDiferentesEn (p:ps) = if not (estaElTipoEn (tipoDePoke p) (tiposDiferentesEn ps))
-                           then tipoDePoke p : tiposDiferentesEn ps
-                           else tiposDiferentesEn ps
+                              then tipoDePoke p : tiposDiferentesEn ps
+                              else tiposDiferentesEn ps
 
 estaElTipoEn :: TipoDePokemon -> [TipoDePokemon] -> Bool
 -- PRECOND: Ninguna.
@@ -362,8 +362,8 @@ proyectosEnLosQueTrabaja :: [Rol] -> [Proyecto]
 -- PRECOND: Ninguna.
 proyectosEnLosQueTrabaja []     = []
 proyectosEnLosQueTrabaja (r:rs) = if not (estaElProyectoDeEn (proyectoDelRol r) (proyectosEnLosQueTrabaja rs))
-                                  then proyectoDelRol r : proyectosEnLosQueTrabaja rs
-                                  else proyectosEnLosQueTrabaja rs
+                                     then proyectoDelRol r : proyectosEnLosQueTrabaja rs
+                                     else proyectosEnLosQueTrabaja rs
 
 proyectoDelRol :: Rol -> Proyecto
 -- PRECOND: Ninguna.
@@ -390,8 +390,8 @@ seniorsDeQueTrabajanEn :: [Rol] -> [Proyecto] -> [Rol]
 seniorsDeQueTrabajanEn []     _      = []
 seniorsDeQueTrabajanEn _      []     = []
 seniorsDeQueTrabajanEn (r:rs) (p:ps) = if esSenior r && perteneceAProyecto r p
-                                       then r : seniorsDeQueTrabajanEn rs ps
-                                       else seniorsDeQueTrabajanEn rs ps
+                                          then r : seniorsDeQueTrabajanEn rs ps
+                                          else seniorsDeQueTrabajanEn rs ps
 
 esSenior :: Rol -> Bool
 -- PRECOND: Ninguna.
@@ -414,8 +414,8 @@ empleadosDeQueTrabajanAlMenosEnAlgun :: [Rol] -> [Proyecto] -> [Rol]
 -- PRECOND: Ninguna.
 empleadosDeQueTrabajanAlMenosEnAlgun []     _  = []
 empleadosDeQueTrabajanAlMenosEnAlgun (r:rs) ps = if empleadoTrabajaEnAlgunProyectoDe r ps
-                                                 then r : empleadosDeQueTrabajanAlMenosEnAlgun rs ps
-                                                 else empleadosDeQueTrabajanAlMenosEnAlgun rs ps
+                                                    then r : empleadosDeQueTrabajanAlMenosEnAlgun rs ps
+                                                    else empleadosDeQueTrabajanAlMenosEnAlgun rs ps
 
 empleadoTrabajaEnAlgunProyectoDe :: Rol -> [Proyecto] -> Bool
 -- PRECOND: Ninguna.
@@ -437,5 +437,5 @@ parDeProyectoConSusIntegrantes :: Rol -> [(Proyecto, Int)] -> [(Proyecto, Int)]
 -- PRECOND: Ninguna.
 parDeProyectoConSusIntegrantes r []         = [(proyectoDelRol r, 1)]
 parDeProyectoConSusIntegrantes r ((x, y):xs) = if esElMismoProyecto (proyectoDelRol r) x
-                                               then (x, y+1):xs
-                                               else (x, y) : parDeProyectoConSusIntegrantes r xs
+                                                  then (x, y+1):xs
+                                                  else (x, y) : parDeProyectoConSusIntegrantes r xs
