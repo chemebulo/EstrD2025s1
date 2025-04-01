@@ -11,15 +11,37 @@ data Celda = Bolita Color Celda | CeldaVacia
 
 nroBolitas :: Color -> Celda -> Int
 -- PRECOND: Ninguna.
-nroBolitas _ CeldaVacia      = 0
-nroBolitas c1 (Bolita c2 cel) = unoSiEsBolitaDeColor c2 c1 + nroBolitas c1 cel
+nroBolitas _  CeldaVacia      = 0
+nroBolitas c1 (Bolita c2 cel) = unoSi (esElMismoColor c2 c1)  + nroBolitas c1 cel
 
-unoSiEsBolitaDeColor :: Color -> Color -> Int
+unoSi :: Bool -> Int
+unoSi True  = 1
+unoSi False = 0
+
+esElMismoColor :: Color -> Color -> Bool
 -- PRECOND: Ninguna.
-unoSiEsBolitaDeColor Azul Azul = 1
-unoSiEsBolitaDeColor Rojo Rojo = 1
-unoSiEsBolitaDeColor _    _    = 0
+esElMismoColor Azul Azul = True
+esElMismoColor Rojo Rojo = True
+esElMismoColor _    _    = False
 
+
+poner :: Color -> Celda -> Celda
+-- PRECOND: Ninguna.
+poner c1 cel = Bolita c1 cel
+
+
+sacar :: Color -> Celda -> Celda
+-- PRECOND: Ninguna.
+sacar _  CeldaVacia      = CeldaVacia  
+sacar c1 (Bolita c2 cel) = if esElMismoColor c1 c2
+                              then cel
+                              else Bolita c2 (sacar c1 cel)
+
+
+ponerN :: Int -> Color -> Celda -> Celda
+ponerN n c1 cel = if n > 0
+                     then poner c1 (ponerN (n-1) c1 cel)
+                     else cel
 
 ---------------------------------------------------- FUNCIONES DE PRUEBA -------------------------------------------------------
 
