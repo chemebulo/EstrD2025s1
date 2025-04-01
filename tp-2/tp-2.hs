@@ -61,9 +61,16 @@ pertenece e (x:xs) = e == x || pertenece e xs
 apariciones :: Eq a => a -> [a] -> Int
 -- PRECOND: Ninguna.
 apariciones e []     = 0
-apariciones e (x:xs) = if e == x
-                          then 1 + apariciones e xs
-                          else apariciones e xs
+apariciones e (x:xs) = unoSi (esMismoElementoA e x) + apariciones e xs
+
+unoSi :: Bool -> Int
+-- PRECOND: Ninguna.
+unoSi True  = 1
+unoSi False = 0
+
+esMismoElementoA :: Eq a => a -> a -> Bool
+-- PRECOND: Ninguna.
+esMismoElementoA x y = x == y
 
 
 -- EJERCICIO 1.9:
@@ -71,9 +78,12 @@ apariciones e (x:xs) = if e == x
 losMenoresA :: Int -> [Int] -> [Int]
 -- PRECOND: Ninguna.
 losMenoresA n []     = []
-losMenoresA n (ns:nss) = if ns < n
-                            then ns : losMenoresA n nss
-                            else losMenoresA n nss
+losMenoresA n (ns:nss) = listaDeNumeroSiSinoNil ns (ns < n) n ++ losMenoresA n nss
+
+listaDeNumeroSiSinoNil :: Int -> Bool -> Int -> [Int]
+-- PRECOND: Ninguna.
+listaDeNumeroSiSinoNil ns True  n = [ns]
+listaDeNumeroSiSinoNil ns False n = []
 
 
 -- EJERCICIO 1.10:
@@ -81,9 +91,13 @@ losMenoresA n (ns:nss) = if ns < n
 lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
 -- PRECOND: El número es mayor o igual a 0.
 lasDeLongitudMayorA n []     = []
-lasDeLongitudMayorA n (x:xs) = if longitud x > n
-                                  then x : lasDeLongitudMayorA n xs
-                                  else lasDeLongitudMayorA n xs
+lasDeLongitudMayorA n (x:xs) = listaDeElementoSiSinoNil x (longitud x > n) ++ lasDeLongitudMayorA n xs
+    
+listaDeElementoSiSinoNil :: [a] -> Bool -> [[a]]
+-- PRECOND: Ninguna.
+listaDeElementoSiSinoNil x True  = [x]
+listaDeElementoSiSinoNil x False = []
+                                  
 
 
 -- EJERCICIO 1.11:
@@ -116,20 +130,37 @@ zipMaximos :: [Int] -> [Int] -> [Int]
 -- PRECOND: Ninguna.
 zipMaximos []     ys     = ys
 zipMaximos xs     []     = xs
-zipMaximos (x:xs) (y:ys) = if x >= y
-                              then x : zipMaximos xs ys
-                              else y : zipMaximos xs ys
+zipMaximos (x:xs) (y:ys) = primerNumeroSiSinoElSegundo x (x >= y) y : zipMaximos xs ys
+
+primerNumeroSiSinoElSegundo :: Int -> Bool -> Int -> Int
+-- PRECOND: Ninguna.
+primerNumeroSiSinoElSegundo n True  m = n
+primerNumeroSiSinoElSegundo n False m = m
 
 
--- EJERCICIO 1.15:
+-- EJERCICIO 1.15 V1:
 
 elMinimo :: Ord a => [a] -> a
 -- PRECOND: La lista no es vacía.
-elMinimo (x:[])  =  x
-elMinimo (x:xs) = if x < elMinimo xs
-                     then x
-                     else elMinimo xs
+elMinimo [x]    = x
+elMinimo (x:xs) = min x (elMinimo xs)
 
+
+-- EJERCICIO 1.15 V2:
+
+{-
+
+elMinimo :: Ord a => [a] -> a
+-- PRECOND: La lista no es vacía.
+elMinimo [x]    = x
+elMinimo (x:xs) = elementoSiSino x (x < elMinimo xs) (elMinimo xs)
+
+elementoSiSino :: a -> Bool -> a -> a 
+-- PRECOND: Ninguna.
+elementoSiSino x True  y = x
+elementoSiSino x False y = y
+
+-}
 
 -- PUNTO 2: Recusión sobre números.
 
@@ -146,9 +177,8 @@ factorial n = n * factorial (n-1)
 
 cuentaRegresiva :: Int -> [Int]
 -- PRECOND: El número es mayor o igual a 0.
-cuentaRegresiva n = if n >= 1
-                       then n : cuentaRegresiva (n-1)
-                       else []
+cuentaRegresiva 0 = []
+cuentaRegresiva n = n : cuentaRegresiva (n-1)
 
 
 -- EJERCICIO 2.3:
@@ -195,9 +225,12 @@ mayoresA :: Int -> [Persona] -> [Persona]
 -- PRECOND: El número es mayor o igual a cero.
 mayoresA 0 _      = []
 mayoresA _ []     = []
-mayoresA n (x:xs) = if edad x > n
-                       then x : mayoresA n xs
-                       else mayoresA n xs
+mayoresA n (x:xs) = listaDePersonaSiSinoNil x (edad x > n) ++ mayoresA n xs
+
+listaDePersonaSiSinoNil :: Persona -> Bool -> [Persona]
+-- PRECOND: Ninguna.
+listaDePersonaSiSinoNil p True  = [p]
+listaDePersonaSiSinoNil p False = []
 
 edad :: Persona -> Int
 -- PRECOND: Ninguna.
@@ -219,9 +252,12 @@ sumatoriaDeEdades (x:xs) = edad x + sumatoriaDeEdades xs
 elMasViejo :: [Persona] -> Persona
 -- PRECOND: La lista al menos posee una persona.
 elMasViejo [x]    = x
-elMasViejo (x:xs) = if edad x > edad (elMasViejo xs)
-                       then x
-                       else elMasViejo xs
+elMasViejo (x:xs) = personaSiSino x (edad x > edad (elMasViejo xs)) (elMasViejo xs)
+
+personaSiSino :: Persona -> Bool -> Persona -> Persona
+-- PRECOND: Ninguna.
+personaSiSino p1 True  p2 = p1
+personaSiSino p1 False p2 = p2
 
 
 -- EJERCICIO 3.2:
@@ -439,3 +475,7 @@ parDeProyectoConSusIntegrantes r []         = [(proyectoDelRol r, 1)]
 parDeProyectoConSusIntegrantes r ((x, y):xs) = if esElMismoProyecto (proyectoDelRol r) x
                                                   then (x, y+1):xs
                                                   else (x, y) : parDeProyectoConSusIntegrantes r xs
+
+
+-- CONSIDERACIÓN FINAL: Entiendo que hay muchas funciones que deberían tener una subtarea en el caso recursivo en lugar de un if, pero en muchos casos 
+--                      eso afectaría a la legibilidad del código. Por eso, solamente modifiqué las funciones que eran viables a dicho cambio.
