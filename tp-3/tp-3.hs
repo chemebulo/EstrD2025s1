@@ -81,6 +81,7 @@ esTesoro _      = False
 
 pasosHastaTesoro :: Camino -> Int
 -- PRECOND: Tiene que haber al menos un tesoro.
+pasosHastaTesoro Fin             = error "No deberias haber llegado al final, te fijaste la precondicion?"
 pasosHastaTesoro (Nada cam)      = 1 + pasosHastaTesoro cam
 pasosHastaTesoro (Cofre obj cam) = if hayTesoroEnObjetos obj
                                          then 0
