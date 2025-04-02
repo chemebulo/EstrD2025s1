@@ -26,6 +26,7 @@ esElMismoColor Rojo Rojo = True
 esElMismoColor _    _    = False
 
 
+
 poner :: Color -> Celda -> Celda
 -- PRECOND: Ninguna.
 poner c1 cel = Bolita c1 cel
@@ -39,28 +40,15 @@ sacar c1 (Bolita c2 cel) = if esElMismoColor c1 c2
                               then cel
                               else Bolita c2 (sacar c1 cel)
 
-{- VERSION 2:
+-- Es cuestion de criterio utilizar o no una subtarea, si no es necesario, preferiblemente evitarlo. En caso de funciones más grandes que terminen generando un if 
+-- más complejo es posible que SI sea necesario terminar desarrollando una subtarea, pero para este caso, no es necesario.
 
-¿Cuál de las dos versiones sigue lo planteado en la materia?
 
-sacar :: Color -> Celda -> Celda
--- PRECOND: Ninguna.
-sacar _  CeldaVacia      = CeldaVacia  
-sacar c1 (Bolita c2 cel) = sacarBolitaSiSino cel (esElMismoColor c1 c2) (Bolita c2 (sacar c1 cel))
-
-sacarBolitaSiSino :: Celda -> Bool -> Celda -> Celda
--- PRECOND: Ninguna.
-sacarBolitaSiSino cel1 True  cel2 = cel1
-sacarBolitaSiSino cel1 False cel2 = cel2
-
--}
-
--- Lo mismo para ponerN, ¿sigue los criteros adecuados?
 
 ponerN :: Int -> Color -> Celda -> Celda
-ponerN n c1 cel = if n > 0
-                     then poner c1 (ponerN (n-1) c1 cel)
-                     else cel
+-- PRECOND: El número es mayor o igual a 0.
+ponerN 0 _   cel = cel 
+ponerN n col cel = poner col (ponerN (n-1) col cel)
 
 
 
@@ -73,24 +61,11 @@ data Camino = Fin | Cofre [Objeto] Camino | Nada Camino
     deriving Show
 
 
--- Sin funcionar.
-
 hayTesoro :: Camino -> Bool
 -- PRECOND: Ninguna.
-hayTesoro  Fin        = False
-hayTesoro  c          = if esCofre c
-                           then hayTesoroEnObjetos (objetosDeCofre c) || hayTesoro c
-                           else hayTesoro c
-
-esCofre :: Camino -> Bool
--- PRECOND: Ninguna.
-esCofre (Cofre obj cam) = True
-esCofre _               = False
-
-objetosDeCofre :: Camino -> [Objeto]
--- PRECOND: Ninguna.
-objetosDeCofre (Cofre obj cam) = obj
-objetosDeCofre _               = []
+hayTesoro Fin             = False
+hayTesoro (Nada cam)      = hayTesoro cam
+hayTesoro (Cofre obj cam) = hayTesoroEnObjetos obj || hayTesoro cam
 
 hayTesoroEnObjetos :: [Objeto] -> Bool
 -- PRECOND: Ninguna.
@@ -103,25 +78,42 @@ esTesoro Tesoro = True
 esTesoro _      = False
 
 
-camino0 :: Camino
-camino0 = Fin
 
-camino1 :: Camino
-camino1 = Nada Fin
-
-camino2 :: Camino
-camino2 = Nada (Nada Fin)
-
-camino3 :: Camino
-camino3 = Cofre [Cacharro, Cacharro, Tesoro] (Nada (Nada Fin))
-
-camino4 :: Camino
-camino4 = Nada (Cofre [Cacharro, Cacharro, Tesoro] (Nada (Nada Fin)))
+pasosHastaElTesoro :: Camino -> Int
+-- PRECOND: Tiene que haber al menos un tesoro.
+pasosHastaElTesoro (Nada cam)      = 1 + pasosHastaElTesoro cam
+pasosHastaElTesoro (Cofre obj cam) = if hayTesoroEnObjetos obj
+                                         then 0
+                                         else 1 + pasosHastaElTesoro cam
 
 
 ---------------------------------------------------- FUNCIONES DE PRUEBA -------------------------------------------------------
 
+camino0 :: Camino
+camino0 = Nada (Nada (Cofre [Cacharro, Cacharro, Tesoro] (Nada Fin)))
 
+camino1 :: Camino
+camino1 = Nada (Nada (Cofre [Tesoro, Cacharro, Cacharro] Fin))
+
+camino2 :: Camino
+camino2 = Nada Fin
+
+{-  
+    camino0 :: Camino
+    camino0 = Fin
+
+    camino1 :: Camino
+    camino1 = Nada Fin
+
+    camino2 :: Camino
+    camino2 = Nada (Nada Fin)
+
+    camino3 :: Camino
+    camino3 = Cofre [Cacharro, Cacharro, Tesoro] (Nada (Nada Fin))
+
+    camino4 :: Camino
+    camino4 = Nada (Cofre [Cacharro, Cacharro, Tesoro] (Nada (Nada Fin)))     
+-}
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -133,3 +125,4 @@ camino4 = Nada (Cofre [Cacharro, Cacharro, Tesoro] (Nada (Nada Fin)))
 
 
 -- EJERCICIO 2.2 (Expresiones Aritméticas):
+
