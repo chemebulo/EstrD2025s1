@@ -79,12 +79,12 @@ esTesoro _      = False
 
 
 
-pasosHastaElTesoro :: Camino -> Int
+pasosHastaTesoro :: Camino -> Int
 -- PRECOND: Tiene que haber al menos un tesoro.
-pasosHastaElTesoro (Nada cam)      = 1 + pasosHastaElTesoro cam
-pasosHastaElTesoro (Cofre obj cam) = if hayTesoroEnObjetos obj
+pasosHastaTesoro (Nada cam)      = 1 + pasosHastaTesoro cam
+pasosHastaTesoro (Cofre obj cam) = if hayTesoroEnObjetos obj
                                          then 0
-                                         else 1 + pasosHastaElTesoro cam
+                                         else 1 + pasosHastaTesoro cam
 
 
 ---------------------------------------------------- FUNCIONES DE PRUEBA -------------------------------------------------------
