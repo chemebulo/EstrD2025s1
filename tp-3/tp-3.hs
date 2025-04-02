@@ -81,47 +81,69 @@ esTesoro _      = False
 
 pasosHastaTesoro :: Camino -> Int
 -- PRECOND: Tiene que haber al menos un tesoro.
-pasosHastaTesoro Fin             = error "No deberias haber llegado al final, te fijaste la precondicion?"
 pasosHastaTesoro (Nada cam)      = 1 + pasosHastaTesoro cam
 pasosHastaTesoro (Cofre obj cam) = if hayTesoroEnObjetos obj
-                                         then 0
-                                         else 1 + pasosHastaTesoro cam
+                                      then 0
+                                      else 1 + pasosHastaTesoro cam
 
 
----------------------------------------------------- FUNCIONES DE PRUEBA -------------------------------------------------------
 
-camino0 :: Camino
-camino0 = Nada (Nada (Cofre [Cacharro, Cacharro, Tesoro] (Nada Fin)))
+hayTesoroEn :: Int -> Camino -> Bool
+-- PRECOND: Ninguna.
+hayTesoroEn n Fin             = False
+hayTesoroEn n (Nada cam)      = hayTesoroEn (n-1) cam 
+hayTesoroEn n (Cofre obj cam) = if n == 0
+                                   then hayTesoroEnObjetos obj
+                                   else hayTesoroEn (n-1) cam
 
-camino1 :: Camino
-camino1 = Nada (Nada (Cofre [Tesoro, Cacharro, Cacharro] Fin))
 
-camino2 :: Camino
-camino2 = Nada Fin
 
-{-  
-    camino0 :: Camino
-    camino0 = Fin
+alMenosNTesoros :: Int -> Camino -> Bool
+-- PRECOND: Ninguna.
+alMenosNTesoros n cam = cantidadDeTesorosEnCamino cam >= n
 
-    camino1 :: Camino
-    camino1 = Nada Fin
+cantidadDeTesorosEnCamino :: Camino -> Int
+-- PRECOND: Ninguna.
+cantidadDeTesorosEnCamino Fin             = 0
+cantidadDeTesorosEnCamino (Nada cam)      = cantidadDeTesorosEnCamino cam 
+cantidadDeTesorosEnCamino (Cofre obj cam) = cantidadDeTesorosEnObjetos obj + cantidadDeTesorosEnCamino cam
 
-    camino2 :: Camino
-    camino2 = Nada (Nada Fin)
+cantidadDeTesorosEnObjetos :: [Objeto] -> Int   
+-- PRECOND: Ninguna.
+cantidadDeTesorosEnObjetos []     = 0
+cantidadDeTesorosEnObjetos (x:xs) = unoSi (esTesoro x) + cantidadDeTesorosEnObjetos xs
 
-    camino3 :: Camino
-    camino3 = Cofre [Cacharro, Cacharro, Tesoro] (Nada (Nada Fin))
 
-    camino4 :: Camino
-    camino4 = Nada (Cofre [Cacharro, Cacharro, Tesoro] (Nada (Nada Fin)))     
--}
 
---------------------------------------------------------------------------------------------------------------------------------
+-- DESAFÍO:
+
+cantTesorosEntre :: Int -> Int -> Camino -> Int
+-- PRECOND: El primer número debe ser menor o igual al segundo, y ambos deben ser mayor a 0.
+cantTesorosEntre _  _  Fin = 0
+cantTesorosEntre 0  n2 cam = cantTesorosHasta n2 cam
+cantTesorosEntre n1 n2 cam = cantTesorosEntre (n1-1) (n2-1) (caminoDe cam)
+
+cantTesorosHasta :: Int -> Camino -> Int
+-- PRECOND: Ninguna.
+cantTesorosHasta 0 (Nada cam)      = 0
+cantTesorosHasta n (Nada cam)      = cantTesorosHasta (n-1) cam
+cantTesorosHasta 0 (Cofre obj cam) = cantidadDeTesorosEnObjetos obj
+cantTesorosHasta n (Cofre obj cam) = cantidadDeTesorosEnObjetos obj + cantTesorosHasta (n-1) cam
+
+caminoDe :: Camino -> Camino
+-- PRECOND: Ninguna.
+caminoDe Fin             = Fin
+caminoDe (Nada cam)      = cam
+caminoDe (Cofre obj cam) = cam
+
 
 
 -- PUNTO 2: Tipos Arbóleos.
 
 -- EJERCICIO 2.1 (Árboles Binarios):
+
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+
 
 
 
