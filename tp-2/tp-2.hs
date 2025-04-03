@@ -177,8 +177,9 @@ factorial n = n * factorial (n-1)
 
 cuentaRegresiva :: Int -> [Int]
 -- PRECOND: El número es mayor o igual a 0.
-cuentaRegresiva 0 = []
-cuentaRegresiva n = n : cuentaRegresiva (n-1)
+cuentaRegresiva n = if n >= 1
+                       then n : cuentaRegresiva (n-1)
+                       else [] 
 
 
 -- EJERCICIO 2.3:
@@ -313,9 +314,9 @@ unoSiTipoEsMismoTipoQue _      _      = 0
 
 
 
-cuantoDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
+cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
 -- PRECOND: Ninguna.
-cuantoDeTipo_De_LeGananATodosLosDe_ tp (ConsEntrenador n1 p1) (ConsEntrenador n2 p2) = nroDePokemonDeTipoQueLeGanarianALosDe tp p1 p2
+cuantosDeTipo_De_LeGananATodosLosDe_ tp (ConsEntrenador n1 p1) (ConsEntrenador n2 p2) = nroDePokemonDeTipoQueLeGanarianALosDe tp p1 p2
 
 nroDePokemonDeTipoQueLeGanarianALosDe :: TipoDePokemon -> [Pokemon] -> [Pokemon] -> Int
 -- PRECOND: Ninguna.
@@ -433,8 +434,7 @@ esSenior :: Rol -> Bool
 -- PRECOND: Ninguna.
 esSenior (Developer  Senior _) = True
 esSenior (Management Senior _) = True
-esSenior (Developer  _      _) = False
-esSenior (Management _      _) = False
+esSenior _                     = False
 
 perteneceAProyecto :: Rol -> Proyecto -> Bool
 -- PRECOND: Ninguna.
