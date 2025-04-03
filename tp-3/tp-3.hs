@@ -124,7 +124,7 @@ cantTesorosEntre 0  n2 cam = cantTesorosHasta n2 cam
 cantTesorosEntre n1 n2 cam = cantTesorosEntre (n1-1) (n2-1) (caminoDe cam)
 
 cantTesorosHasta :: Int -> Camino -> Int
--- PRECOND: Ninguna.
+-- PRECOND: El número es mayor o igual a 0.
 cantTesorosHasta 0 (Nada cam)      = 0
 cantTesorosHasta n (Nada cam)      = cantTesorosHasta (n-1) cam
 cantTesorosHasta 0 (Cofre obj cam) = cantidadDeTesorosEnObjetos obj
@@ -143,8 +143,58 @@ caminoDe (Cofre obj cam) = cam
 -- EJERCICIO 2.1 (Árboles Binarios):
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
 
 
+
+
+----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
+
+-- GRAFICO DIAPOSITIVA 36:
+
+arbolStr :: Tree String
+arbolStr = NodeT "E" nodoIzq nodoDer
+
+
+nodoDer :: Tree String
+nodoDer = NodeT "M" EmptyT nodoDerIzq
+
+nodoDerIzq :: Tree String
+nodoDerIzq = NodeT "O" EmptyT EmptyT
+
+
+nodoIzq :: Tree String
+nodoIzq = NodeT "A" nodoIzqIzq nodoIzqDer
+
+nodoIzqDer :: Tree String
+nodoIzqDer = NodeT "O" EmptyT EmptyT
+
+nodoIzqIzq :: Tree String
+nodoIzqIzq = NodeT "M" EmptyT EmptyT
+
+-------------------------------------------------------------------------------------------------------
+
+arbolInt :: Tree Int
+arbolInt = NodeT 11 nodoIzq' nodoDer'
+
+
+nodoDer' :: Tree Int
+nodoDer' = NodeT 3 EmptyT nodoDerIzq'
+
+nodoDerIzq' :: Tree Int
+nodoDerIzq' = NodeT 0 EmptyT EmptyT
+
+
+nodoIzq' :: Tree Int
+nodoIzq' = NodeT 7 nodoIzqIzq' nodoIzqDer'
+
+nodoIzqDer' :: Tree Int
+nodoIzqDer' = NodeT 5 EmptyT EmptyT
+
+nodoIzqIzq' :: Tree Int
+nodoIzqIzq' = NodeT 2 EmptyT EmptyT
+
+-------------------------------------------------------------------------------------------------------
 
 
 -- EJERCICIO 2.2 (Expresiones Aritméticas):
