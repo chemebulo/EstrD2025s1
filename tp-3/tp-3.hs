@@ -47,7 +47,7 @@ sacar c1 (Bolita c2 cel) = if esElMismoColor c1 c2
 
 ponerN :: Int -> Color -> Celda -> Celda
 -- PRECOND: El número es mayor o igual a 0.
-ponerN 0 _   cel = cel 
+ponerN 0 _   cel = cel
 ponerN n col cel = poner col (ponerN (n-1) col cel)
 
 
@@ -91,7 +91,7 @@ pasosHastaTesoro (Cofre obj cam) = if hayTesoroEnObjetos obj
 hayTesoroEn :: Int -> Camino -> Bool
 -- PRECOND: Ninguna.
 hayTesoroEn n Fin             = False
-hayTesoroEn n (Nada cam)      = hayTesoroEn (n-1) cam 
+hayTesoroEn n (Nada cam)      = hayTesoroEn (n-1) cam
 hayTesoroEn n (Cofre obj cam) = if n == 0
                                    then hayTesoroEnObjetos obj
                                    else hayTesoroEn (n-1) cam
@@ -105,10 +105,10 @@ alMenosNTesoros n cam = cantidadDeTesorosEnCamino cam >= n
 cantidadDeTesorosEnCamino :: Camino -> Int
 -- PRECOND: Ninguna.
 cantidadDeTesorosEnCamino Fin             = 0
-cantidadDeTesorosEnCamino (Nada cam)      = cantidadDeTesorosEnCamino cam 
+cantidadDeTesorosEnCamino (Nada cam)      = cantidadDeTesorosEnCamino cam
 cantidadDeTesorosEnCamino (Cofre obj cam) = cantidadDeTesorosEnObjetos obj + cantidadDeTesorosEnCamino cam
 
-cantidadDeTesorosEnObjetos :: [Objeto] -> Int   
+cantidadDeTesorosEnObjetos :: [Objeto] -> Int
 -- PRECOND: Ninguna.
 cantidadDeTesorosEnObjetos []     = 0
 cantidadDeTesorosEnObjetos (x:xs) = unoSi (esTesoro x) + cantidadDeTesorosEnObjetos xs
@@ -150,8 +150,8 @@ data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
 
 sumarT :: Tree Int -> Int
 -- PRECOND: Ninguna.
-sumarT EmptyT          = 0 
-sumarT (NodeT n t1 t2) = n + sumarT t1 + sumarT t2
+sumarT EmptyT          = 0
+sumarT (NodeT n n1 n2) = n + sumarT n1 + sumarT n2
 
 
 -- EJERCICIO 2.2
@@ -167,7 +167,7 @@ sizeT (NodeT n t1 t2) = 1 + sizeT t1 + sizeT t2
 mapDobleT :: Tree Int -> Tree Int
 -- PRECOND: Ninguna.
 mapDobleT EmptyT          = EmptyT
-mapDobleT (NodeT n t1 t2) = NodeT (n*2) (mapDobleT t1) (mapDobleT t2)
+mapDobleT (NodeT n n1 n2) = NodeT (n*2) (mapDobleT n1) (mapDobleT n2)
 
 
 -- EJERCICIO 2.4
@@ -175,14 +175,14 @@ mapDobleT (NodeT n t1 t2) = NodeT (n*2) (mapDobleT t1) (mapDobleT t2)
 perteneceT :: Eq a => a -> Tree a -> Bool
 -- PRECOND: Ninguna.
 perteneceT x EmptyT          = False
-perteneceT x (NodeT n t1 t2) = x == n || perteneceT x t1 || perteneceT x t2 
+perteneceT x (NodeT n t1 t2) = x == n || perteneceT x t1 || perteneceT x t2
 
 
 -- EJERCICIO 2.5
 
 aparicionesT :: Eq a => a -> Tree a -> Int
 -- PRECOND: Ninguna.
-aparicionesT x EmptyT          = 0 
+aparicionesT x EmptyT          = 0
 aparicionesT x (NodeT n t1 t2) = unoSi (x == n) + aparicionesT x t1 + aparicionesT x t2
 
 
@@ -191,57 +191,72 @@ aparicionesT x (NodeT n t1 t2) = unoSi (x == n) + aparicionesT x t1 + aparicione
 leaves :: Tree a -> [a]
 -- PRECOND: Ninguna.
 leaves EmptyT          = []
-leaves (NodeT n t1 t2) = listaDeObjetoSiEsHoja n t1 t2 ++ leaves t1 ++ leaves t2
+leaves (NodeT n t1 t2) = singularDeObjetoSiEsHoja n t1 t2 ++ leaves t1 ++ leaves t2
 
-listaDeObjetoSiEsHoja :: a -> Tree a -> Tree a -> [a]
+singularDeObjetoSiEsHoja :: a -> Tree a -> Tree a -> [a]
 -- PRECOND: Ninguna.
-listaDeObjetoSiEsHoja x EmptyT EmptyT = [x]
-listaDeObjetoSiEsHoja x _      _      = []
+singularDeObjetoSiEsHoja x EmptyT EmptyT = [x]
+singularDeObjetoSiEsHoja x _      _      = []
 
 
 -- EJERCICIO 2.7
 
 heightT :: Tree a -> Int
 -- PRECOND: Ninguna.
-heightT EmptyT                  = 0
-heightT (NodeT n EmptyT EmptyT) = 1
-heightT (NodeT n t1 t2)         = max (profundidadDeRama t1) (profundidadDeRama t2)
-
-profundidadDeRama :: Tree a -> Int
--- PRECOND: Ninguna.
-profundidadDeRama EmptyT          = 0
-profundidadDeRama (NodeT n t1 t2) = 1 + max (profundidadDeRama t1) (profundidadDeRama t2)
+heightT EmptyT          = 0
+heightT (NodeT n t1 t2) = 1 + max (heightT t1) (heightT t2)
 
 
 -- EJERCICIO 2.8
 
+mirrorT :: Tree a -> Tree a
+-- PRECOND: Niguna.
+mirrorT EmptyT          = EmptyT
+mirrorT (NodeT n t1 t2) = NodeT n (mirrorT t2) (mirrorT t1)
 
 
 -- EJERCICIO 2.9
 
--- In order quiere decir de izquierda a derecha.
+-- toList :: Tree a -> [a]
+-- -- PRECOND: Ninguna.
+-- toList EmptyT                  = 
+-- toList mirrorT (NodeT n t1 t2) = []
+
 
 -- EJERCICIO 2.10
 
-
+-- levelN :: Int -> Tree a -> [a]
+-- -- PRECOND: Ninguna.
+-- levelN EmptyT                  = 
+-- levelN mirrorT (NodeT n t1 t2) =
 
 
 -- EJERCICIO 2.11
 
-
+-- listPerLevel :: Tree a -> [[a]]
+-- -- PRECOND: Ninguna.
+-- listPerLevel EmptyT                  = 
+-- listPerLevel mirrorT (NodeT n t1 t2) =
 
 
 -- EJERCICIO 2.12
 
+-- ramaMasLarga :: Tree a -> [a]
+-- -- PRECOND: Ninguna.
+-- ramaMasLarga EmptyT                  = 
+-- ramaMasLarga mirrorT (NodeT n t1 t2) =
 
--- case d of 
--- Izq -> haces algo
--- Der -> haces algo
+        -- case d of 
+        -- Izq -> valorEn ds t1
+        -- Der -> valorEn ds t2
 
 
 -- EJERCICIO 2.13
 
-
+-- todosLosCaminos :: Tree a -> [[a]]
+-- -- PRECOND: Ninguna.
+-- todosLosCaminos EmptyT                  = 
+-- todosLosCaminos mirrorT (NodeT n t1 t2) =
 
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
@@ -316,3 +331,23 @@ nodoDerIzqDer' = NodeT 1 EmptyT EmptyT
 
 -- EJERCICIO 2.2 (Expresiones Aritméticas):
 
+data ExpA = Valor Int
+          | Sum   ExpA ExpA
+          | Prod  ExpA ExpA
+          | Neg   ExpA
+
+
+-- EJERCICIO 2.1
+
+-- eval :: ExpA -> Int
+-- -- PRECOND: Ninguna.
+-- eval EmptyT                  = 
+-- eval mirrorT (NodeT n t1 t2) =
+
+
+-- EJERCICIO 2.2
+
+-- simplificar :: ExpA -> ExpA
+-- -- PRECOND: Ninguna.
+-- simplificar EmptyT                  = 
+-- simplificar mirrorT (NodeT n t1 t2) =
