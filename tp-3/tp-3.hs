@@ -146,6 +146,102 @@ data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
     deriving Show
 
 
+-- EJERCICIO 2.1
+
+sumarT :: Tree Int -> Int
+-- PRECOND: Ninguna.
+sumarT EmptyT          = 0 
+sumarT (NodeT n t1 t2) = n + sumarT t1 + sumarT t2
+
+
+-- EJERCICIO 2.2
+
+sizeT :: Tree a -> Int
+-- PRECOND: Ninguna.
+sizeT EmptyT          = 0
+sizeT (NodeT n t1 t2) = 1 + sizeT t1 + sizeT t2
+
+
+-- EJERCICIO 2.3
+
+mapDobleT :: Tree Int -> Tree Int
+-- PRECOND: Ninguna.
+mapDobleT EmptyT          = EmptyT
+mapDobleT (NodeT n t1 t2) = NodeT (n*2) (mapDobleT t1) (mapDobleT t2)
+
+
+-- EJERCICIO 2.4
+
+perteneceT :: Eq a => a -> Tree a -> Bool
+-- PRECOND: Ninguna.
+perteneceT x EmptyT          = False
+perteneceT x (NodeT n t1 t2) = x == n || perteneceT x t1 || perteneceT x t2 
+
+
+-- EJERCICIO 2.5
+
+aparicionesT :: Eq a => a -> Tree a -> Int
+-- PRECOND: Ninguna.
+aparicionesT x EmptyT          = 0 
+aparicionesT x (NodeT n t1 t2) = unoSi (x == n) + aparicionesT x t1 + aparicionesT x t2
+
+
+-- EJERCICIO 2.6
+
+leaves :: Tree a -> [a]
+-- PRECOND: Ninguna.
+leaves EmptyT          = []
+leaves (NodeT n t1 t2) = listaDeObjetoSiEsHoja n t1 t2 ++ leaves t1 ++ leaves t2
+
+listaDeObjetoSiEsHoja :: a -> Tree a -> Tree a -> [a]
+-- PRECOND: Ninguna.
+listaDeObjetoSiEsHoja x EmptyT EmptyT = [x]
+listaDeObjetoSiEsHoja x _      _      = []
+
+
+-- EJERCICIO 2.7
+
+heightT :: Tree a -> Int
+-- PRECOND: Ninguna.
+heightT EmptyT                  = 0
+heightT (NodeT n EmptyT EmptyT) = 1
+heightT (NodeT n t1 t2)         = max (profundidadDeRama t1) (profundidadDeRama t2)
+
+profundidadDeRama :: Tree a -> Int
+-- PRECOND: Ninguna.
+profundidadDeRama EmptyT          = 0
+profundidadDeRama (NodeT n t1 t2) = 1 + max (profundidadDeRama t1) (profundidadDeRama t2)
+
+
+-- EJERCICIO 2.8
+
+
+
+-- EJERCICIO 2.9
+
+-- In order quiere decir de izquierda a derecha.
+
+-- EJERCICIO 2.10
+
+
+
+
+-- EJERCICIO 2.11
+
+
+
+
+-- EJERCICIO 2.12
+
+
+-- case d of 
+-- Izq -> haces algo
+-- Der -> haces algo
+
+
+-- EJERCICIO 2.13
+
+
 
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
@@ -156,21 +252,29 @@ arbolStr :: Tree String
 arbolStr = NodeT "E" nodoIzq nodoDer
 
 
+nodoIzq :: Tree String
+nodoIzq = NodeT "A" nodoIzqIzq nodoIzqDer
+
+nodoIzqIzq :: Tree String
+nodoIzqIzq = NodeT "M" EmptyT EmptyT
+
+nodoIzqDer :: Tree String
+nodoIzqDer = NodeT "O" EmptyT EmptyT
+
+
 nodoDer :: Tree String
 nodoDer = NodeT "M" EmptyT nodoDerIzq
 
 nodoDerIzq :: Tree String
 nodoDerIzq = NodeT "O" EmptyT EmptyT
 
-
-nodoIzq :: Tree String
-nodoIzq = NodeT "A" nodoIzqIzq nodoIzqDer
-
-nodoIzqDer :: Tree String
-nodoIzqDer = NodeT "O" EmptyT EmptyT
-
-nodoIzqIzq :: Tree String
-nodoIzqIzq = NodeT "M" EmptyT EmptyT
+{-
+           "E"
+         /    \
+       "M"    "A"
+        \     / \
+        "O" "O" "M"
+-}
 
 -------------------------------------------------------------------------------------------------------
 
@@ -178,21 +282,34 @@ arbolInt :: Tree Int
 arbolInt = NodeT 11 nodoIzq' nodoDer'
 
 
-nodoDer' :: Tree Int
-nodoDer' = NodeT 3 EmptyT nodoDerIzq'
-
-nodoDerIzq' :: Tree Int
-nodoDerIzq' = NodeT 0 EmptyT EmptyT
-
-
 nodoIzq' :: Tree Int
 nodoIzq' = NodeT 7 nodoIzqIzq' nodoIzqDer'
+
+nodoIzqIzq' :: Tree Int
+nodoIzqIzq' = NodeT 2 EmptyT EmptyT
 
 nodoIzqDer' :: Tree Int
 nodoIzqDer' = NodeT 5 EmptyT EmptyT
 
-nodoIzqIzq' :: Tree Int
-nodoIzqIzq' = NodeT 2 EmptyT EmptyT
+
+nodoDer' :: Tree Int
+nodoDer' = NodeT 3 EmptyT nodoDerIzq'
+
+nodoDerIzq' :: Tree Int
+nodoDerIzq' = NodeT 0 EmptyT nodoDerIzqDer'
+
+nodoDerIzqDer' :: Tree Int
+nodoDerIzqDer' = NodeT 1 EmptyT EmptyT
+
+{-
+           11
+         /    \
+        3      7
+        \     / \
+         0   5   2
+         /
+        1
+-}
 
 -------------------------------------------------------------------------------------------------------
 
