@@ -424,11 +424,10 @@ losDevSenior (ConsEmpresa r) ps = longitud (seniorsDeQueTrabajanEn r ps)
 
 seniorsDeQueTrabajanEn :: [Rol] -> [Proyecto] -> [Rol]
 -- PRECOND: Ninguna.
-seniorsDeQueTrabajanEn []     _      = []
-seniorsDeQueTrabajanEn _      []     = []
-seniorsDeQueTrabajanEn (r:rs) (p:ps) = if esSenior r && perteneceAProyecto r p
-                                          then r : seniorsDeQueTrabajanEn rs ps
-                                          else seniorsDeQueTrabajanEn rs ps
+seniorsDeQueTrabajanEn []     ps = []
+seniorsDeQueTrabajanEn (r:rs) ps = if esSenior r && perteneceAAlgunProyectoDe r ps
+                                      then r : seniorsDeQueTrabajanEn rs ps
+                                      else seniorsDeQueTrabajanEn rs ps
 
 esSenior :: Rol -> Bool
 -- PRECOND: Ninguna.
@@ -436,9 +435,10 @@ esSenior (Developer  Senior _) = True
 esSenior (Management Senior _) = True
 esSenior _                     = False
 
-perteneceAProyecto :: Rol -> Proyecto -> Bool
+perteneceAAlgunProyectoDe :: Rol -> [Proyecto] -> Bool
 -- PRECOND: Ninguna.
-perteneceAProyecto r p = esElMismoProyecto (proyectoDelRol r) p
+perteneceAAlgunProyectoDe r []     = False
+perteneceAAlgunProyectoDe r (p:ps) = esElMismoProyecto (proyectoDelRol r) p || perteneceAAlgunProyectoDe r ps
 
 
 
