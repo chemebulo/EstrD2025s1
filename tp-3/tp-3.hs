@@ -159,7 +159,7 @@ sumarT (NodeT n n1 n2) = n + sumarT n1 + sumarT n2
 sizeT :: Tree a -> Int
 -- PRECOND: Ninguna.
 sizeT EmptyT          = 0
-sizeT (NodeT n t1 t2) = 1 + sizeT t1 + sizeT t2
+sizeT (NodeT x t1 t2) = 1 + sizeT t1 + sizeT t2
 
 
 -- EJERCICIO 2.3
@@ -175,7 +175,7 @@ mapDobleT (NodeT n n1 n2) = NodeT (n*2) (mapDobleT n1) (mapDobleT n2)
 perteneceT :: Eq a => a -> Tree a -> Bool
 -- PRECOND: Ninguna.
 perteneceT x EmptyT          = False
-perteneceT x (NodeT n t1 t2) = x == n || perteneceT x t1 || perteneceT x t2
+perteneceT x (NodeT y t1 t2) = x == y || perteneceT x t1 || perteneceT x t2
 
 
 -- EJERCICIO 2.5
@@ -183,7 +183,7 @@ perteneceT x (NodeT n t1 t2) = x == n || perteneceT x t1 || perteneceT x t2
 aparicionesT :: Eq a => a -> Tree a -> Int
 -- PRECOND: Ninguna.
 aparicionesT x EmptyT          = 0
-aparicionesT x (NodeT n t1 t2) = unoSi (x == n) + aparicionesT x t1 + aparicionesT x t2
+aparicionesT x (NodeT y t1 t2) = unoSi (x == y) + aparicionesT x t1 + aparicionesT x t2
 
 
 -- EJERCICIO 2.6
@@ -191,12 +191,17 @@ aparicionesT x (NodeT n t1 t2) = unoSi (x == n) + aparicionesT x t1 + aparicione
 leaves :: Tree a -> [a]
 -- PRECOND: Ninguna.
 leaves EmptyT          = []
-leaves (NodeT n t1 t2) = singularDeObjetoSiEsHoja n t1 t2 ++ leaves t1 ++ leaves t2
+leaves (NodeT x t1 t2) = singularSi x (esHoja t1 t2)  ++ leaves t1 ++ leaves t2
 
-singularDeObjetoSiEsHoja :: a -> Tree a -> Tree a -> [a]
+singularSi :: a -> Bool -> [a]
 -- PRECOND: Ninguna.
-singularDeObjetoSiEsHoja x EmptyT EmptyT = [x]
-singularDeObjetoSiEsHoja x _      _      = []
+singularSi x True  = [x]
+singularSi x False = []
+
+esHoja :: Tree a -> Tree a -> Bool
+-- PRECOND: Ninguna.
+esHoja EmptyT EmptyT = True
+esHoja _      _      = False
 
 
 -- EJERCICIO 2.7
@@ -204,7 +209,7 @@ singularDeObjetoSiEsHoja x _      _      = []
 heightT :: Tree a -> Int
 -- PRECOND: Ninguna.
 heightT EmptyT          = 0
-heightT (NodeT n t1 t2) = 1 + max (heightT t1) (heightT t2)
+heightT (NodeT x t1 t2) = 1 + max (heightT t1) (heightT t2)
 
 
 -- EJERCICIO 2.8
@@ -212,51 +217,66 @@ heightT (NodeT n t1 t2) = 1 + max (heightT t1) (heightT t2)
 mirrorT :: Tree a -> Tree a
 -- PRECOND: Niguna.
 mirrorT EmptyT          = EmptyT
-mirrorT (NodeT n t1 t2) = NodeT n (mirrorT t2) (mirrorT t1)
+mirrorT (NodeT x t1 t2) = NodeT x (mirrorT t2) (mirrorT t1)
 
 
 -- EJERCICIO 2.9
 
--- toList :: Tree a -> [a]
--- -- PRECOND: Ninguna.
--- toList EmptyT                  = 
--- toList mirrorT (NodeT n t1 t2) = []
+toList :: Tree a -> [a]
+-- PRECOND: Ninguna.
+toList EmptyT          = []
+toList (NodeT x t1 t2) = toList t1 ++ [x] ++ toList t2
 
 
 -- EJERCICIO 2.10
 
--- levelN :: Int -> Tree a -> [a]
--- -- PRECOND: Ninguna.
--- levelN EmptyT                  = 
--- levelN mirrorT (NodeT n t1 t2) =
+levelN :: Int -> Tree a -> [a]
+-- PRECOND: Ninguna.
+levelN _ EmptyT          = []
+levelN 0 (NodeT x t1 t2) = [x]
+levelN n (NodeT x t1 t2) = levelN (n-1) t1 ++ levelN (n-1) t2
 
 
 -- EJERCICIO 2.11
 
--- listPerLevel :: Tree a -> [[a]]
--- -- PRECOND: Ninguna.
--- listPerLevel EmptyT                  = 
--- listPerLevel mirrorT (NodeT n t1 t2) =
+listPerLevel :: Tree a -> [[a]]
+-- PRECOND: Ninguna.
+listPerLevel EmptyT          = []
+listPerLevel (NodeT x t1 t2) = [x] : unirNivelesDe (listPerLevel t1) (listPerLevel t2)
+
+unirNivelesDe :: [[a]] -> [[a]] -> [[a]]
+-- PRECOND: Ninguna.
+unirNivelesDe xs     []      = xs
+unirNivelesDe []     ys      = ys
+unirNivelesDe (x:xs) (y:ys)  = (x ++ y) : unirNivelesDe xs ys
 
 
 -- EJERCICIO 2.12
 
--- ramaMasLarga :: Tree a -> [a]
--- -- PRECOND: Ninguna.
--- ramaMasLarga EmptyT                  = 
--- ramaMasLarga mirrorT (NodeT n t1 t2) =
+ramaMasLarga :: Tree a -> [a]
+-- PRECOND: Ninguna.
+ramaMasLarga EmptyT          = []
+ramaMasLarga (NodeT x t1 t2) = x : ramaMasLargaEntre (ramaMasLarga t1) (ramaMasLarga t2)
 
-        -- case d of 
-        -- Izq -> valorEn ds t1
-        -- Der -> valorEn ds t2
+ramaMasLargaEntre :: [a] -> [a] -> [a]
+-- PRECOND: Ninguna.
+ramaMasLargaEntre xs ys = if length xs > length  ys
+                             then xs
+                             else ys
 
 
 -- EJERCICIO 2.13
 
--- todosLosCaminos :: Tree a -> [[a]]
--- -- PRECOND: Ninguna.
--- todosLosCaminos EmptyT                  = 
--- todosLosCaminos mirrorT (NodeT n t1 t2) =
+todosLosCaminos :: Tree a -> [[a]]
+-- PRECOND: Ninguna.
+todosLosCaminos EmptyT          = [] 
+todosLosCaminos (NodeT x t1 t2) = [x] : caminosHastaLaRaiz (todosLosCaminos t1) (todosLosCaminos t2) 
+
+caminosHastaLaRaiz :: [[a]] -> [[a]] -> [[a]]
+-- PRECOND: Ninguna.
+caminosHastaLaRaiz xs     []     = xs
+caminosHastaLaRaiz []     ys     = ys
+caminosHastaLaRaiz (x:xs) (y:ys) = x .. y : caminosHastaLaRaiz xs ys
 
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
@@ -341,13 +361,13 @@ data ExpA = Valor Int
 
 -- eval :: ExpA -> Int
 -- -- PRECOND: Ninguna.
--- eval EmptyT                  = 
--- eval mirrorT (NodeT n t1 t2) =
+-- eval EmptyT          = 
+-- eval (NodeT n t1 t2) =
 
 
 -- EJERCICIO 2.2
 
 -- simplificar :: ExpA -> ExpA
 -- -- PRECOND: Ninguna.
--- simplificar EmptyT                  = 
--- simplificar mirrorT (NodeT n t1 t2) =
+-- simplificar EmptyT          = 
+-- simplificar (NodeT n t1 t2) =
