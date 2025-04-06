@@ -269,14 +269,13 @@ ramaMasLargaEntre xs ys = if length xs > length  ys
 
 todosLosCaminos :: Tree a -> [[a]]
 -- PRECOND: Ninguna.
-todosLosCaminos EmptyT          = [] 
-todosLosCaminos (NodeT x t1 t2) = [x] : caminosHastaLaRaiz (todosLosCaminos t1) (todosLosCaminos t2) 
+todosLosCaminos EmptyT          = []
+todosLosCaminos (NodeT x t1 t2) = [x] : consACadaDe x (todosLosCaminos t1 ++ todosLosCaminos t2)
 
-caminosHastaLaRaiz :: [[a]] -> [[a]] -> [[a]]
+consACadaDe :: a -> [[a]] -> [[a]]
 -- PRECOND: Ninguna.
-caminosHastaLaRaiz xs     []     = xs
-caminosHastaLaRaiz []     ys     = ys
-caminosHastaLaRaiz (x:xs) (y:ys) = x .. y : caminosHastaLaRaiz xs ys
+consACadaDe x []     = []
+consACadaDe x (y:ys) = (x:y) : consACadaDe x ys
 
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
@@ -312,7 +311,6 @@ nodoDerIzq = NodeT "O" EmptyT EmptyT
 -}
 
 -------------------------------------------------------------------------------------------------------
-
 arbolInt :: Tree Int
 arbolInt = NodeT 11 nodoIzq' nodoDer'
 
@@ -359,15 +357,51 @@ data ExpA = Valor Int
 
 -- EJERCICIO 2.1
 
--- eval :: ExpA -> Int
--- -- PRECOND: Ninguna.
--- eval EmptyT          = 
--- eval (NodeT n t1 t2) =
+eval :: ExpA -> Int
+-- PRECOND: Ninguna.
+eval (Valor n)     = n
+eval (Sum   e1 e2) = eval e1 + eval e2
+eval (Prod  e1 e2) = eval e1 * eval e2
+eval (Neg   e)     = eval e * (-1)
 
 
 -- EJERCICIO 2.2
 
--- simplificar :: ExpA -> ExpA
--- -- PRECOND: Ninguna.
--- simplificar EmptyT          = 
--- simplificar (NodeT n t1 t2) =
+simplificar :: ExpA -> ExpA
+simplificar (Valor e)     = Valor e
+simplificar (Sum   e1 e2) = simplificarSuma (simplificar e1) (simplificar e2) 
+simplificar (Prod  e1 e2) = simplificarMultiplicacion (simplificar e1) (simplificar e2)
+simplificar (Neg   e)     = simplificarNegativo (simplificar e)
+
+simplificarSuma :: ExpA -> ExpA -> ExpA
+-- PRECOND: Ninguna.
+simplificarSuma (Valor 0) e2        = e2
+simplificarSuma e1        (Valor 0) = e1
+simplificarSuma exp1      exp2      = Sum exp1 exp2
+
+simplificarMultiplicacion :: ExpA -> ExpA -> ExpA
+-- PRECOND: Ninguna.
+simplificarMultiplicacion (Valor 0) e2        = Valor 0
+simplificarMultiplicacion e1        (Valor 0) = Valor 0
+simplificarMultiplicacion e1        (Valor 1) = e1
+simplificarMultiplicacion (Valor 1) e2        = e2
+simplificarMultiplicacion e1        e2        = Prod e1 e2
+
+simplificarNegativo :: ExpA -> ExpA
+-- PRECOND: Ninguna.
+simplificarNegativo (Neg e) = e
+simplificarNegativo exp     = Neg exp
+
+
+----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
+
+expresion1 :: ExpA
+expresion1 = Valor 10
+
+expresion2 :: ExpA
+expresion2 = Prod (Neg (Sum (Valor 10) (Valor 20))) (Neg (Valor 10)) -- Resultado: 300
+
+expresion3 :: ExpA
+expresion3 = Sum (Prod (Sum (Valor 15) (Valor 10)) (Neg (Valor 2))) (Valor 5) -- Resultado: -45
+
+-------------------------------------------------------------------------------------------------------
