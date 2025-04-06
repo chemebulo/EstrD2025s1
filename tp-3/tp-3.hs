@@ -353,7 +353,7 @@ data ExpA = Valor Int
           | Sum   ExpA ExpA
           | Prod  ExpA ExpA
           | Neg   ExpA
-
+    deriving Show
 
 -- EJERCICIO 2.1
 
@@ -402,6 +402,6 @@ expresion2 :: ExpA
 expresion2 = Prod (Neg (Sum (Valor 10) (Valor 20))) (Neg (Valor 10)) -- Resultado: 300
 
 expresion3 :: ExpA
-expresion3 = Sum (Prod (Sum (Valor 15) (Valor 10)) (Neg (Valor 2))) (Valor 5) -- Resultado: -45
+expresion3 = Sum (Prod (Sum (Valor 15) (Valor 10)) (Neg (Neg (Valor 2)))) (Valor 5) -- Resultado: -45
 
 -------------------------------------------------------------------------------------------------------
