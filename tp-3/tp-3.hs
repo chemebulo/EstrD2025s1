@@ -246,9 +246,9 @@ listPerLevel (NodeT x t1 t2) = [x] : unirNivelesDe (listPerLevel t1) (listPerLev
 
 unirNivelesDe :: [[a]] -> [[a]] -> [[a]]
 -- PRECOND: Ninguna.
-unirNivelesDe xs     []      = xs
-unirNivelesDe []     ys      = ys
-unirNivelesDe (x:xs) (y:ys)  = (x ++ y) : unirNivelesDe xs ys
+unirNivelesDe xss     []      = xss
+unirNivelesDe []      yss     = yss
+unirNivelesDe (xs:xss) (ys:yss)  = (xs ++ ys) : unirNivelesDe xss yss
 
 
 -- EJERCICIO 2.12
@@ -275,7 +275,7 @@ todosLosCaminos (NodeT x t1 t2) = [x] : consACadaDe x (todosLosCaminos t1 ++ tod
 consACadaDe :: a -> [[a]] -> [[a]]
 -- PRECOND: Ninguna.
 consACadaDe x []     = []
-consACadaDe x (y:ys) = (x:y) : consACadaDe x ys
+consACadaDe x (ys:yss) = (x:ys) : consACadaDe x yss
 
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
