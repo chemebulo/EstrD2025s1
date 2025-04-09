@@ -2,8 +2,8 @@
 
 data Pizza = Prepizza
            | Capa Ingrediente Pizza
-    deriving Show    
-    
+    deriving Show
+
 data Ingrediente = Salsa
                  | Queso
                  | Jamon
@@ -12,44 +12,92 @@ data Ingrediente = Salsa
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
 
+pizza0 :: Pizza
+pizza0 = Prepizza
 
+pizza1 :: Pizza
+pizza1 = Capa (Aceitunas 5) (Capa Queso (Capa Salsa Prepizza))
+
+pizza2 :: Pizza
+pizza2 =  Capa (Aceitunas 10) (Capa Jamon (Capa Queso (Capa Salsa Prepizza)))
 
 -------------------------------------------------------------------------------------------------------
 
 -- EJERCICIO 1.1
 
 cantidadDeCapas :: Pizza -> Int
-cantidadDeCapas = undefined
+-- PRECOND: Ninguna.
+cantidadDeCapas Prepizza   = 0
+cantidadDeCapas (Capa _ p) = 1 + cantidadDeCapas p
 
 
 -- EJERCICIO 1.2
 
 armarPizza :: [Ingrediente] -> Pizza
-armarPizza = undefined
+-- PRECOND: Ninguna.
+armarPizza []     = Prepizza
+armarPizza (i:is) = Capa i (armarPizza is)
 
 
 -- EJERCICIO 1.3
 
 sacarJamon :: Pizza -> Pizza
-sacarJamon = undefined
+-- PRECOND: Ninguna.
+sacarJamon Prepizza   = Prepizza
+sacarJamon (Capa i p) = if esJamon i
+                           then sacarJamon p
+                           else Capa i (sacarJamon p)
+
+esJamon :: Ingrediente -> Bool
+-- PRECOND: Ninguna.
+esJamon Jamon = True
+esJamon _     = False
 
 
 -- EJERCICIO 1.4
 
 tieneSoloSalsaYQueso :: Pizza -> Bool
-tieneSoloSalsaYQueso = undefined
+-- PRECOND: Ninguna.
+tieneSoloSalsaYQueso Prepizza   = True
+tieneSoloSalsaYQueso (Capa i p) = (esIngredienteIgualQue Salsa i && esSoloCapaDeEn Queso p) || (esIngredienteIgualQue Queso i && esSoloCapaDeEn Salsa p)
+
+esIngredienteIgualQue :: Ingrediente -> Ingrediente -> Bool
+-- PRECOND: Ninguna.
+esIngredienteIgualQue Queso Queso = True
+esIngredienteIgualQue Salsa Salsa = True
+esIngredienteIgualQue Jamon Jamon = True
+esIngredienteIgualQue _     _     = False
+
+esSoloCapaDeEn :: Ingrediente -> Pizza -> Bool
+-- PRECOND: Ninguna.
+esSoloCapaDeEn ing Prepizza   = False
+esSoloCapaDeEn ing (Capa i p) = esIngredienteIgualQue ing i && esPrepizza p
+
+esPrepizza :: Pizza -> Bool
+-- PRECOND: Ninguna.
+esPrepizza Prepizza = True
+esPrepizza _        = False
 
 
 -- EJERCICIO 1.5
 
 duplicarAceitunas :: Pizza -> Pizza
-duplicarAceitunas = undefined
+-- PRECOND: Ninguna.
+duplicarAceitunas Prepizza   = Prepizza
+duplicarAceitunas (Capa i p) = Capa (duplicarSiSonAceitunas i) (duplicarAceitunas p)
+
+duplicarSiSonAceitunas :: Ingrediente -> Ingrediente
+-- PRECOND: Ninguna.
+duplicarSiSonAceitunas (Aceitunas n) = Aceitunas (n*2)
+duplicarSiSonAceitunas i             = i
 
 
 -- EJERCICIO 1.6
 
 cantCapasPorPizza :: [Pizza] -> [(Int, Pizza)]
-cantCapasPorPizza = undefined
+-- PRECOND: Ninguna.
+cantCapasPorPizza []     = []
+cantCapasPorPizza (p:ps) = (cantidadDeCapas p, p) : cantCapasPorPizza ps
 
 
 -- PUNTO 2 (Mapa de Tesoros (con bifucaciones)):
@@ -76,36 +124,42 @@ data Mapa = Fin Cofre
 -- EJERCICIO 2.1
 
 hayTesoro :: Mapa -> Bool
+-- PRECOND: Ninguna.
 hayTesoro = undefined
 
 
 -- EJERCICIO 2.2
 
 hayTesoroEn :: [Dir] -> Mapa -> Bool
+-- PRECOND: Ninguna.
 hayTesoroEn = undefined
 
 
 -- EJERCICIO 2.3
 
 caminoAlTesoro :: Mapa -> [Dir]
+-- PRECOND: Ninguna.
 caminoAlTesoro = undefined
 
 
 -- EJERCICIO 2.4
 
 caminoDeLaRamaMasLarga :: Mapa -> [Dir]
+-- PRECOND: Ninguna.
 caminoDeLaRamaMasLarga = undefined
 
 
 -- EJERCICIO 2.5
 
 tesorosPorNivel :: Mapa -> [[Objeto]]
+-- PRECOND: Ninguna.
 tesorosPorNivel = undefined
 
 
 -- EJERCICIO 2.6
 
 todosLosCaminos :: Mapa -> [[Dir]]
+-- PRECOND: Ninguna.
 todosLosCaminos = undefined
 
 
@@ -139,43 +193,50 @@ data Nave = N (Tree Sector)
 -- EJERCICIO 3.1
 
 sectores :: Nave -> [SectorId]
+-- PRECOND: Ninguna.
 sectores = undefined
 
 
 -- EJERCICIO 3.2
 
 poderDePropulsion :: Nave -> Int
+-- PRECOND: Ninguna.
 poderDePropulsion = undefined
 
 
 -- EJERCICIO 3.3
 
 barriles :: Nave -> [Barril]
+-- PRECOND: Ninguna.
 barriles = undefined
 
 
 -- EJERCICIO 3.4
 
 agregarASector :: [Componente] -> SectorId -> Nave -> Nave
+-- PRECOND: Ninguna.
 agregarASector = undefined
 
 
 -- EJERCICIO 3.5
 
 asignarTripulanteA :: Tripulante -> [SectorId] -> Nave -> Nave
+-- PRECOND: Ninguna.
 asignarTripulanteA = undefined
 
 
 -- EJERCICIO 3.6
 
 sectoresAsignados :: Tripulante -> Nave -> [SectorId]
+-- PRECOND: Ninguna.
 sectoresAsignados = undefined
 
 
 -- EJERCICIO 3.7
 
 tripulantes :: Nave -> [Tripulante]
-tripulantes = undefined 
+-- PRECOND: Ninguna.
+tripulantes = undefined
 
 
 -- PUNTO 4 (Manada de Lobos):
@@ -188,7 +249,7 @@ type Nombre     = String -- nombre de lobo
 
 data Lobo       = Cazador    Nombre [Presa]      Lobo Lobo Lobo
                 | Explorador Nombre [Territorio] Lobo Lobo
-                | Cría       Nombre
+                | Cria       Nombre
     deriving Show
 
 data Manada = M Lobo
@@ -208,28 +269,33 @@ data Manada = M Lobo
 -- EJERCICIO 4.2
 
 buenaCaza :: Manada -> Bool
+-- PRECOND: Ninguna.
 buenaCaza = undefined
 
 
 -- EJERCICIO 4.3
 
 elAlfa :: Manada -> (Nombre, Int)
+-- PRECOND: Ninguna.
 elAlfa = undefined
 
 
 -- EJERCICIO 4.4
 
 losQueExploraron :: Territorio -> Manada -> [Nombre]
+-- PRECOND: Ninguna.
 losQueExploraron = undefined
 
 
 -- EJERCICIO 4.5
 
 exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
+-- PRECOND: Ninguna.
 exploradoresPorTerritorio = undefined
 
 
 -- EJERCICIO 4.6
 
 cazadoresSuperioresDe :: Nombre -> Manada -> [Nombre]
+-- PRECOND: Ninguna.
 cazadoresSuperioresDe = undefined
