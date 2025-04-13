@@ -117,7 +117,16 @@ data Mapa = Fin Cofre
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
 
+mapa0 :: Mapa
+mapa0 = Fin (Cofre [Tesoro, Chatarra, Chatarra, Tesoro, Tesoro])
 
+mapa1 :: Mapa
+mapa1 = Bifurcacion (Cofre [Chatarra, Chatarra, Chatarra]) mapa2 mapa0
+
+mapa2 :: Mapa
+mapa2 = Bifurcacion (Cofre [Chatarra, Tesoro]) mapa0 mapa0
+
+-- Gráfico: https://prnt.sc/wf7KOnJ8AGh0
 
 -------------------------------------------------------------------------------------------------------
 
@@ -125,42 +134,117 @@ data Mapa = Fin Cofre
 
 hayTesoro :: Mapa -> Bool
 -- PRECOND: Ninguna.
-hayTesoro = undefined
+hayTesoro (Fin c)               = hayTesoroEnCofre c
+hayTesoro (Bifurcacion c m1 m2) = hayTesoroEnCofre c || hayTesoro m1 || hayTesoro m2
+
+hayTesoroEnCofre :: Cofre -> Bool
+-- PRECOND: Ninguna.
+hayTesoroEnCofre (Cofre o) = hayTesoroEnObjetos o
+
+hayTesoroEnObjetos :: [Objeto] -> Bool
+-- PRECOND: Ninguna.
+hayTesoroEnObjetos []     = False
+hayTesoroEnObjetos (o:os) = esTesoro o || hayTesoroEnObjetos os
+
+esTesoro :: Objeto -> Bool
+-- PRECOND: Ninguna.
+esTesoro Tesoro = True
+esTesoro _      = False
 
 
 -- EJERCICIO 2.2
 
 hayTesoroEn :: [Dir] -> Mapa -> Bool
 -- PRECOND: Ninguna.
-hayTesoroEn = undefined
+hayTesoroEn []     m                     = hayTesoroEnCofreDeMapa m
+hayTesoroEn (d:ds) (Fin c)               = False
+hayTesoroEn (d:ds) (Bifurcacion c m1 m2) = if esIzquierda d
+                                              then hayTesoroEn ds m1
+                                              else hayTesoroEn ds m2
+
+hayTesoroEnCofreDeMapa :: Mapa -> Bool
+-- PRECOND: Ninguna.
+hayTesoroEnCofreDeMapa (Fin c)             = hayTesoroEnCofre c
+hayTesoroEnCofreDeMapa (Bifurcacion c _ _) = hayTesoroEnCofre c
+
+esIzquierda :: Dir -> Bool
+-- PRECOND: Ninguna.
+esIzquierda Izq = True
+esIzquierda Der = False
 
 
 -- EJERCICIO 2.3
 
 caminoAlTesoro :: Mapa -> [Dir]
+-- PRECOND: Existe un tesoro y es único.
+caminoAlTesoro (Fin c)               = []
+caminoAlTesoro (Bifurcacion c m1 m2) = if hayTesoroEnCofre c
+                                          then []
+                                          else direccionAlMapaConTesoro m1 m2 : caminoAlTesoro (caminoConTesoroEntre m1 m2)
+
+direccionAlMapaConTesoro :: Mapa -> Mapa -> Dir
 -- PRECOND: Ninguna.
-caminoAlTesoro = undefined
+direccionAlMapaConTesoro m1 m2 = if hayTesoro m1
+                                    then Izq
+                                    else Der
+
+caminoConTesoroEntre :: Mapa -> Mapa -> Mapa
+-- PRECOND: Ninguna.
+caminoConTesoroEntre m1 m2 = if hayTesoro m1
+                                then m1
+                                else m2
 
 
 -- EJERCICIO 2.4
 
 caminoDeLaRamaMasLarga :: Mapa -> [Dir]
 -- PRECOND: Ninguna.
-caminoDeLaRamaMasLarga = undefined
+caminoDeLaRamaMasLarga (Fin c)               = []
+caminoDeLaRamaMasLarga (Bifurcacion c m1 m2) = if length (caminoDeLaRamaMasLarga m1) > length (caminoDeLaRamaMasLarga m2)
+                                                  then Izq : caminoDeLaRamaMasLarga m1
+                                                  else Der : caminoDeLaRamaMasLarga m2
 
 
 -- EJERCICIO 2.5
 
 tesorosPorNivel :: Mapa -> [[Objeto]]
 -- PRECOND: Ninguna.
-tesorosPorNivel = undefined
+tesorosPorNivel (Fin c)               = [tesorosDeCofre c]
+tesorosPorNivel (Bifurcacion c m1 m2) = tesorosDeCofre c : unirNivelesDe (tesorosPorNivel m1) (tesorosPorNivel m2)
+
+tesorosDeCofre :: Cofre -> [Objeto]
+-- PRECOND: Ninguna.
+tesorosDeCofre (Cofre o) = tesorosDeObjetos o
+
+tesorosDeObjetos :: [Objeto] -> [Objeto]
+-- PRECOND: Ninguna.
+tesorosDeObjetos []     =  []
+tesorosDeObjetos (o:os) = singularSi o (esTesoro o) ++ tesorosDeObjetos os
+
+singularSi :: a -> Bool -> [a]
+-- PRECOND: Ninguna.
+singularSi x True  = [x]
+singularSi x False = []
+
+unirNivelesDe :: [[a]] -> [[a]] -> [[a]]
+-- PRECOND: Ninguna.
+unirNivelesDe []        ys       = ys
+unirNivelesDe xs        []       = xs
+unirNivelesDe (xs:xss)  (ys:yss) = (xs ++ ys) : unirNivelesDe xss yss
 
 
 -- EJERCICIO 2.6
 
 todosLosCaminos :: Mapa -> [[Dir]]
 -- PRECOND: Ninguna.
-todosLosCaminos = undefined
+todosLosCaminos (Fin c)               = []
+todosLosCaminos (Bifurcacion _ m1 m2) = [Izq] : consACadaDe Izq (todosLosCaminos m1) ++
+                                        [Der] : consACadaDe Der (todosLosCaminos m2)
+
+consACadaDe :: a -> [[a]] -> [[a]]
+-- PRECOND: Ninguna.
+consACadaDe x []       = []
+consACadaDe x (ys:yss) = (x:ys) : consACadaDe x yss
 
 
 -- PUNTO 3 (Nave Espacial):
@@ -193,7 +277,7 @@ data Nave = N (Tree Sector)
 -- EJERCICIO 3.1
 
 sectores :: Nave -> [SectorId]
--- PRECOND: Ninguna.
+-- PRECOND: Devuelve todos los sectores de la nave.
 sectores = undefined
 
 
