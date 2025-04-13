@@ -274,7 +274,7 @@ todosLosCaminos (NodeT x t1 t2) = [x] : consACadaDe x (todosLosCaminos t1 ++ tod
 
 consACadaDe :: a -> [[a]] -> [[a]]
 -- PRECOND: Ninguna.
-consACadaDe x []     = []
+consACadaDe x []       = []
 consACadaDe x (ys:yss) = (x:ys) : consACadaDe x yss
 
 
