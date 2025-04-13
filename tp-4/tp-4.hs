@@ -19,7 +19,7 @@ pizza1 :: Pizza
 pizza1 = Capa (Aceitunas 5) (Capa Queso (Capa Salsa Prepizza))
 
 pizza2 :: Pizza
-pizza2 =  Capa (Aceitunas 10) (Capa Jamon (Capa Queso (Capa Salsa Prepizza)))
+pizza2 = Capa (Aceitunas 10) (Capa Jamon (Capa Queso (Capa Salsa Prepizza)))
 
 -------------------------------------------------------------------------------------------------------
 
@@ -218,7 +218,7 @@ tesorosDeCofre (Cofre o) = tesorosDeObjetos o
 
 tesorosDeObjetos :: [Objeto] -> [Objeto]
 -- PRECOND: Ninguna.
-tesorosDeObjetos []     =  []
+tesorosDeObjetos []     = []
 tesorosDeObjetos (o:os) = singularSi o (esTesoro o) ++ tesorosDeObjetos os
 
 singularSi :: a -> Bool -> [a]
@@ -268,59 +268,191 @@ data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
 data Nave = N (Tree Sector)
     deriving Show
 
------------------------------------------ FUNCIONES DE PRUEBA -----------------------------------------
+-------------------------------------------------------- FUNCIONES DE PRUEBA ---------------------------------------------------
 
+nave1 :: Nave
+nave1 = N (NodeT (S "a920" [LanzaTorpedos, (Almacen [Torpedo, Oxigeno])] ["jose", "manuel", "javier"])
+              (NodeT (S "34b0" [(Almacen [Torpedo, Comida, Comida]), (Motor 98)] ["javier", "ricardo"]) EmptyT EmptyT)
+              (NodeT (S "890ab" [(Almacen [Combustible, Comida]), (Motor 281)] ["emilia", "javier", "martina"]) EmptyT EmptyT))
 
-
--------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
 
 -- EJERCICIO 3.1
 
 sectores :: Nave -> [SectorId]
--- PRECOND: Devuelve todos los sectores de la nave.
-sectores = undefined
+-- PRECOND: Ninguna.
+sectores (N ts) = sectoresDeTS ts
+
+sectoresDeTS :: Tree Sector -> [SectorId]
+-- PRECOND: Ninguna.
+sectoresDeTS EmptyT            = []
+sectoresDeTS (NodeT s ts1 ts2) = sectorIdDe s : sectoresDeTS ts1 ++ sectoresDeTS ts2
+
+sectorIdDe :: Sector -> SectorId
+-- PRECOND: Ninguna.
+sectorIdDe (S id _ _) = id
 
 
 -- EJERCICIO 3.2
 
 poderDePropulsion :: Nave -> Int
 -- PRECOND: Ninguna.
-poderDePropulsion = undefined
+poderDePropulsion (N ts) = propulsionDeTS ts
+
+propulsionDeTS :: Tree Sector -> Int
+-- PRECOND: Ninguna.
+propulsionDeTS EmptyT            = 0
+propulsionDeTS (NodeT s ts1 ts2) = propulsionDeS s + propulsionDeTS ts1 + propulsionDeTS ts2
+
+propulsionDeS :: Sector -> Int
+-- PRECOND: Ninguna.
+propulsionDeS (S sid comp trip) = propulsionDeComp comp
+
+propulsionDeComp :: [Componente] -> Int
+-- PRECOND: Ninguna.
+propulsionDeComp []     = 0
+propulsionDeComp (c:cs) = propulsionDeC c + propulsionDeComp cs
+
+propulsionDeC :: Componente -> Int
+-- PRECOND: Ninguna.
+propulsionDeC (Motor n) = n
+propulsionDeC _         = 0
 
 
 -- EJERCICIO 3.3
 
 barriles :: Nave -> [Barril]
 -- PRECOND: Ninguna.
-barriles = undefined
+barriles (N ts) = barrilesDeTS ts
+
+barrilesDeTS :: Tree Sector -> [Barril]
+-- PRECOND: Ninguna.
+barrilesDeTS EmptyT            = []
+barrilesDeTS (NodeT s ts1 ts2) = barrilesDeS s ++ barrilesDeTS ts1 ++ barrilesDeTS ts2
+
+barrilesDeS :: Sector -> [Barril]
+-- PRECOND: Ninguna.
+barrilesDeS (S sid comp trip) = barrilesDeComp comp
+
+barrilesDeComp :: [Componente] -> [Barril]
+-- PRECOND: Ninguna.
+barrilesDeComp []     = []
+barrilesDeComp (c:cs) = barrilesDeC c ++ barrilesDeComp cs
+
+barrilesDeC :: Componente -> [Barril]
+-- PRECOND: Ninguna.
+barrilesDeC (Almacen b) = b
+barrilesDeC _           = []
 
 
 -- EJERCICIO 3.4
 
 agregarASector :: [Componente] -> SectorId -> Nave -> Nave
 -- PRECOND: Ninguna.
-agregarASector = undefined
+agregarASector c s (N ts) = N (agregarCompASectorEnNave c s ts)
+
+agregarCompASectorEnNave :: [Componente] -> SectorId -> Tree Sector -> Tree Sector
+-- PRECOND: Ninguna.
+agregarCompASectorEnNave comp sec EmptyT            = EmptyT
+agregarCompASectorEnNave comp sec (NodeT s ts1 ts2) = NodeT (agregarCompSiEsSector comp sec s)
+                                                            (agregarCompASectorEnNave comp sec ts1)
+                                                            (agregarCompASectorEnNave comp sec ts2)
+
+agregarCompSiEsSector :: [Componente] -> SectorId -> Sector -> Sector
+-- PRECOND: Ninguna.
+agregarCompSiEsSector comp sec s = if esMismoSectorId sec s
+                                      then agregarCompASector comp s
+                                      else s
+
+esMismoSectorId :: SectorId -> Sector -> Bool
+-- PRECOND: Ninguna.
+esMismoSectorId sec (S sid comp trip) = sec == sid
+
+agregarCompASector :: [Componente] -> Sector -> Sector
+-- PRECOND: Ninguna.
+agregarCompASector c (S sid comp trip) = S sid (comp ++ c) trip
 
 
 -- EJERCICIO 3.5
 
 asignarTripulanteA :: Tripulante -> [SectorId] -> Nave -> Nave
+-- PRECOND: Todos los ID de la lista existen en la nave.
+asignarTripulanteA t s (N ts) = N (asignarTripulanteATS t s ts)
+
+asignarTripulanteATS :: Tripulante -> [SectorId] -> Tree Sector -> Tree Sector
 -- PRECOND: Ninguna.
-asignarTripulanteA = undefined
+asignarTripulanteATS trip sid EmptyT            = EmptyT
+asignarTripulanteATS trip sid (NodeT s ts1 ts2) = NodeT (agregarTripulanteAlSectorSiEsS trip sid s)
+                                                        (asignarTripulanteATS trip sid ts1)
+                                                        (asignarTripulanteATS trip sid ts2)
+
+agregarTripulanteAlSectorSiEsS :: Tripulante -> [SectorId] -> Sector -> Sector
+-- PRECOND: Ninguna.
+agregarTripulanteAlSectorSiEsS trip sids sec = if estaEnIdsElId sids (idDelSector sec)
+                                                  then agregarTripulanteASector trip sec
+                                                  else sec
+
+estaEnIdsElId :: [SectorId] -> SectorId -> Bool
+-- PRECOND: Ninguna.
+estaEnIdsElId []     sid = False
+estaEnIdsElId (s:ss) sid = s == sid || estaEnIdsElId ss sid
+
+idDelSector :: Sector -> SectorId
+-- PRECOND: Ninguna.
+idDelSector (S sid comp trip) = sid
+
+agregarTripulanteASector :: Tripulante -> Sector -> Sector
+-- PRECOND: Ninguna.
+agregarTripulanteASector t (S sid c ts) = S sid c (t:ts)
 
 
 -- EJERCICIO 3.6
 
 sectoresAsignados :: Tripulante -> Nave -> [SectorId]
 -- PRECOND: Ninguna.
-sectoresAsignados = undefined
+sectoresAsignados t (N ts) = sectoresAsignadosDeT t ts
+
+sectoresAsignadosDeT :: Tripulante -> Tree Sector -> [SectorId]
+-- PRECOND: Ninguna.
+sectoresAsignadosDeT t EmptyT            = []
+sectoresAsignadosDeT t (NodeT s ts1 ts2) = sectorIdSiEstaTripulanteEn t s ++ sectoresAsignadosDeT t ts1 ++ sectoresAsignadosDeT t ts2
+
+sectorIdSiEstaTripulanteEn :: Tripulante -> Sector -> [SectorId]
+-- PRECOND: Ninguna.
+sectorIdSiEstaTripulanteEn t (S sid comp ts) = if estaTripulanteEn t ts
+                                                  then [sid]
+                                                  else []
+
+estaTripulanteEn :: Tripulante -> [Tripulante] -> Bool
+-- PRECOND: Ninguna.
+estaTripulanteEn trip []     = False
+estaTripulanteEn trip (t:ts) = trip == t || estaTripulanteEn trip ts
 
 
 -- EJERCICIO 3.7
 
 tripulantes :: Nave -> [Tripulante]
 -- PRECOND: Ninguna.
-tripulantes = undefined
+tripulantes (N ts) = tripulantesSinRepetidos (tripulantesDeTS ts)
+
+tripulantesDeTS :: Tree Sector -> [Tripulante]
+-- PRECOND: Ninguna.
+tripulantesDeTS EmptyT            = []
+tripulantesDeTS (NodeT s ts1 ts2) = tripulantesDeS s ++ tripulantesDeTS ts1 ++ tripulantesDeTS ts2
+
+tripulantesDeS :: Sector -> [Tripulante]
+-- PRECOND: Ninguna.
+tripulantesDeS (S sid comp trip) = trip
+
+tripulantesSinRepetidos :: [Tripulante] -> [Tripulante]
+tripulantesSinRepetidos []     = []
+tripulantesSinRepetidos (x:xs) = if noSeRepiteEn x xs
+                                    then x : tripulantesSinRepetidos xs
+                                    else tripulantesSinRepetidos xs
+
+noSeRepiteEn :: Eq a => a -> [a] -> Bool
+noSeRepiteEn x []     = True
+noSeRepiteEn x (y:ys) = x/=y && noSeRepiteEn x ys
 
 
 -- PUNTO 4 (Manada de Lobos):
