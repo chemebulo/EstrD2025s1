@@ -473,7 +473,25 @@ data Manada = M Lobo
 
 ----------------------------------------- FUNCIONES DE PRUEBA -----------------------------------------
 
-
+manadaEj :: Manada
+manadaEj = M (Cazador "DienteFiloso" ["Bufalos", "Antilopes"]
+                (Cria "Hopito")
+                (Explorador "Incansable" ["Oeste hasta el rio"]
+                            (Cria "MechonGris")
+                            (Cria "Rabito"))
+                (Cazador "Garras" ["Antilopes", "Ciervos"]
+                    (Explorador "Zarpado" ["Bosque este"]
+                        (Cria "Osado")
+                        (Cazador "Mandibulas" ["Cerdos", "Pavos"]
+                            (Cria "Desgrenado")
+                            (Cria "Malcriado")
+                            (Cazador "TrituraHuesos" ["Conejos"]
+                                (Cria "Peludo")
+                                (Cria "Largo")
+                                (Cria "Menudo"))))
+                    (Cria "Garrita")
+                    (Cria "Manchas"))
+             )
 
 -------------------------------------------------------------------------------------------------------
 
@@ -564,58 +582,75 @@ esTerritorio t1 t2 = t1 == t2
 
 -- EJERCICIO 4.5
 
--- exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
--- -- PRECOND: Ninguna.
--- exploradoresPorTerritorio (M l) = exploradoresPorTerritorioL l
--- 
--- exploradoresPorTerritorioL :: Lobo -> [(Territorio, [Nombre])]
--- -- PRECOND: Ninguna.
--- exploradoresPorTerritorioL (Cria n)                = []
--- exploradoresPorTerritorioL (Explorador n ts l1 l2) = n ... ts ... exploradoresPorTerritorioL l1 ... exploradoresPorTerritorioL l2
--- exploradoresPorTerritorioL (Cazador n ps l1 l2 l3) = n ... ps ... exploradoresPorTerritorioL l1 ... exploradoresPorTerritorioL l2 ... exploradoresPorTerritorioL l3
+exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
+-- PRECOND: Ninguna.
+exploradoresPorTerritorio (M l) = exploradoresPorCadaTerritorio (nombresYTerritoriosL l) []
 
-loberioFeroz :: Manada
-loberioFeroz = M (Cazador "Colmillonazo" ["Despistadeo", "Perezosandra", "Papanatalia"]
-                    (Cria "Chiquilin")
-                    (Explorador "Astutobias" ["Parque Yellowstone", "Rio Mojado"]
-                                (Cria "Enanin") (Explorador "Astutomas" ["Bosque Verdoso", "Rio Azulado"]
-                                                            (Cria "Petisin") (Cazador "Colmillonatan" ["Despistadeo", "Perezosandra", "Papanatalia"]
-                                                                                       (Cria "Chiquilin") (Cria "Chiquilin") (Cria "Chiquilin"))))
-                    (Cria "Chiquitin"))
+nombresYTerritoriosL :: Lobo -> [(Nombre, [Territorio])]
+-- PRECOND: Ninguna.
+nombresYTerritoriosL (Cria n)                = []
+nombresYTerritoriosL (Explorador n ts l1 l2) = (n, ts) : nombresYTerritoriosL l1 ++ nombresYTerritoriosL l2
+nombresYTerritoriosL (Cazador n ps l1 l2 l3) = nombresYTerritoriosL l1 ++ nombresYTerritoriosL l2 ++ nombresYTerritoriosL l3
 
+exploradoresPorCadaTerritorio :: [(Nombre, [Territorio])] -> [(Territorio, [Nombre])] -> [(Territorio, [Nombre])]
+-- PRECOND: Ninguna.
+exploradoresPorCadaTerritorio []     ys = ys
+exploradoresPorCadaTerritorio (x:xs) ys = exploradoresPorCadaTerritorio xs (exploradorVisto (nombreEn x) (territoriosEn x) ys)
 
-manadaEj :: Manada
-manadaEj = M (Cazador "DienteFiloso" ["Búfalos", "Antílopes"]
-                (Cría "Hopito")
-                (Explorador "Incansable" ["Oeste hasta el río"]
-                            (Cría "MechónGris") 
-                            (Cría "Rabito"))
-                (Cazador "Garras" ["Antílopes", "Ciervos"]
-                    (Explorador "Zarpado" ["Bosque este"]
-                        (Cría "Osado")
-                        (Cazador "Mandíbulas" ["Cerdos", "Pavos"]
-                            (Cría "Desgreñado")
-                            (Cría "Malcriado")
-                            (Cazador "TrituraHuesos" ["Conejos"]
-                                (Cría "Peludo")
-                                (Cría "Largo")
-                                (Cría "Menudo")
-                            )
-                        )
-                    )
-                    (Cría "Garrita")
-                    (Cría "Manchas")
-                ))
+nombreEn :: (Nombre, [Territorio]) -> Nombre
+-- PRECOND: Ninguna.
+nombreEn (nom, ters) = nom
+
+territoriosEn :: (Nombre, [Territorio]) -> [Territorio]
+-- PRECOND: Ninguna.
+territoriosEn (nom, ters) = ters
+
+exploradorVisto :: Nombre -> [Territorio] -> [(Territorio, [Nombre])] -> [(Territorio, [Nombre])]
+-- PRECOND: Ninguna.
+exploradorVisto _ []     xs = xs
+exploradorVisto n (t:ts) xs = exploradorVisto n ts (terrritorioVisto n t xs)
+
+terrritorioVisto :: Nombre -> Territorio -> [(Territorio, [Nombre])] -> [(Territorio, [Nombre])]
+-- PRECOND: Ninguna.
+terrritorioVisto n ter []     = [(ter, [n])]
+terrritorioVisto n ter (x:xs) = if ter == territorioEn x
+                                   then (territorioEn x, n : nombresEn x) : xs
+                                   else x : terrritorioVisto n ter xs
+
+territorioEn :: (Territorio, [Nombre]) -> Territorio
+-- PRECOND: Ninguna.
+territorioEn (ter, noms) = ter
+
+nombresEn :: (Territorio, [Nombre]) -> [Nombre]
+-- PRECOND: Ninguna.
+nombresEn (ter, noms) = noms
 
 
 -- EJERCICIO 4.6
 
 cazadoresSuperioresDe :: Nombre -> Manada -> [Nombre]
 -- PRECOND: Hay un lobo con dicho nombre y es único.
-cazadoresSuperioresDe n (M l) = cazadoresSuperioresDeL n l
+cazadoresSuperioresDe n (M l) = cazadoresSuperioresDeEnL n l
 
-cazadoresSuperioresDeL :: Nombre -> Lobo -> [Nombre]
+cazadoresSuperioresDeEnL :: Nombre -> Lobo -> [Nombre]
 -- PRECOND: Ninguna.
-cazadoresSuperioresDeL n (Cria n)                = ... n
-cazadoresSuperioresDeL n (Explorador n ts l1 l2) = ... n ... ts ... cazadoresSuperioresDeL l1 ... cazadoresSuperioresDeL l2
-cazadoresSuperioresDeL n (Cazador n ps l1 l2 l3) = ... n ... ps ... cazadoresSuperioresDeL l1 ... cazadoresSuperioresDeL l2 ... cazadoresSuperioresDeL l3
+cazadoresSuperioresDeEnL nom (Cria n)                = []
+cazadoresSuperioresDeEnL nom (Explorador n ts l1 l2) = cazadoresSuperioresDeEnL nom l1 ++ cazadoresSuperioresDeEnL nom l2
+cazadoresSuperioresDeEnL nom (Cazador n ps l1 l2 l3) = nombreSiTieneComoSubordinadoAEnL n nom l1 ++ cazadoresSuperioresDeEnL nom l1
+                                                    ++ nombreSiTieneComoSubordinadoAEnL n nom l2 ++ cazadoresSuperioresDeEnL nom l2
+                                                    ++ nombreSiTieneComoSubordinadoAEnL n nom l3 ++ cazadoresSuperioresDeEnL nom l3
+
+nombreSiTieneComoSubordinadoAEnL :: Nombre -> Nombre -> Lobo -> [Nombre]
+-- PRECOND: Ninguna.
+nombreSiTieneComoSubordinadoAEnL n1 n2 (Cria n)                = nombreSiEsSinoNil n1 n2 n
+nombreSiTieneComoSubordinadoAEnL n1 n2 (Explorador n ts l1 l2) = nombreSiEsSinoNil n1 n2 n ++ nombreSiTieneComoSubordinadoAEnL n1 n2 l1
+                                                                                           ++ nombreSiTieneComoSubordinadoAEnL n1 n2 l2
+nombreSiTieneComoSubordinadoAEnL n1 n2 (Cazador n ps l1 l2 l3) = nombreSiEsSinoNil n1 n2 n ++ nombreSiTieneComoSubordinadoAEnL n1 n2 l1
+                                                                                           ++ nombreSiTieneComoSubordinadoAEnL n1 n2 l2
+                                                                                           ++ nombreSiTieneComoSubordinadoAEnL n1 n2 l3
+
+nombreSiEsSinoNil :: Nombre -> Nombre -> Nombre -> [Nombre]
+-- PRECOND: Ninguna.
+nombreSiEsSinoNil n1 n2 n3 = if n2 == n3
+                                then [n1]
+                                else []
