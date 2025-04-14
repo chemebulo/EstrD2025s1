@@ -457,11 +457,11 @@ noSeRepiteEn x (y:ys) = x/=y && noSeRepiteEn x ys
 
 -- PUNTO 4 (Manada de Lobos):
 
-type Presa      = String -- nombre de presa
+type Presa      = String -- Nombre de presa
 
-type Territorio = String -- nombre de territorio
+type Territorio = String -- Nombre de territorio
 
-type Nombre     = String -- nombre de lobo
+type Nombre     = String -- Nombre de lobo
 
 data Lobo       = Cazador    Nombre [Presa]      Lobo Lobo Lobo
                 | Explorador Nombre [Territorio] Lobo Lobo
@@ -479,39 +479,143 @@ data Manada = M Lobo
 
 -- EJERCICIO 4.1
 
-
-
+manadaTemible :: Manada
+manadaTemible = M (Cazador "Carlitos" ["Gallina", "Cabra", "Mamut Australiano"]
+                        (Cria "Carlitos JR")
+                        (Explorador "Tadeo" ["La Pampa", "Misiones", "Quilmes"]
+                            (Cria "Zell") (Explorador "Gallardo" ["La Pampa", "Belgrano"]
+                                                (Cria "Borja")
+                                                (Cria "Lanzini")))
+                        (Cria "FabiDeRamos")
+                   )
 
 -- EJERCICIO 4.2
 
 buenaCaza :: Manada -> Bool
 -- PRECOND: Ninguna.
-buenaCaza = undefined
+buenaCaza (M l) = cantidadDeAlimentoDeL l > cantidadDeCriasDeL l
+
+cantidadDeAlimentoDeL :: Lobo -> Int
+-- PRECOND: Ninguna.
+cantidadDeAlimentoDeL (Cria n)                = 0
+cantidadDeAlimentoDeL (Explorador n ts l1 l2) = 0 + cantidadDeAlimentoDeL l1 + cantidadDeAlimentoDeL l2
+cantidadDeAlimentoDeL (Cazador n ps l1 l2 l3) = cantidadDePresasPS ps    + cantidadDeAlimentoDeL l1
+                                              + cantidadDeAlimentoDeL l2 + cantidadDeAlimentoDeL l3
+
+cantidadDePresasPS :: [Presa] -> Int
+-- PRECOND: Ninguna.
+cantidadDePresasPS []     = 0
+cantidadDePresasPS (p:ps) = 1 + cantidadDePresasPS ps
+
+cantidadDeCriasDeL :: Lobo -> Int
+-- PRECOND: Ninguna.
+cantidadDeCriasDeL (Cria n)                = 1
+cantidadDeCriasDeL (Explorador n ts l1 l2) = cantidadDeCriasDeL l1 + cantidadDeCriasDeL l2
+cantidadDeCriasDeL (Cazador n ps l1 l2 l3) = cantidadDeCriasDeL l1 + cantidadDeCriasDeL l2 + cantidadDeCriasDeL l3
 
 
 -- EJERCICIO 4.3
 
 elAlfa :: Manada -> (Nombre, Int)
 -- PRECOND: Ninguna.
-elAlfa = undefined
+elAlfa (M l) = elAlfaDeL l
+
+elAlfaDeL :: Lobo -> (Nombre, Int)
+-- PRECOND: Ninguna.
+elAlfaDeL (Cria n)                = (n, 0)
+elAlfaDeL (Explorador n ts l1 l2) = elAlfaEntre (n, 0) (elAlfaEntre  (elAlfaDeL l1) (elAlfaDeL l2))
+elAlfaDeL (Cazador n ps l1 l2 l3) = elAlfaEntre (elAlfaEntre (n, cantidadDePresasPS ps) (elAlfaDeL l1))
+                                                (elAlfaEntre (elAlfaDeL l2)             (elAlfaDeL l3))
+
+elAlfaEntre :: (Nombre, Int) -> (Nombre, Int) -> (Nombre, Int)
+-- PRECOND: Ninguna.
+elAlfaEntre (nom1, n1) (nom2, n2) = if n1 > n2
+                                       then (nom1, n1)
+                                       else (nom2, n2)
 
 
 -- EJERCICIO 4.4
 
 losQueExploraron :: Territorio -> Manada -> [Nombre]
 -- PRECOND: Ninguna.
-losQueExploraron = undefined
+losQueExploraron t (M l) = losQueExploraronL t l
+
+losQueExploraronL :: Territorio -> Lobo -> [Nombre]
+-- PRECOND: Ninguna.
+losQueExploraronL t (Cria n)                = []
+losQueExploraronL t (Explorador n ts l1 l2) = nombreSiExploroEn n t ts ++ losQueExploraronL t l1 ++ losQueExploraronL t l2
+losQueExploraronL t (Cazador n ps l1 l2 l3) = losQueExploraronL t l1   ++ losQueExploraronL t l2 ++ losQueExploraronL t l3
+
+nombreSiExploroEn :: Nombre -> Territorio -> [Territorio] -> [Nombre]
+-- PRECOND: Ninguna.
+nombreSiExploroEn n t ts = if recorrioTerritorio t ts
+                              then [n]
+                              else []
+
+recorrioTerritorio :: Territorio -> [Territorio] -> Bool
+-- PRECOND: Ninguna.
+recorrioTerritorio ter []     = False
+recorrioTerritorio ter (t:ts) = esTerritorio ter t || recorrioTerritorio ter ts
+
+esTerritorio :: Territorio -> Territorio -> Bool
+-- PRECOND: Ninguna.
+esTerritorio t1 t2 = t1 == t2
 
 
 -- EJERCICIO 4.5
 
-exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
--- PRECOND: Ninguna.
-exploradoresPorTerritorio = undefined
+-- exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
+-- -- PRECOND: Ninguna.
+-- exploradoresPorTerritorio (M l) = exploradoresPorTerritorioL l
+-- 
+-- exploradoresPorTerritorioL :: Lobo -> [(Territorio, [Nombre])]
+-- -- PRECOND: Ninguna.
+-- exploradoresPorTerritorioL (Cria n)                = []
+-- exploradoresPorTerritorioL (Explorador n ts l1 l2) = n ... ts ... exploradoresPorTerritorioL l1 ... exploradoresPorTerritorioL l2
+-- exploradoresPorTerritorioL (Cazador n ps l1 l2 l3) = n ... ps ... exploradoresPorTerritorioL l1 ... exploradoresPorTerritorioL l2 ... exploradoresPorTerritorioL l3
+
+loberioFeroz :: Manada
+loberioFeroz = M (Cazador "Colmillonazo" ["Despistadeo", "Perezosandra", "Papanatalia"]
+                    (Cria "Chiquilin")
+                    (Explorador "Astutobias" ["Parque Yellowstone", "Rio Mojado"]
+                                (Cria "Enanin") (Explorador "Astutomas" ["Bosque Verdoso", "Rio Azulado"]
+                                                            (Cria "Petisin") (Cazador "Colmillonatan" ["Despistadeo", "Perezosandra", "Papanatalia"]
+                                                                                       (Cria "Chiquilin") (Cria "Chiquilin") (Cria "Chiquilin"))))
+                    (Cria "Chiquitin"))
+
+
+manadaEj :: Manada
+manadaEj = M (Cazador "DienteFiloso" ["Búfalos", "Antílopes"]
+                (Cría "Hopito")
+                (Explorador "Incansable" ["Oeste hasta el río"]
+                            (Cría "MechónGris") 
+                            (Cría "Rabito"))
+                (Cazador "Garras" ["Antílopes", "Ciervos"]
+                    (Explorador "Zarpado" ["Bosque este"]
+                        (Cría "Osado")
+                        (Cazador "Mandíbulas" ["Cerdos", "Pavos"]
+                            (Cría "Desgreñado")
+                            (Cría "Malcriado")
+                            (Cazador "TrituraHuesos" ["Conejos"]
+                                (Cría "Peludo")
+                                (Cría "Largo")
+                                (Cría "Menudo")
+                            )
+                        )
+                    )
+                    (Cría "Garrita")
+                    (Cría "Manchas")
+                ))
 
 
 -- EJERCICIO 4.6
 
 cazadoresSuperioresDe :: Nombre -> Manada -> [Nombre]
+-- PRECOND: Hay un lobo con dicho nombre y es único.
+cazadoresSuperioresDe n (M l) = cazadoresSuperioresDeL n l
+
+cazadoresSuperioresDeL :: Nombre -> Lobo -> [Nombre]
 -- PRECOND: Ninguna.
-cazadoresSuperioresDe = undefined
+cazadoresSuperioresDeL n (Cria n)                = ... n
+cazadoresSuperioresDeL n (Explorador n ts l1 l2) = ... n ... ts ... cazadoresSuperioresDeL l1 ... cazadoresSuperioresDeL l2
+cazadoresSuperioresDeL n (Cazador n ps l1 l2 l3) = ... n ... ps ... cazadoresSuperioresDeL l1 ... cazadoresSuperioresDeL l2 ... cazadoresSuperioresDeL l3
