@@ -82,14 +82,14 @@ dropN n (x:xs) = dropN (n-1) xs
 partir :: Int -> [a] -> ([a], [a])
 partir n xs = (takeN n xs, dropN n xs)
 
--- El costo operacional de la función "partir" es O().
+-- El costo operacional de la función "partir" es O(n^2).
 
 
 minimo :: Ord a => [a] -> a
 minimo [x]    = x
 minimo (x:xs) = min x (minimo xs)
 
--- El costo operacional de la función "minimo" es O().
+-- El costo operacional de la función "minimo" es O(n^2).
 
 
 sacar :: Eq a => a -> [a] -> [a]
@@ -98,28 +98,105 @@ sacar n (x:xs) = if n == x
                     then xs
                     else x : sacar n xs
 
--- El costo operacional de la función "sacar" es O().
+-- El costo operacional de la función "sacar" es O(n).
 
 
 ordenar :: Ord a => [a] -> [a]
 ordenar [] = []
-orderar xs = let m = minimo xs
+ordenar xs = let m = minimo xs
              in  m : ordenar (sacar m xs)
 
--- El costo operacional de la función "ordenar" es O().
+-- El costo operacional de la función "ordenar" es O(n^2).
 
 
 -- EJERCICIO 2: Set (Conjunto).
+
+import SetV1
+
+-- EJERCICIO 2.1:
+
+    -- Implementado en Set.hs.
+
+
+-- EJERCICIO 2.2:
+
+-- losQuePertenecen :: Eq a => [a] -> Set a -> [a]
+-- PROP: Dados una lista y un conjunto, devuelve una lista con todos los elementos que pertenecen al conjunto.
+
+
+
+-- sinRepetidos :: Eq a => [a] -> [a]
+-- PROP: Quita todos los elementos repetidos de la lista dada utilizando un conjunto como estructura auxiliar.
+
+
+
+-- unirTodos :: Eq a => Tree (Set a) -> Set a
+-- PROP: Dado un árbol de conjuntos devuelve un conjunto con la unión de todos los conjuntos del árbol.
+
+
+
+-- EJERCICIO 2.3:
 
 
 
 
 -- EJERCICIO 3: Queue (Cola).
 
+-------------------------------------------------- INTERFAZ --------------------------------------------------
+
+-- emptyQ :: Queue a
+-- -- PROP: Crea una cola vacía.
+-- 
+-- isEmptyQ :: Queue a -> Bool
+-- -- PROP: Dada una cola indica si la cola está vacía.
+-- 
+-- enqueue :: a -> Queue a -> Queue a
+-- -- PROP: Dados un elemento y una cola, agrega ese elemento a la cola.
+-- 
+-- firstQ :: Queue a -> a
+-- -- PROP: Dada una cola devuelve el primer elemento de la cola.
+-- 
+-- dequeue :: Queue a -> Queue a
+-- -- PROP: Dada una cola la devuelve sin su primer elemento.
+
+--------------------------------------------------------------------------------------------------------------
+
+-- EJERCICIO 3.1:
+
+
+
+
+-- EJERCICIO 3.2:
+
+
+
+
+-- EJERCICIO 3.3:
+
 
 
 
 -- EJERCICIO 4: Stack (Pila).
 
+-------------------------------------------------- INTERFAZ --------------------------------------------------
 
+-- emptyS :: Stack a
+-- -- PROP: Crea una pila vacía.
+-- 
+-- isEmptyS :: Stack a -> Bool
+-- -- PROP: Dada una pila indica si está vacía.
+-- 
+-- push :: a -> Stack a -> Stack a
+-- -- PROP: Dados un elemento y una pila, agrega el elemento a la pila.
+-- 
+-- top :: Stack a -> a
+-- -- PROP: Dada un pila devuelve el elemento del top e de la pila.
+-- 
+-- pop :: Stack a -> Stack a
+-- -- PROP: Dada una pila devuelve la pila sin el primer elemento.
+-- 
+-- lenS :: Stack a -> Int
+-- -- PROP:  Dada la cantidad de elementos en la pila. 
+-- -- COSTO: O(1).
 
+--------------------------------------------------------------------------------------------------------------
