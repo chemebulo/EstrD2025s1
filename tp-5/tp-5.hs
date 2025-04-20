@@ -1,3 +1,11 @@
+import SetV2
+-- import __
+-- import __
+-- import __
+
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+
 -- EJERCICIO 1: Cálculo de costos.
 
 head' :: [a] -> a
@@ -40,13 +48,13 @@ pertenece n (x:xs) = n == x || pertenece n xs
 -- El costo operacional de la función "pertenece" es O(n).
 
 
-sinRepetidos :: Eq a => [a] -> [a]
-sinRepetidos []     = []
-sinRepetidos (x:xs) = if pertenece x xs
-                         then sinRepetidos xs
-                         else x : sinRepetidos xs
+sinRepetidosL :: Eq a => [a] -> [a]
+sinRepetidosL []     = []
+sinRepetidosL (x:xs) = if pertenece x xs
+                         then sinRepetidosL xs
+                         else x : sinRepetidosL xs
 
--- El costo operacional de la función "sinRepetidos" es O(n^2).
+-- El costo operacional de la función "sinRepetidosL" es O(n^2).
 
 
 append :: [a] -> [a] -> [a]
@@ -111,33 +119,75 @@ ordenar xs = let m = minimo xs
 
 -- EJERCICIO 2: Set (Conjunto).
 
-import SetV1
 
 -- EJERCICIO 2.1:
 
     -- Implementado en Set.hs.
 
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
 
 -- EJERCICIO 2.2:
 
--- losQuePertenecen :: Eq a => [a] -> Set a -> [a]
+losQuePertenecen :: Eq a => [a] -> Set a -> [a]
 -- PROP: Dados una lista y un conjunto, devuelve una lista con todos los elementos que pertenecen al conjunto.
+losQuePertenecen []     s = []
+losQuePertenecen (x:xs) s = if belongs x s
+                               then x : losQuePertenecen xs s
+                               else losQuePertenecen xs s
 
 
-
--- sinRepetidos :: Eq a => [a] -> [a]
+sinRepetidos :: Eq a => [a] -> [a]
 -- PROP: Quita todos los elementos repetidos de la lista dada utilizando un conjunto como estructura auxiliar.
+sinRepetidos xs = setToList (listaAConjunto xs)
+
+listaAConjunto :: Eq a => [a] -> Set a
+listaAConjunto []     = emptyS
+listaAConjunto (x:xs) = addS x (listaAConjunto xs)
 
 
-
--- unirTodos :: Eq a => Tree (Set a) -> Set a
+unirTodos :: Eq a => Tree (Set a) -> Set a
 -- PROP: Dado un árbol de conjuntos devuelve un conjunto con la unión de todos los conjuntos del árbol.
-
+unirTodos EmptyT          = emptyS
+unirTodos (NodeT s t1 t2) = unionS s (unionS (unirTodos t1) (unirTodos t2))
 
 
 -- EJERCICIO 2.3:
 
+losQuePertenecen' :: Eq a => [a] -> Set a -> [a]
+-- PROP: Dados una lista y un conjunto, devuelve una lista con todos los elementos que pertenecen al conjunto.
+losQuePertenecen' []     s = []
+losQuePertenecen' (x:xs) s = if belongs x s
+                                then x : losQuePertenecen' xs s
+                                else losQuePertenecen' xs s
 
+
+sinRepetidos' :: Eq a => [a] -> [a]
+-- PROP: Quita todos los elementos repetidos de la lista dada utilizando un conjunto como estructura auxiliar.
+sinRepetidos' xs = setToList (listaAConjunto xs)
+
+
+unirTodos' :: Eq a => Tree (Set a) -> Set a
+-- PROP: Dado un árbol de conjuntos devuelve un conjunto con la unión de todos los conjuntos del árbol.
+unirTodos' EmptyT          = emptyS
+unirTodos' (NodeT s t1 t2) = unionS s (unionS (unirTodos' t1) (unirTodos' t2))
+
+
+{- COSTO OPERACIONAL DE CADA IMPLEMENTACIÓN:
+
+------------------------------------------------------
+|   SET (SIN REPETIDOS)  |    SET (CON REPETIDOS)    |
+|------------------------|---------------------------|
+|  emptyS        O(1)    |   emptyS        O(1)      |
+|  addS          O(n^2)  |   addS          O(1)      |
+|  belongs       O(n)    |   belongs       O(n)      |
+|  sizeS         O(1)    |   sizeS         O(n^2)    |   
+|  removeS       O(n^2)  |   removeS       O(n^2)    |   
+|  unionS        O(n^2)  |   unionS        O(1)      |
+|  setToList     O(1)    |   setToList     O(n)      |
+------------------------------------------------------
+
+-}
 
 
 -- EJERCICIO 3: Queue (Cola).
@@ -200,3 +250,11 @@ import SetV1
 -- -- COSTO: O(1).
 
 --------------------------------------------------------------------------------------------------------------
+
+
+-- EJERCICIO 4.1:
+
+
+
+
+-- EJERCICIO 4.2:

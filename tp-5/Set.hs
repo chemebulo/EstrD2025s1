@@ -1,15 +1,26 @@
-module SetV1
+module Set
     (Set, emptyS, addS, belongs, sizeS, removeS, unionS, setToList)
 where
 
 data Set a = TRS [a] Int
-                     -- Cantidad de Elementos en [a]
+                  -- Cantidad de Elementos en [a].
     deriving Show
-    {- INV. REP.:
-        * Sea TRS xs n, no hay elementos repetidos en xs.
-        * 
-    -}
+{- INV. REP.:
+    * Sea (TRS xs n): no hay elementos repetidos en xs.
+    * Sea (TRS xs n): n equivale a la cantidad de elementos en xs.
+-}
 
+{- COSTO OPERACIONAL DE CADA FUNCIÓN:
+
+- emptyS        O(1)
+- addS          O(n^2)
+- belongs       O(n)
+- sizeS         O(1)
+- removeS       O(n^2)
+- unionS        O(n^2)
+- setToList     O(1)
+
+-}
 
 emptyS :: Set a
 -- PROP: Crea un conjunto vacío.
@@ -29,33 +40,30 @@ perteneceA x (y:ys) = x == y || perteneceA x ys
 
 belongs :: Eq a => a -> Set a -> Bool
 -- PROP: Dados un elemento y un conjunto indica si el elemento pertenece al conjunto.
-belongs x (TRS xs) = perteneceA x xs 
+belongs x (TRS xs n) = perteneceA x xs 
 
 
 sizeS :: Eq a => Set a -> Int
 -- PROP: Devuelve la cantidad de elementos distintos de un conjunto.
-sizeS (TRS xs) = length xs
+sizeS (TRS xs n) = n
 
 
 removeS :: Eq a => a -> Set a -> Set a
 -- PROP: Borra un elemento del conjunto.
-removeS x (TRS xs) = if perteneceA x xs
-                        then TRS (removeX x xs)
-                        else TRS xs
+removeS x (TRS xs n) = TRS (removeX x xs) (length (removeX x xs))
 
 removeX :: Eq a => a -> [a] -> [a]
 removeX x []     = []
 removeX x (y:ys) = if x==y
                       then ys
-                      else removeX x ys 
+                      else y : removeX x ys 
 
 
 unionS :: Eq a => Set a -> Set a -> Set a
 -- PROP: Dados dos conjuntos devuelve un conjunto con todos los elementos de ambos conjuntos.
-unionS (TRS xs) (TRS ys) = TRS (unionDe xs ys)
+unionS (TRS xs n) (TRS ys m) = TRS (unionDe xs ys) (length (unionDe xs ys))
 
 unionDe :: Eq a => [a] -> [a] -> [a]
--- PRECOND: Cada lista no contiene elementos repetidos, pero puede llegar a coincidir que ambas tengan el mismo elemento.
 unionDe []     ys     = ys
 unionDe xs     []     = xs
 unionDe (x:xs) (y:ys) = if not (perteneceA x (unionDe xs ys))
@@ -65,4 +73,4 @@ unionDe (x:xs) (y:ys) = if not (perteneceA x (unionDe xs ys))
 
 setToList :: Eq a => Set a -> [a]
 -- PROP: Dado un conjunto devuelve una lista con todos los elementos distintos del conjunto.
-setToList (TRS xs) = xs
+setToList (TRS xs n) = xs
