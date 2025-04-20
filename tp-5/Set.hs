@@ -3,7 +3,6 @@ module Set
 where
 
 data Set a = TRS [a] Int
-                  -- Cantidad de Elementos en [a].
     deriving Show
 {- INV. REP.:
     * Sea (TRS xs n): no hay elementos repetidos en xs.
@@ -21,6 +20,8 @@ data Set a = TRS [a] Int
 - setToList     O(1)
 
 -}
+
+------------------------------------------------ IMPLEMENTACIÓN ------------------------------------------------ 
 
 emptyS :: Set a
 -- PROP: Crea un conjunto vacío.

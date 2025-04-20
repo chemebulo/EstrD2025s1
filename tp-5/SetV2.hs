@@ -21,6 +21,7 @@ data Set a = TRS [a] Int
 
 -}
 
+------------------------------------------------ IMPLEMENTACIÓN ------------------------------------------------ 
 
 emptyS :: Set a
 -- PROP: Crea un conjunto vacío.

@@ -1,5 +1,5 @@
--- import Set
-import SetV2
+import Set
+-- import SetV2
 import Queue
 -- import QueueV2
 -- import Stack
@@ -194,38 +194,39 @@ unirTodos' (NodeT s t1 t2) = unionS s (unionS (unirTodos' t1) (unirTodos' t2))
 
 -- EJERCICIO 3: Queue (Cola).
 
--------------------------------------------------- INTERFAZ --------------------------------------------------
-
--- emptyQ :: Queue a
--- -- PROP: Crea una cola vacía.
--- 
--- isEmptyQ :: Queue a -> Bool
--- -- PROP: Dada una cola indica si la cola está vacía.
--- 
--- enqueue :: a -> Queue a -> Queue a
--- -- PROP: Dados un elemento y una cola, agrega ese elemento a la cola.
--- 
--- firstQ :: Queue a -> a
--- -- PROP: Dada una cola devuelve el primer elemento de la cola.
--- 
--- dequeue :: Queue a -> Queue a
--- -- PROP: Dada una cola la devuelve sin su primer elemento.
-
---------------------------------------------------------------------------------------------------------------
 
 -- EJERCICIO 3.1:
 
-
+    -- Implementado en Queue.hs.
 
 
 -- EJERCICIO 3.2:
 
-
+    -- Implementado en QueueV2.hs.
 
 
 -- EJERCICIO 3.3:
 
+lengthQ :: Queue a -> Int
+-- PROP: Cuenta la cantidad de elementos de la cola.
+lengthQ q = if isEmptyQ
+               then 0
+               else 1 + dequeue (lengthQ q)
 
+
+queueToList :: Queue a -> [a]
+-- PROP: Dada una cola devuelve la lista con los mismos elementos, donde el orden de la lista es el de la cola.
+-- Nota: Chequear que los elementos queden en el orden correcto.
+queueToList q = if isEmptyQ
+                   then []
+                   else firstQ q : queueToList (dequeue q)
+
+
+unionQ :: Queue a -> Queue a -> Queue a
+-- PROP: Inserta todos los elementos de la segunda cola en la primera
+unionQ q1 q2 = if isEmptyQ q2
+                  then q1
+                  else enqueue (firstQ q2) (unionQ q1 (dequeue q2))
 
 
 -- EJERCICIO 4: Stack (Pila).
@@ -256,7 +257,22 @@ unirTodos' (NodeT s t1 t2) = unionS s (unionS (unirTodos' t1) (unirTodos' t2))
 
 -- EJERCICIO 4.1:
 
+apilar :: [a] -> Stack a
+-- PROP: Dada una lista devuelve una pila sin alterar el orden de los elementos.
+apilar = undefined
 
+
+desapilar :: Stack a -> [a]
+-- PROP: Dada una pila devuelve una lista sin alterar el orden de los elementos.
+desapilar = undefined
+
+
+insertarEnPos :: Int -> a -> Stack a -> Stack a
+-- PROP: Dada una p osicion válida en la stack y un elemento, ubica dicho elemento en dicha posición 
+--       (se desapilan elementos hasta dicha posición y se inserta en ese lugar).
+insertarEnPos = undefined
 
 
 -- EJERCICIO 4.2:
+
+    -- Implementado en Stack.hs
