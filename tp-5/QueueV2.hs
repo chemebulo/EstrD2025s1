@@ -38,12 +38,12 @@ enqueue x (Q xs) = Q (x:xs)
 firstQ :: Queue a -> a
 -- PROP: Dada una cola devuelve el primer elemento de la cola.
 -- PRECOND: La lista de la cola no es vacía.
-firstQ (Q []) = error "No hay primer elemento en una cola vacía."
+firstQ (Q []) = error "No hay primer elemento en una cola vacia."
 firstQ (Q xs) = last xs
 
 
 dequeue :: Queue a -> Queue a
 -- PROP: Dada una cola la devuelve sin su primer elemento.
 -- PRECOND: La lista de la cola no es vacía.
-dequeue (Q []) = error "No se puede quitar el primer elemento en una cola vacía."
+dequeue (Q []) = error "No se puede quitar el primer elemento en una cola vacia."
 dequeue (Q xs) = Q (init xs)

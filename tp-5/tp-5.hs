@@ -1,5 +1,6 @@
 import Set
-import Queue
+import QueueV2
+import Stack
 
 -------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
@@ -117,6 +118,7 @@ ordenar xs = let m = minimo xs
 
 -- EJERCICIO 2: Set (Conjunto).
 
+    -- INTERFAZ: emptyS, addS, belongs, sizeS, removeS, unionS, setToList.
 
 -- EJERCICIO 2.1:
 
@@ -190,6 +192,7 @@ unirTodos' (NodeT s t1 t2) = unionS s (unionS (unirTodos' t1) (unirTodos' t2))
 
 -- EJERCICIO 3: Queue (Cola).
 
+    -- INTERFAZ: emptyQ, isEmptyQ, enqueue, firstQ, dequeue.
 
 -- EJERCICIO 3.1:
 
@@ -205,15 +208,15 @@ unirTodos' (NodeT s t1 t2) = unionS s (unionS (unirTodos' t1) (unirTodos' t2))
 
 lengthQ :: Queue a -> Int
 -- PROP: Cuenta la cantidad de elementos de la cola.
-lengthQ q = if isEmptyQ
+lengthQ q = if isEmptyQ q
                then 0
-               else 1 + dequeue (lengthQ q)
+               else 1 + lengthQ (dequeue q)
 
 
 queueToList :: Queue a -> [a]
 -- PROP: Dada una cola devuelve la lista con los mismos elementos, donde el orden de la lista es el de la cola.
 -- Nota: Chequear que los elementos queden en el orden correcto.
-queueToList q = if isEmptyQ
+queueToList q = if isEmptyQ q
                    then []
                    else firstQ q : queueToList (dequeue q)
 
@@ -225,50 +228,68 @@ unionQ q1 q2 = if isEmptyQ q2
                   else enqueue (firstQ q2) (unionQ q1 (dequeue q2))
 
 
+{- COSTO OPERACIONAL DE CADA IMPLEMENTACIÓN:
+
+------------------------------------------------------
+|         QUEUE.V1       |          QUEUE.V2         |
+|------------------------|---------------------------|
+|   emptyQ        O(1)   |     emptyQ        O(1)    |
+|   isEmptyQ      O(1)   |     isEmptyQ      O(1)    |
+|   enqueue       O(n)   |     enqueue       O(1)    |
+|   firstQ        O(1)   |     firstQ        O(n)    |
+|   dequeue       O(1)   |     dequeue       O(n)    |
+------------------------------------------------------
+
+-}
+
+
 -- EJERCICIO 4: Stack (Pila).
 
--------------------------------------------------- INTERFAZ --------------------------------------------------
-
--- emptyS :: Stack a
--- -- PROP: Crea una pila vacía.
--- 
--- isEmptyS :: Stack a -> Bool
--- -- PROP: Dada una pila indica si está vacía.
--- 
--- push :: a -> Stack a -> Stack a
--- -- PROP: Dados un elemento y una pila, agrega el elemento a la pila.
--- 
--- top :: Stack a -> a
--- -- PROP: Dada un pila devuelve el elemento del top e de la pila.
--- 
--- pop :: Stack a -> Stack a
--- -- PROP: Dada una pila devuelve la pila sin el primer elemento.
--- 
--- lenS :: Stack a -> Int
--- -- PROP:  Dada la cantidad de elementos en la pila. 
--- -- COSTO: O(1).
-
---------------------------------------------------------------------------------------------------------------
-
+    -- INTERFAZ: emptyST, isEmptyST, push, top, pop, lenS.
 
 -- EJERCICIO 4.1:
 
 apilar :: [a] -> Stack a
 -- PROP: Dada una lista devuelve una pila sin alterar el orden de los elementos.
-apilar = undefined
+apilar []     = emptyST
+apilar (x:xs) = push x (apilar xs)
 
 
 desapilar :: Stack a -> [a]
 -- PROP: Dada una pila devuelve una lista sin alterar el orden de los elementos.
-desapilar = undefined
+desapilar st = if not (isEmptyST st)
+                  then top st : desapilar (pop st)
+                  else []
 
 
 insertarEnPos :: Int -> a -> Stack a -> Stack a
--- PROP: Dada una p osicion válida en la stack y un elemento, ubica dicho elemento en dicha posición 
+-- PROP: Dada una posición válida en la stack y un elemento, ubica dicho elemento en dicha posición 
 --       (se desapilan elementos hasta dicha posición y se inserta en ese lugar).
-insertarEnPos = undefined
+-- PRECOND: La posicion dada existe dentro del stack dado.
+insertarEnPos 0 x st = push x st
+insertarEnPos n x st = push (top st) (insertarEnPos (n-1) x (pop st))
 
 
 -- EJERCICIO 4.2:
 
     -- Implementado en Stack.hs
+
+    {- COSTO OPERACIONAL LA IMPLEMENTACION
+
+          --------------------------
+          |          STACK         |
+          |------------------------|
+          |    emptyST     O(1)    |
+          |    isEmptyST   O(1)    |
+          |    push        O(1)    |
+          |    top         O(1)    |
+          |    pop         O(1)    |
+          |    lenS        O(1)    |
+          --------------------------
+
+    -}
+
+
+-- EJERCICIO 5: Queue con Dos Listas.
+
+    -- Implementado en QueueV3.
