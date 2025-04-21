@@ -1,5 +1,5 @@
 import Set
-import QueueV2
+import QueueV3
 import Stack
 
 -------------------------------------------------------------------------------------------------------------
@@ -293,3 +293,17 @@ insertarEnPos n x st = push (top st) (insertarEnPos (n-1) x (pop st))
 -- EJERCICIO 5: Queue con Dos Listas.
 
     -- Implementado en QueueV3.
+
+    {- COSTO OPERACIONAL DE CADA IMPLEMENTACIÓN:
+
+    ----------------------------------------------------------------------------------
+    |         QUEUE.V1       |          QUEUE.V2         |          QUEUE.V3         |
+    |------------------------|---------------------------|---------------------------|
+    |   emptyQ        O(1)   |     emptyQ        O(1)    |     emptyQ        O(1)    |
+    |   isEmptyQ      O(1)   |     isEmptyQ      O(1)    |     isEmptyQ      O(1)    |
+    |   enqueue       O(n)   |     enqueue       O(1)    |     enqueue       O(1)    |
+    |   firstQ        O(1)   |     firstQ        O(n)    |     firstQ        O(1)    |
+    |   dequeue       O(1)   |     dequeue       O(n)    |     dequeue       O(1)    |
+    ----------------------------------------------------------------------------------
+
+    -}
