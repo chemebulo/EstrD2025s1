@@ -2,19 +2,19 @@ module Map
     (Map, emptyM, assocM, lookupM, deleteM, keys)
 where 
 
-data Map a = M k v
+data Map k v = M [(k, v)]
     deriving Show
 {- INV. REP.:
-    * Sea M key value: cada key se asocia a un value.
+    * Sea M [(k, v)]: cada k (clave) se asocia a un v (valor). La lista no posee claves repetidas.
 -}
 
 {- COSTO OPERACIONAL DE CADA FUNCIÓN:
 
-- emptyM    O()
-- assocM    O()
-- lookupM   O()
-- deleteM   O()
-- keys      O()
+- emptyM    O(1)
+- assocM    O(n)
+- lookupM   O(n)
+- deleteM   O(n)
+- keys      O(n)
 
 -}
 
@@ -22,24 +22,45 @@ data Map a = M k v
 
 emptyM :: Map k v
 -- PROP: Devuelve un map vacío
-emptyM = undefined
+emptyM = M []
 
 
 assocM :: Eq k => k -> v -> Map k v -> Map k v
 -- PROP: Agrega una asociación clave-valor al map.
-assocM = undefined
+assocM x y (M kvs) = M (asociarEn x y kvs)
+
+asociarEn :: Eq k => k -> v -> [(k, v)] -> [(k, v)]
+asociarEn x y []          = [(x, y)]
+asociarEn x y ((k,v):kvs) = if x == k 
+                               then (x, y):kvs
+                               else (k, v):asociarEn x y kvs
 
 
 lookupM :: Eq k => k -> Map k v -> Maybe v
 -- PROP: Encuentra un valor dado una clave.
-lookupM = undefined
+lookupM x (M kvs) = buscarValorDeEn x kvs 
+
+buscarValorDeEn :: Eq k => k -> [(k, v)] -> Maybe v
+buscarValorDeEn x []          = Nothing
+buscarValorDeEn x ((k,v):kvs) = if x == k
+                                   then Just v
+                                   else buscarValorDeEn x kvs 
 
 
 deleteM :: Eq k => k -> Map k v -> Map k v
 -- PROP: Borra una asociación dada una clave.
-deleteM = undefined
+deleteM k (M kvs) = M (borrarAsociacionEn k kvs)
 
+borrarAsociacionEn :: Eq k => k -> [(k, v)] -> [(k, v)]
+borrarAsociacionEn x []          = []
+borrarAsociacionEn x ((k,v):kvs) = if x == k
+                                     then kvs
+                                     else (k,v):borrarAsociacionEn x kvs
 
 keys :: Map k v -> [k]
 -- PROP: Devuelve las claves del map.
-keys = undefined
+keys (M kvs) = clavesEn kvs
+
+clavesEn :: [(k, v)] -> [k]
+clavesEn []          = []
+clavesEn ((k,v):kvs) = k : clavesEn kvs
