@@ -76,45 +76,52 @@ fromJust Nothing   = error "No tendria que dar esto."
 fromJust (Just x)  = x
 
 
--- ARREGLARRRRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!
 agruparEq :: Eq k => [(k, v)] -> Map k [v]
 -- PROP: Dada una lista de pares clave valor, agrupa los valores de los pares que compartan la misma clave.
 -- O().
-agruparEq []          = emptyM
-agruparEq ((k,v):kvs) = agregarValueAK k v (agruparEq kvs)
+agruparEq kvs = agruparValuesAKeys (soloKeys kvs) kvs
 
-agregarValueAK :: Eq k => k -> v -> Map k [v] -> Map k [v]
-agregarValueAK k v m = listToMap (agregarVKEn k v (mapToList m))
+agruparValuesAKeys :: Eq k => [k] -> [(k, v)] -> Map k [v]
+agruparValuesAKeys []     kvs = emptyM
+agruparValuesAKeys (k:ks) kvs = assocM k (agruparValuesDeKey k kvs) (agruparValuesAKeys ks kvs)
 
-agregarVKEn :: Eq k => k -> v -> [(k,[v])] -> [(k,[v])]
-agregarVKEn nk nv []            = [(nk,[nv])]
-agregarVKEn nk nv ((k,vs):kvs) = if nk == k
-                                    then (k, nv:vs) : kvs
-                                    else (k,vs):kvs ++ agregarVKEn nk nv kvs
+agruparValuesDeKey :: Eq k => k -> [(k, v)] -> [v]
+agruparValuesDeKey nk []          = []
+agruparValuesDeKey nk ((k,v):kvs) = if nk == k
+                                       then v : agruparValuesDeKey nk kvs
+                                       else agruparValuesDeKey nk kvs
+
+soloKeys :: Eq k => [(k, v)] -> [k]
+soloKeys []          = []
+soloKeys ((k,v):kvs) = if not (estaEnPares k kvs)
+                          then k : soloKeys kvs
+                          else soloKeys kvs
+
+estaEnPares :: Eq k => k -> [(k, v)] -> Bool
+estaEnPares nk []          = False
+estaEnPares nk ((k,v):kvs) = nk == k || estaEnPares nk kvs
 
 
 incrementar :: Eq k => [k] -> Map k Int -> Map k Int
 -- PROP: Dada una lista de claves de tipo k y un map que va de k a Int, le suma uno a cada número asociado con dichas claves.
 -- O(n^2).
-incrementar ks m = mapConIncrementoEnUnoEnKS m ks
-
-mapConIncrementoEnUnoEnKS :: Eq k => Map k Int -> [k] -> Map k Int
-mapConIncrementoEnUnoEnKS m []     = m
-mapConIncrementoEnUnoEnKS m (k:ks) = let v = fromJust (lookupM k m)
-                                     in if estaAsociadoEn k m
-                                           then assocM k (v + 1) (mapConIncrementoEnUnoEnKS m ks)
-                                           else mapConIncrementoEnUnoEnKS m ks
+incrementar []     m = m
+incrementar (k:ks) m = let v = fromJust (lookupM k m)
+                       in if estaAsociadoEn k m
+                             then assocM k (v + 1) (incrementar ks m)
+                             else incrementar ks m
 
 
 mergeMaps:: Eq k => Map k v -> Map k v -> Map k v
 -- PROP: Dado dos maps se agregan las claves y valores del primer map en el segundo. Si una clave del primero  
 --       existe en el segundo, es reemplazada por la del primero.
 -- O().
-mergeMaps m1 m2 = agruparListaDeMapAMap (mapToList m1) m2
+mergeMaps m1 m2 = agregarMapAMap (keys m1) m1 m2
 
-agruparListaDeMapAMap :: Eq k => [(k, v)] -> Map k v -> Map k v
-agruparListaDeMapAMap []          m = m
-agruparListaDeMapAMap ((k,v):kvs) m = assocM k v (agruparListaDeMapAMap kvs m)
+agregarMapAMap :: Eq k => [k] -> Map k v -> Map k v -> Map k v
+agregarMapAMap []     m1 m2 = m2
+agregarMapAMap (k:ks) m1 m2 = let v = fromJust (lookupM k m1)
+                              in agregarMapAMap ks m1 (assocM k v m2)
 
 
 -- EJERCICIO 2.2:
@@ -139,7 +146,24 @@ ocurrencias :: String -> Map Char Int
 -- PROP: Dado un string, devuelve un map donde las claves son los caracteres que aparecen en el string, y los 
 --       valores la cantidad de veces que aparecen en el mismo.
 -- O().
-ocurrencias = undefined
+ocurrencias s = ocurrenciasDe (sinRepeticiones s) s
+
+ocurrenciasDe :: String -> String -> Map Char Int
+ocurrenciasDe []     s = emptyM
+ocurrenciasDe (c:cs) s = let num = aparicionesDeEn c s
+                         in assocM c num (ocurrenciasDe cs s)
+
+aparicionesDeEn :: Char -> String -> Int
+aparicionesDeEn x []     = 0
+aparicionesDeEn x (c:cs) = if x == c
+                              then 1 + aparicionesDeEn x cs
+                              else aparicionesDeEn x cs
+
+sinRepeticiones :: Eq a => [a] -> [a]
+sinRepeticiones []     = []
+sinRepeticiones (x:xs) = if elem x xs
+                            then sinRepeticiones xs
+                            else x : sinRepeticiones xs
 
 
 -- EJERCICIO 3: MultiSet (Multiconjunto).
