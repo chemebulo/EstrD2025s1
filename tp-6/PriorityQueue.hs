@@ -13,7 +13,7 @@ data PriorityQueue a = PQ [a]
 
 - emptyPQ       O(1)
 - isEmptyPQ     O(1)
-- insertPQ      O(??? Calcular)
+- insertPQ      O(n^2)
 - findMinPQ     O(1)
 - deleteMinPQ   O(n)
 

@@ -29,7 +29,8 @@ priorityQueueALista pq = if not (isEmptyPQ pq)
 
     -- INTERFAZ: emptyM, assocM, lookupM, deleteM, keys.
 
--- (assocM "NRJ540" 110 (assocM "NNO999" 500 (assocM "MVO118" 500 emptyM)))
+-- (assocM "NRJ" 110 (assocM "NNO" 500 (assocM "MVO" 118 emptyM)))
+-- (assocM "NRJ" 55 (assocM "NNN" 777 (assocM "WZY" 575 emptyM)))
 -- [("MVO118", 500), ("NN0999", 350), ("NRJ540", 110)]
 
 -- EJERCICIO 2.1:
@@ -128,6 +129,20 @@ agregarMapAMap (k:ks) m1 m2 = let v = fromJust (lookupM k m1)
 
     -- Implementado en MapV2.hs
     -- Implementado en MapV3.hs
+
+{-
+
+--------------------------------------------------------------
+|       MAP_V1     |        MAP_V2       |      MAP_V3       |
+|------------------------------------------------------------|
+|  emptyM    O(1)  |   emptyM    O(1)    |   emptyM    O(1)  |
+|  assocM    O(n)  |   assocM    O(1)    |   assocM    O(n)  |
+|  lookupM   O(n)  |   lookupM   O(n)    |   lookupM   O(n)  |
+|  deleteM   O(n)  |   deleteM   O(n)    |   deleteM   O(n)  |
+|  keys      O(n)  |   keys      O(n^2)  |   keys      O(1)  |
+--------------------------------------------------------------
+
+-}
 
 
 -- EJERCICIO 2.3:

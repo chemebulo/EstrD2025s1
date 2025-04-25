@@ -5,7 +5,7 @@ where
 data Map k v = M [(k, v)]
     deriving Show
 {- INV. REP.:
-    * Sea M [(k, v)]: cada k (clave) se asocia a un v (valor). La lista no posee claves repetidas.
+    * Sea M [(k, v)]: cada cada par (k,v) representa un par de clave-valor. La lista no puede tener claves repetidas.
 -}
 
 {- COSTO OPERACIONAL DE CADA FUNCIÓN:
@@ -21,7 +21,7 @@ data Map k v = M [(k, v)]
 ------------------------------------------------ IMPLEMENTACIÓN ------------------------------------------------ 
 
 emptyM :: Map k v
--- PROP: Devuelve un map vacío
+-- PROP: Devuelve un map vacío.
 emptyM = M []
 
 
