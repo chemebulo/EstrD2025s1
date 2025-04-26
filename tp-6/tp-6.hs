@@ -2,6 +2,7 @@
 
 import PriorityQueue
 import Map
+import MultiSet
 
 -- EJERCICIO 1.1:
 
@@ -183,5 +184,14 @@ sinRepeticiones (x:xs) = if elem x xs
 
 -- EJERCICIO 3: MultiSet (Multiconjunto).
 
+    -- INTERFAZ: emptyMS, addMS, ocurrencesMS, unionMS, intersectionMS, multiSetToList.
 
 -- EJERCICIO 3.1:
+
+    -- Implementado en Multiset.hs
+
+-- EJERCICIO 3.2:
+
+ocurrencias' :: String -> MultiSet Char
+ocurrencias' []     = undefined
+ocurrencias' (c:cs) = undefined
