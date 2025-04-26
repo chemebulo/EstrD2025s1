@@ -15,9 +15,9 @@ data MultiSet a = MS (Map a Int)
 - emptyMS           O(1)
 - addMS             O(n)
 - ocurrencesMS      O(n)
-- unionMS           O()
-- intersectionMS    O()
-- multiSetToList    O()
+- unionMS           O(n^2)
+- intersectionMS    O(n^2)
+- multiSetToList    O(n^2)
 
 -}
 

@@ -190,6 +190,18 @@ sinRepeticiones (x:xs) = if elem x xs
 
     -- Implementado en Multiset.hs
 
+    {- COSTO OPERACIONAL DE CADA FUNCIÓN:
+
+    - emptyMS           O(1)
+    - addMS             O(n)
+    - ocurrencesMS      O(n)
+    - unionMS           O(n^2)
+    - intersectionMS    O(n^2)
+    - multiSetToList    O(n^2)
+
+    -}
+
+
 -- EJERCICIO 3.2:
 
 ocurrencias' :: String -> MultiSet Char
