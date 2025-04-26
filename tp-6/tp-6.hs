@@ -193,5 +193,5 @@ sinRepeticiones (x:xs) = if elem x xs
 -- EJERCICIO 3.2:
 
 ocurrencias' :: String -> MultiSet Char
-ocurrencias' []     = undefined
-ocurrencias' (c:cs) = undefined
+ocurrencias' []     = emptyMS
+ocurrencias' (c:cs) = addMS c (ocurrencias' cs) 
