@@ -8,6 +8,15 @@ import MultiSet
 
     -- INTERFAZ: emptyPQ, isEmptyPQ, insertPQ, findMinPQ, deleteMinPQ.
 
+    {- COSTO OPERACIONAL DE CADA FUNCIÓN:
+    
+    - emptyPQ       O(1)
+    - isEmptyPQ     O(1)
+    - insertPQ      O(n^2)
+    - findMinPQ     O(1)
+    - deleteMinPQ   O(n)
+    
+    -}
 
 -- EJERCICIO 1.2:
 
@@ -16,14 +25,14 @@ heapSort :: Ord a => [a] -> [a]
 --       como estructura auxiliar.
 heapSort xs = priorityQueueALista (listaAPriorityQueue xs)
 
-listaAPriorityQueue :: Ord a => [a] -> PriorityQueue a
-listaAPriorityQueue []     = emptyPQ
-listaAPriorityQueue (x:xs) = insertPQ x (listaAPriorityQueue xs)
-
 priorityQueueALista :: Ord a => PriorityQueue a -> [a]
 priorityQueueALista pq = if not (isEmptyPQ pq)
                             then findMinPQ pq : priorityQueueALista (deleteMinPQ pq)
                             else []
+
+listaAPriorityQueue :: Ord a => [a] -> PriorityQueue a
+listaAPriorityQueue []     = emptyPQ
+listaAPriorityQueue (x:xs) = insertPQ x (listaAPriorityQueue xs)
 
 
 -- EJERCICIO 2: Map (Diccionario).
