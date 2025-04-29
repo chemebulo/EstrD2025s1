@@ -32,7 +32,7 @@ assocM :: Eq k => k -> v -> Map k v -> Map k v
 -- PROP: Agrega una asociación clave-valor al map.
     -- COSTO: O(n).
     -- Siendo ks1 la lista de claves dada, y vs1 la lista de valores dado, se realiza una operación de costo lineal para
-    -- ks1 y vs1, utilizando además k y v (clave y valor nuevo dado). Siempre recorre hasta el final por diseño, incluso 
+    -- ks1 y vs1, utilizando además k y v (clave y valor nuevo dado). Siempre se llega al final de la lista por diseño, incluso 
     -- si no encuentra la clave, y después la agrega igual, lo cual termina resultando en que "assocM" sea de costo lineal.
 assocM k v (M ks1 vs1) = let (ks, vs) = agregarEn k v ks1 vs1
                          in M ks vs
