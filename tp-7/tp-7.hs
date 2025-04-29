@@ -28,7 +28,63 @@
 
 -- EJERCICIO 2:
 
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
 
+
+belongsBST :: Ord a => a -> Tree a -> Bool
+-- PROP: Dado un BST dice si el elemento pertenece o no al árbol.
+    -- COSTO: O(log n)
+belongsBST = undefined
+
+
+insertBST :: Ord a => a -> Tree a -> Tree a
+-- PROP: Dado un BST inserta un elemento en el árbol.
+    -- COSTO: O(log n)
+insertBST = undefined
+
+
+deleteBST :: Ord a => a -> Tree a -> Tree a
+-- PROP: Dado un BST borra un elemento en el árbol.
+    -- COSTO: O(log n)
+deleteBST = undefined
+
+
+splitMinBST :: Ord a => Tree a -> (a, Tree a)
+-- PROP: Dado un BST devuelve un par con el mínimo elemento y el árbol sin el mismo.
+    -- COSTO: O(log n)
+splitMinBST = undefined
+
+
+splitMaxBST :: Ord a => Tree a -> (a, Tree a)
+-- PROP: Dado un BST devuelve un par con el máximo elemento y el árbol sin el mismo.
+    -- COSTO: O(log n)
+splitMaxBST = undefined
+
+
+esBST :: Tree a -> Bool
+-- PROP: Indica si el árbol cumple con los invariantes de BST.
+    -- COSTO: O(n^2)
+esBST = undefined
+
+
+elMaximoMenorA :: Ord a => a -> Tree a -> Maybe a
+-- PROP: Dado un BST y un elemento, devuelve el máximo elemento que sea menor al elemento dado.
+    -- COSTO: O(log n)
+elMaximoMenorA = undefined
+
+
+elMinimoMayorA :: Ord a => a -> Tree a -> Maybe a
+-- PROP: Dado un BST y un elemento, devuelve el mínimo elemento que sea mayor al elemento dado.
+    -- COSTO: O(log n)
+elMinimoMayorA = undefined
+
+
+balanceado :: Tree a -> Bool
+-- PROP: Indica si el árbol está balanceado. Un árbol está balanceado cuando para cada nodo la diferencia de
+--       alturas entre el subarbol izquierdo y el derecho es menor o igual a 1.
+    -- COSTO: O(n^2)
+balanceado = undefined
 
 
 -- EJERCICIO 3:
@@ -38,7 +94,16 @@
 
 -- EJERCICIO 4:
 
-
+-- import Map
+-- import Set
+-- 
+-- type SectorId = Int
+-- 
+-- type CUIL = Int
+-- 
+-- data Empresa = ConsE (Map SectorId (Set Empleado))
+-- --                   (Map   CUIL      Empleado)
+--     deriving Show
 
 
 -- EJERCICIO 5:
