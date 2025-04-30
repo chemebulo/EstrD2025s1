@@ -102,77 +102,94 @@ todasAsociadas (k:ks) m = estaAsociadoEn k m && todasAsociadas ks m
 estaAsociadoEn :: Eq k => k -> Map k v -> Bool
     -- COSTO: O(n).
     -- Siendo que "keys m" es de costo lineal, se utiliza "elem" para buscar la clave (de costo lineal). Tanto "keys" como "elem"
-    -- son operaciones lineales, lo que termina resultando que el costo total sea lineal.
+    -- son operaciones lineales (ya que elem es una búsqueda lineal sobre la lista), lo que termina resultando que el costo total sea lineal.
 estaAsociadoEn k m = elem k (keys m)
 
 
 listToMap :: Eq k => [(k, v)] -> Map k v
 -- PROP: Convierte una lista de pares clave valor en un map.
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo n cada par de la lista de pares dada (kvs), se realiza la operación "assocM" en cada uno de ellos. Esto resulta que por 
+    -- cada n se realiza una operación de costo lineal en el peor caso, por ende, el costo total de la función es cuadrático.    
 listToMap []          = emptyM
 listToMap ((k,v):kvs) = assocM k v (listToMap kvs)
 
 
 mapToList :: Eq k => Map k v -> [(k, v)]
 -- PROP: Convierte un map en una lista de pares clave valor.
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo m el mapa dado, y n las claves de dicho mapa; se utiliza la función "mapALista" de costo cuadrático, resultando entonces,
+    -- que el costo total de la función es cuadrático. 
 mapToList m = mapALista m (keys m)
 
 mapALista :: Eq k => Map k v -> [k] -> [(k, v)]
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo m el mapa dado, y ks las claves dadas; para cada clave de ks se utiliza la operación "lookupM" de costo lineal en el peor caso
+    -- como argumento de la función "fromJust" (lo cual sabiendo que las claves dadas son claves de m, asegura que hay valores para cada una de ellas), 
+    -- además que va utilizando "cons" de costo constante para agregar cada par a la lista resultante de ks. Esto implica, entonces, que el costo total 
+    -- de la función es cuadrático. 
 mapALista m []     = []
 mapALista m (k:ks) = let v = fromJust (lookupM k m)
                      in (k, v) : mapALista m ks
 
 fromJust :: Maybe a -> a
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(1).
+    -- Siendo x el dato de tipo "maybe a", devuelve x en el caso de que tenga el constructor "Just", entonces, eso implica que el costo
+    -- de todo el funcionamiento en el peor caso sea constante, ya que solo devuelve el dato. 
 fromJust Nothing   = error "No tendria que dar esto."
 fromJust (Just x)  = x
 
 
 agruparEq :: Eq k => [(k, v)] -> Map k [v]
 -- PROP: Dada una lista de pares clave valor, agrupa los valores de los pares que compartan la misma clave.
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo kvs la lista de pares clave-valor dada, se utiliza la función "agruparValuesAKeys" de costo cuadrático sobre las claves de kvs
+    -- y sobre kvs. Esto termina resultando que el costo total de la función sea cuadrático, ya que termina costando lo que "agruparValuesAKeys" cueste. 
 agruparEq kvs = agruparValuesAKeys (soloKeys kvs) kvs
 
 agruparValuesAKeys :: Eq k => [k] -> [(k, v)] -> Map k [v]
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo n la cantidad de claves de la lista dada, por cada n se realiza la operación "assocM" de costo lineal, además que también
+    -- se utiliza la función "agruparValuesDeKey" de costo lineal. Es por eso, que el costo total termina resultando de costo cuadrático,
+    -- ya que por cada n (cada clave) se realiza n operaciones. 
 agruparValuesAKeys []     kvs = emptyM
 agruparValuesAKeys (k:ks) kvs = assocM k (agruparValuesDeKey k kvs) (agruparValuesAKeys ks kvs)
 
 agruparValuesDeKey :: Eq k => k -> [(k, v)] -> [v]
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n).
+    -- Siendo n la cantidad de pares de la lista dada (kvs), por cada n se realiza una operación constante de comparación, y en el peor caso,
+    -- se termina llegando al final de kvs. Es por eso, que el costo total de la función en el peor caso es lineal, ya que depende de n. 
 agruparValuesDeKey nk []          = []
 agruparValuesDeKey nk ((k,v):kvs) = if nk == k
                                        then v : agruparValuesDeKey nk kvs
                                        else agruparValuesDeKey nk kvs
 
 soloKeys :: Eq k => [(k, v)] -> [k]
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo kvs la lista de pares dado, para cada clave de kvs se utiliza la función "estaEnPares" de costo lineal en el peor caso,
+    -- resultando entonces, que en el peor caso, que el costo total de la función sea cuadrático (la utiliza en cada par de kvs y por diseño,
+    -- va a recorrer toda la lista).
 soloKeys []          = []
 soloKeys ((k,v):kvs) = if not (estaEnPares k kvs)
                           then k : soloKeys kvs
                           else soloKeys kvs
 
 estaEnPares :: Eq k => k -> [(k, v)] -> Bool
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n).
+    -- Siendo kvs la lista de pares dado, y nk la clave dada; para cada par de kvs se realiza la operación de comparación de costo constante,
+    -- resultando entonces, que en el peor caso, la comparación se realiza en todos los elementos de kvs, lo cual termina explicando que
+    -- el costo total de la función es lineal.
 estaEnPares nk []          = False
 estaEnPares nk ((k,v):kvs) = nk == k || estaEnPares nk kvs
 
 
 incrementar :: Eq k => [k] -> Map k Int -> Map k Int
 -- PROP: Dada una lista de claves de tipo k y un map que va de k a Int, le suma uno a cada número asociado con dichas claves.
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo ks la lista de claves dada, y m el mapa dado; para cada clave de ks se utiliza la función "fromJust" con la operación "lookupM"
+    -- como argumento (el cual tiene costo lineal), y también la función "estaAsociadoEn" (de costo lineal). En el caso de que la clave de ks
+    -- dada esté asocidada, se realiza la operación "assocM" (de costo lineal). Todo esto termina resultando en que por cada clave de ks se 
+    -- realizan operaciones lineales, dando entonces con que el costo total de la función en el peor caso es cuadrático. 
 incrementar []     m = m
 incrementar (k:ks) m = let v = fromJust (lookupM k m)
                        in if estaAsociadoEn k m
@@ -183,13 +200,16 @@ incrementar (k:ks) m = let v = fromJust (lookupM k m)
 mergeMaps:: Eq k => Map k v -> Map k v -> Map k v
 -- PROP: Dado dos maps se agregan las claves y valores del primer map en el segundo. Si una clave del primero existe en el segundo,
 --       es reemplazada por la del primero.
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n*m + n).
+    -- Siendo m1 y m2 los mapas dados, se utiliza la función "agregarMapAMap" de costo 'n*m' y la operación "keys" de costo lineal en el peor caso,
+    -- el resultado del costo total de la función es 'n*m + n'.
 mergeMaps m1 m2 = agregarMapAMap (keys m1) m1 m2
 
 agregarMapAMap :: Eq k => [k] -> Map k v -> Map k v -> Map k v
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n*m).
+    -- Siendo ks la lista de claves dada (y n cada clave), m el costo lookupM, a el costo de assocM; por cada clave de ks se utiliza la función "fromJust" de 
+    -- costo constante, aunque de argumento tiene la operación "lookupM" (de costo lineal), y en la recursión se utiliza un "assocM" (de costo lineal). 
+    -- Esto termina resultando con que el costo total de la función en el peor caso es n*m.
 agregarMapAMap []     m1 m2 = m2
 agregarMapAMap (k:ks) m1 m2 = let v = fromJust (lookupM k m1)
                               in agregarMapAMap ks m1 (assocM k v m2)
