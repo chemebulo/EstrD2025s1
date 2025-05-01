@@ -225,13 +225,15 @@ agregarMapAMap (k:ks) m1 m2 = let v = fromJust (lookupM k m1)
 
 indexar :: [a] -> Map Int a
 -- PROP: Dada una lista de elementos construye un map que relaciona cada elemento con su posición en la lista.
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo xs la lista de elementos dada, se utiliza la función "indexarXS" de costo cuadrático. Esto termina resultando con que el costo
+    -- total de la función en el peor caso sea 'n^2', siendo n la cantidad elementos en la lista y n la operación "assocM" dentro de "indexarXS".
 indexar xs = indexarXS 1 xs
 
 indexarXS :: Int -> [a] -> Map Int a
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo n la cantidad de elementos en xs, por cada n se realiza la operación "assocM" de costo lineal n, lo cual termina resultando
+    -- con que el costo total de la función sea 'n^2'.
 indexarXS n []     = emptyM
 indexarXS n (x:xs) = assocM n x (indexarXS (n+1) xs)
 
@@ -239,28 +241,33 @@ indexarXS n (x:xs) = assocM n x (indexarXS (n+1) xs)
 ocurrencias :: String -> Map Char Int
 -- PROP: Dado un string, devuelve un map donde las claves son los caracteres que aparecen en el string, y los 
 --       valores la cantidad de veces que aparecen en el mismo.
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo s el string dado, se utiliza la función "ocurrenciasDe" de costo 'n^2', y como argumento se utiliza "sinRepeticiones" de costo
+    -- 'n^2'. Esto resulta en que el costo total de la función sea 'n^2', ya que (n^2 + n^2) => n^2.
 ocurrencias s = ocurrenciasDe (sinRepeticiones s) s
 
 ocurrenciasDe :: String -> String -> Map Char Int
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo n la cantidad de elementos de cs, por cada n se utiliza la función "aparicionesDeEn" de costo lineal, además de esto, también
+    -- se realiza la operación de "assocM" (de costo lineal). Entonces, termina resultando con que el costo total de la función es 'n (n + n)',
+    -- ya que por cada n se realizan dos operaciones de costo 'n', lo cual resulta en (n^2 + n^2) => n^2.    
 ocurrenciasDe []     s = emptyM
 ocurrenciasDe (c:cs) s = let num = aparicionesDeEn c s
                          in assocM c num (ocurrenciasDe cs s)
 
 aparicionesDeEn :: Char -> String -> Int
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n).
+    -- Siendo n la cantidad de elementos de cs, por cada n se realiza una operacion constante. Esto resulta en que el costo total de la función
+    -- termine siendo lineal, ya que por diseño siempre se termina llegando al final de la lista cs.
 aparicionesDeEn x []     = 0
 aparicionesDeEn x (c:cs) = if x == c
                               then 1 + aparicionesDeEn x cs
                               else aparicionesDeEn x cs
 
 sinRepeticiones :: Eq a => [a] -> [a]
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(n^2).
+    -- Siendo n la cantidad de elementos en xs, por cada n se utiliza la funcion "elem" de costo lineal, esto termina resultando con que
+    -- el costo total de la función sea 'n^2' (siendo n el costo de "elem", es decir, por cada n se realiza una operación de costo n). 
 sinRepeticiones []     = []
 sinRepeticiones (x:xs) = if elem x xs
                             then sinRepeticiones xs
@@ -295,7 +302,8 @@ sinRepeticiones (x:xs) = if elem x xs
 -- EJERCICIO 3.2:
 
 ocurrencias' :: String -> MultiSet Char
-    -- COSTO: O().
-    -- Siendo 
+    -- COSTO: O(c^2).
+    -- Siendo c cada char del string dado, por cada c se realiza la operacion "addMS" de costo cuadrático, lo cual termina resultando
+    -- con que el costo total de la función sea de dicho costo, ya que depende de la operación "addMS".
 ocurrencias' []     = emptyMS
 ocurrencias' (c:cs) = addMS c (ocurrencias' cs) 
