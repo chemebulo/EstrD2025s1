@@ -302,8 +302,8 @@ sinRepeticiones (x:xs) = if elem x xs
 -- EJERCICIO 3.2:
 
 ocurrencias' :: String -> MultiSet Char
-    -- COSTO: O(c^2).
-    -- Siendo c cada char del string dado, por cada c se realiza la operacion "addMS" de costo cuadrático, lo cual termina resultando
+    -- COSTO: O(n).
+    -- Siendo n cada char del string dado, por cada c se realiza la operacion "addMS" de costo lineal, lo cual termina resultando
     -- con que el costo total de la función sea de dicho costo, ya que depende de la operación "addMS".
 ocurrencias' []     = emptyMS
 ocurrencias' (c:cs) = addMS c (ocurrencias' cs) 
