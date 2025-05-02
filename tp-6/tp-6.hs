@@ -80,13 +80,13 @@ valuesM :: Eq k => Map k v -> [Maybe v]
     -- COSTO: O(n*m).
     -- Siendo n la cantidad de claves en el map, se obtienen las claves del map utilizando la operación "keys" de
     -- costo lineal. Posteriormente se obtienen los valores de cada clave con "valoresDeKeysEn" sobre en que también
-    -- es lineal por cada lookupM. Esto resulta en que el costo total es cuadrático.
+    -- es lineal por cada lookupM. Esto resulta en que el costo total es 'n*m'.
 valuesM m = valoresDeKeysEn (keys m) m
 
 valoresDeKeysEn :: Eq k => [k] -> Map k v -> [Maybe v]
     -- COSTO: O(n*m).
     -- Siendo m la longitud de la lista de claves dada y n la cantidad de claves en el map, se utiliza la operación
-    -- "lookupM" de costo lineal por cada clave de la lista. Esto termina resultando que el costo total sea 'm*n'.
+    -- "lookupM" de costo lineal por cada clave de la lista. Esto termina resultando que el costo total sea 'n*m'.
 valoresDeKeysEn []     m = []
 valoresDeKeysEn (k:ks) m = lookupM k m : valoresDeKeysEn ks m
 
