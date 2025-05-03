@@ -7,12 +7,15 @@ import Set
 import Map
 
 type SectorId = Int
-type CUIL = Int
---                   (Map   CUIL      Empleado   )
+type CUIL     = Int
+--                   
 data Empresa = ConsE (Map SectorId (Set Empleado))
+                     (Map CUIL Empleado)
     deriving Show
 {- INV. REP.:
-    * 
+    * Siendo ConsE m1 m2: en m1 solamente se pueden relacionar ID de sectores con empleados que trabajan en dicho sector.
+    * Siendo ConsE m1 m2: en m1 cada empleado puede estar asignado a más de un sector.
+    * Siendo ConsE m1 m2: en m2 solamente se pueden relacionar un número CUIL con el empleado al que le pertenece.
 -}
 
 {- COSTO OPERACIONAL DE CADA FUNCIÓN:
@@ -48,69 +51,118 @@ data Empresa = ConsE (Map SectorId (Set Empleado))
         -- COSTO: O(S).
 -}
 
+{- 
+    ------------------------------------------------
+    |     INTERFACES DISPONIBLES COMO USUARIO      |
+    |----------------------------------------------|
+    |          MAP         |          SET          |
+    |----------------------|-----------------------|
+    |  emptyM    O(1)      |  emptyS     O(1)      |
+    |  assocM    O(log n)  |  addS       O(log n)  |
+    |  lookupM   O(log n)  |  belongs    O(log n)  |
+    |  deleteM   O(log n)  |  sizeS      O(1)      |
+    |  keys      O(n)      |  removeS    O(log n)  |
+    |                      |  unionS     O(n)      |
+    |                      |  setToList  O(n)      |
+    ------------------------------------------------
+-}
+
 -- #################################################### IMPLEMENTACIÓN ####################################################
 
 consEmpresa :: Empresa
 -- PROP: Construye una empresa vacía.
     -- COSTO: O(1).
-    -- Siendo ...
-consEmpresa = undefined
+    -- Siendo de costo constante ya que lo único que hace es utilizar el constructor para construir una empresa vacía.
+consEmpresa = ConsE emptyM emptyM
 
 
 buscarPorCUIL :: CUIL -> Empresa -> Empleado
 -- PROP: Devuelve el empleado con dicho CUIL.
 -- PRECOND: El CUIL es de un empleado de la empresa.
     -- COSTO: O(log E).
-    -- Siendo ...
-buscarPorCUIL = undefined
+    -- Siendo E la cantidad de empleados,
+buscarPorCUIL c (ConsE m1 m2) = fromJust (lookupM c m2)
 
 
 empleadosDelSector :: SectorId -> Empresa -> [Empleado]
 -- PROP: Indica los empleados que trabajan en un sector dado.
     -- COSTO: O(log S + E).
-    -- Siendo ...
-empleadosDelSector = undefined
+    -- Siendo E la cantidad de empleados y S,
+empleadosDelSector s (ConsE m1 m2) = let empleados = lookupM s m1
+                                      in setToList empleados
 
 
 todosLosCUIL :: Empresa -> [CUIL]
 -- PROP: Indica todos los CUIL de empleados de la empresa.
     -- COSTO: O(E).
-    -- Siendo ...
-todosLosCUIL = undefined
+    -- Siendo E la cantidad de empleados,
+todosLosCUIL (ConsE m1 m2) = keys m2
 
 
 todosLosSectores :: Empresa -> [SectorId]
 -- PROP: Indica todos los sectores de la empresa.
     -- COSTO: O(S).
-    -- Siendo ...
-todosLosSectores = undefined
+    -- Siendo S...
+todosLosSectores (ConsE m1 m2) = keys m1
 
 
 agregarSector :: SectorId -> Empresa -> Empresa
 -- PROP: Agrega un sector a la empresa, inicialmente sin empleados.
     -- COSTO: O(log S).
     -- Siendo ...
-agregarSector = undefined
+agregarSector s (ConsE m1 m2) = ConsE (assocM s emptyS m1) m2
 
 
 agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
 -- PROP: Agrega un empleado a la empresa, que trabajará en dichos sectores y tendrá el CUIL dado.
     -- COSTO: ...
     -- Siendo ...
-agregarEmpleado = undefined
+agregarEmpleado ss c (ConsE m1 m2) = let emp = empleadoConSectores ss (consEmpleado c)
+                                      in ConsE (agregarEmpleadoASectores emp ss m1) (assocM c emp m2)
+
+empleadoConSectores :: [SectorId] -> Empleado -> Empleado
+    -- COSTO: ...
+    -- Siendo ...
+empleadoConSectores []     e = e
+empleadoConSectores (s:ss) e = empleadoConSectores ss (incorporarASector s e)
+
+agregarEmpleadoASectores :: Empleado -> [SectorId] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+    -- COSTO: ...
+    -- Siendo ...
+agregarEmpleadoASectores e []     m = m
+agregarEmpleadoASectores e (s:ss) m = let se = fromJust (lookupM s m) 
+                                       in if lookupM s m /= Nothing
+                                             then agregarEmpleadoASectores e ss (assocM s (addS e se) m)
+                                             else agregarEmpleadoASectores e ss m
 
 
 agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
 -- PROP: Agrega un sector al empleado con dicho CUIL.
     -- COSTO: ...
     -- Siendo ...
-agregarASector = undefined
+agregarASector s c (ConsE m1 m2) = let emp = incorporarSector s (fromJust (lookupM c m2))
+                                    in ConsE (agregarEmpleadoASectores emp (s:(sectores emp)) m1) (assocM c emp m2)
 
 
 borrarEmpleado :: CUIL -> Empresa -> Empresa
 -- PROP: Elimina al empleado que posee dicho CUIL.
     -- COSTO: ...
     -- Siendo ...
-borrarEmpleado = undefined
+borrarEmpleado c (ConsE m1 m2) = let emp = fromJust (lookupM c m2)
+                                  in ConsE (actualizarSectoresDeLaEmpresa (sectores e) e m1) (deleteM c m2)
+
+actualizarSectoresDeLaEmpresa :: [SectorId] -> Empleado -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+actualizarSectoresDeLaEmpresa []     e m = m 
+actualizarSectoresDeLaEmpresa (s:ss) e m = let sinE = removeS e (fromJust (lookupM s msise))
+                                            in if lookupM s m /= Nothing
+                                                  then agregarEmpleadoASectores e ss (assocM s sinE m)
+                                                  else agregarEmpleadoASectores e ss m
 
 -- #################################################### AUXILIARES ####################################################
+
+fromJust :: Maybe a -> a
+    -- COSTO: O(1).
+    -- Siendo x el dato de tipo "maybe a", devuelve x en el caso de que tenga el constructor "Just", entonces, eso implica 
+    -- que el costo de todo el funcionamiento en el peor caso sea constante, ya que solo devuelve el dato. 
+fromJust Nothing   = error "No tendria que dar esto."
+fromJust (Just x)  = x

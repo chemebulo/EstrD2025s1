@@ -1,5 +1,6 @@
 import Map
 import PriorityQueue
+import Empresa
 
 -- EJERCICIO 1:
 
