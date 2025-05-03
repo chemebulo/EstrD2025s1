@@ -403,14 +403,30 @@ sinRepeticiones (x:xs) = if elem x xs
 
 -- EJERCICIO 4:
 
--- type SectorId = Int
--- 
--- type CUIL = Int
--- 
--- data Empresa = ConsE (Map SectorId (Set Empleado))
--- --                   (Map   CUIL      Empleado)
---     deriving Show
+    -- Implementado en Empresa.hs
 
 
 -- EJERCICIO 5:
 
+comenzarCon :: [SectorId] -> [CUIL] -> Empresa
+-- PROP: Construye una empresa con la información de empleados dada. Los sectores no tienen empleados.
+    -- COSTO: ...
+comenzarCon = undefined
+
+
+recorteDePersonal :: Empresa -> Empresa
+-- PROP: Dada una empresa elimina a la mitad de sus empleados (sin importar a quiénes).
+    -- COSTO: ...
+recorteDePersonal = undefined
+
+
+convertirEnComodin :: CUIL -> Empresa -> Empresa
+-- PROP: Dado un CUIL de empleado le asigna todos los sectores de la empresa.
+    -- COSTO: ...
+convertirEnComodin = undefined
+
+
+esComodin :: CUIL -> Empresa -> Bool
+-- PROP: Dado un CUIL de empleado indica si el empleado está en todos los sectores.
+    -- COSTO: ...
+esComodin = undefined
