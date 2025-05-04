@@ -120,21 +120,6 @@ agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
 agregarEmpleado ss c (ConsE m1 m2) = let emp = empleadoConSectores ss (consEmpleado c)
                                       in ConsE (agregarEmpleadoASectores emp ss m1) (assocM c emp m2)
 
-empleadoConSectores :: [SectorId] -> Empleado -> Empleado
-    -- COSTO: ...
-    -- Siendo ...
-empleadoConSectores []     e = e
-empleadoConSectores (s:ss) e = empleadoConSectores ss (incorporarASector s e)
-
-agregarEmpleadoASectores :: Empleado -> [SectorId] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
-    -- COSTO: ...
-    -- Siendo ...
-agregarEmpleadoASectores e []     m = m
-agregarEmpleadoASectores e (s:ss) m = let se = fromJust (lookupM s m) 
-                                       in if lookupM s m /= Nothing
-                                             then agregarEmpleadoASectores e ss (assocM s (addS e se) m)
-                                             else agregarEmpleadoASectores e ss m
-
 
 agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
 -- PROP: Agrega un sector al empleado con dicho CUIL.
@@ -151,13 +136,6 @@ borrarEmpleado :: CUIL -> Empresa -> Empresa
 borrarEmpleado c (ConsE m1 m2) = let emp = fromJust (lookupM c m2)
                                   in ConsE (actualizarSectoresDeLaEmpresa (sectores e) e m1) (deleteM c m2)
 
-actualizarSectoresDeLaEmpresa :: [SectorId] -> Empleado -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
-actualizarSectoresDeLaEmpresa []     e m = m 
-actualizarSectoresDeLaEmpresa (s:ss) e m = let sinE = removeS e (fromJust (lookupM s msise))
-                                            in if lookupM s m /= Nothing
-                                                  then agregarEmpleadoASectores e ss (assocM s sinE m)
-                                                  else agregarEmpleadoASectores e ss m
-
 -- #################################################### AUXILIARES ####################################################
 
 fromJust :: Maybe a -> a
@@ -166,3 +144,29 @@ fromJust :: Maybe a -> a
     -- que el costo de todo el funcionamiento en el peor caso sea constante, ya que solo devuelve el dato. 
 fromJust Nothing   = error "No tendria que dar esto."
 fromJust (Just x)  = x
+
+
+empleadoConSectores :: [SectorId] -> Empleado -> Empleado
+    -- COSTO: ...
+    -- Siendo ...
+empleadoConSectores []     e = e
+empleadoConSectores (s:ss) e = empleadoConSectores ss (incorporarASector s e)
+
+agregarEmpleadoASectores :: Empleado -> [SectorId] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+    -- COSTO: ...
+    -- Siendo ...
+agregarEmpleadoASectores e []     m = m
+agregarEmpleadoASectores e (s:ss) m = let se = fromJust (lookupM s m) 
+                                       in if lookupM s m /= Nothing
+                                             then agregarEmpleadoASectores e ss (assocM s (addS e se) m)
+                                             else agregarEmpleadoASectores e ss m
+
+
+actualizarSectoresDeLaEmpresa :: [SectorId] -> Empleado -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+    -- COSTO: ...
+    -- Siendo ...
+actualizarSectoresDeLaEmpresa []     e m = m 
+actualizarSectoresDeLaEmpresa (s:ss) e m = let sinE = removeS e (fromJust (lookupM s msise))
+                                            in if lookupM s m /= Nothing
+                                                  then agregarEmpleadoASectores e ss (assocM s sinE m)
+                                                  else agregarEmpleadoASectores e ss m

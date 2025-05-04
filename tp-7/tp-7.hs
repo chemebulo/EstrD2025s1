@@ -406,28 +406,64 @@ sinRepeticiones (x:xs) = if elem x xs
 
     -- Implementado en Empresa.hs
 
+    {- COSTO OPERACIONAL DE CADA FUNCIÓN:
+
+    - consEmpresa          O(1)
+    - buscarPorCUIL        O(log E)
+    - empleadosDelSector   O(log S + E)
+    - todosLosCUIL         O(E)
+    - todosLosSectores     O(S)
+    - agregarSector        O(log S)
+    - agregarEmpleado      O(...)
+    - agregarASector       O(...)
+    - borrarEmpleado       O(...)
+
+    -}
 
 -- EJERCICIO 5:
 
 comenzarCon :: [SectorId] -> [CUIL] -> Empresa
 -- PROP: Construye una empresa con la información de empleados dada. Los sectores no tienen empleados.
     -- COSTO: ...
-comenzarCon = undefined
+    -- Siendo...
+comenzarCon ss cc = empleadosEn cc (empresaConSectores ss) ss
+
+empresaConSectores :: [SectorId] -> Empresa
+    -- COSTO: ...
+    -- Siendo...
+empresaConSectores []     = consEmpresa
+empresaConSectores (s:ss) = agregarSector s (empresaConSectores ss)
+
+empleadosEn :: [CUIL] -> Empresa -> [SectorId] -> Empresa
+    -- COSTO: ...
+    -- Siendo...
+empleadosEn []     e ss = e
+empleadosEn (c:cc) e ss = agregarEmpleado ss c (empleadosEn cc e ss)
 
 
 recorteDePersonal :: Empresa -> Empresa
 -- PROP: Dada una empresa elimina a la mitad de sus empleados (sin importar a quiénes).
     -- COSTO: ...
-recorteDePersonal = undefined
+    -- Siendo...
+recorteDePersonal e = let c = todosLosCUIL e 
+                       in recortarPersonal c (div (length c) 2) e
+
+recortarPersonal :: [CUIL] -> Int -> Empresa -> Empresa
+recortarPersonal cc     0 e = e
+recortarPersonal []     n e = e
+recortarPersonal (c:cc) n e = recortarPersonal cc (n-1) (borrarEmpleado c e) 
 
 
 convertirEnComodin :: CUIL -> Empresa -> Empresa
 -- PROP: Dado un CUIL de empleado le asigna todos los sectores de la empresa.
     -- COSTO: ...
-convertirEnComodin = undefined
+    -- Siendo...
+convertirEnComodin c e = agregarEmpleado (todosLosSectores e) c e
 
 
 esComodin :: CUIL -> Empresa -> Bool
 -- PROP: Dado un CUIL de empleado indica si el empleado está en todos los sectores.
     -- COSTO: ...
-esComodin = undefined
+    -- Siendo...
+esComodin c e = let ss = todosLosSectores e
+                 in ss == sectores (buscarPorCUIL c e)
