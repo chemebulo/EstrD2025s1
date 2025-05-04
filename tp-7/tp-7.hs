@@ -414,9 +414,9 @@ sinRepeticiones (x:xs) = if elem x xs
     - todosLosCUIL         O(E)
     - todosLosSectores     O(S)
     - agregarSector        O(log S)
-    - agregarEmpleado      O(...)
-    - agregarASector       O(...)
-    - borrarEmpleado       O(...)
+    - agregarEmpleado      O(S log S + log S)
+    - agregarASector       O((S log S)^2 + log S)
+    - borrarEmpleado       O(S log S * S^2 + log S)
 
     -}
 
@@ -424,31 +424,40 @@ sinRepeticiones (x:xs) = if elem x xs
 
 comenzarCon :: [SectorId] -> [CUIL] -> Empresa
 -- PROP: Construye una empresa con la información de empleados dada. Los sectores no tienen empleados.
-    -- COSTO: ...
-    -- Siendo...
+    -- COSTO: O(((S log S + log S) * C) + (log S * C)).
+    -- Siendo 'S' la cantidad de sectores en la empresa, y 'C' la cantidad de CUILs que hay en la misma; en 'C' y en 'S' se utiliza la función
+    -- "empleadosEn" de costo '(S log S + log S) * C', y dentro como argumento, la función "empresaConSectores" de costo 'log S * C'. Esto 
+    -- termina resultando con que el costo total de la función sea '((S log S + log S) * C) + (log S * C)'.
 comenzarCon ss cc = empleadosEn cc (empresaConSectores ss) ss
 
 empresaConSectores :: [SectorId] -> Empresa
-    -- COSTO: ...
-    -- Siendo...
+    -- COSTO: O(log S * C).
+    -- Siendo 'S' la cantidad de sectores en la empresa, y 'C' la cantidad de CUILs que hay en la misma; en cada 'S' se utiliza la operación
+    -- "agregarSector" de costo 'log S', es por eso, que el costo total de la función es 'log S * C'.
 empresaConSectores []     = consEmpresa
 empresaConSectores (s:ss) = agregarSector s (empresaConSectores ss)
 
 empleadosEn :: [CUIL] -> Empresa -> [SectorId] -> Empresa
-    -- COSTO: ...
-    -- Siendo...
+    -- COSTO: O((S log S + log S) * C).
+    -- Siendo 'S' la cantidad de sectores en la empresa, y 'C' la cantidad de CUILs que hay en la misma; en cada 'C' se utiliza la operación
+    -- "agregarEmpleado" de costo 'S log S + log S', es por eso, que el costo total de la función sea '(S log S + log S) * C'. 
 empleadosEn []     e ss = e
 empleadosEn (c:cc) e ss = agregarEmpleado ss c (empleadosEn cc e ss)
 
 
 recorteDePersonal :: Empresa -> Empresa
 -- PROP: Dada una empresa elimina a la mitad de sus empleados (sin importar a quiénes).
-    -- COSTO: ...
-    -- Siendo...
+    -- COSTO: O(S log S * S^2 + log S) * C).
+    -- Siendo 'S' la cantidad de sectores en la empresa, y 'C' la cantidad de CUILs que hay en la misma; en 'C' se utiliza la función
+    -- "recortarPersonal" de costo 'S log S * S^2 + log S) * C', esto termina resultando que el costo total de la función sea ese mismo.
 recorteDePersonal e = let c = todosLosCUIL e 
                        in recortarPersonal c (div (length c) 2) e
 
 recortarPersonal :: [CUIL] -> Int -> Empresa -> Empresa
+    -- COSTO: O((S log S * S^2 + log S) * C).
+    -- Siendo 'C' la cantidad de CUILs que hay en la empresa dada, por cada 'C' se realiza la operación "borrarEmpleado" de costo
+    -- 'S log S * S^2 + log S', siendo S la cantidad de sectores en la empresa dada. Esto termina resultando con que el costo total
+    -- de la función es '(S log S * S^2 + log S) * C'.
 recortarPersonal cc     0 e = e
 recortarPersonal []     n e = e
 recortarPersonal (c:cc) n e = recortarPersonal cc (n-1) (borrarEmpleado c e) 
@@ -456,14 +465,18 @@ recortarPersonal (c:cc) n e = recortarPersonal cc (n-1) (borrarEmpleado c e)
 
 convertirEnComodin :: CUIL -> Empresa -> Empresa
 -- PROP: Dado un CUIL de empleado le asigna todos los sectores de la empresa.
-    -- COSTO: ...
-    -- Siendo...
+    -- COSTO: O(S log S + log S + E).
+    -- Siendo 'C' la cantidad de CUILs que hay en la empresa y 'E' la empresa dada; en 'C' y 'E' se realiza la operación "agregarEmpleado"
+    -- de costo 'S log S + log S', y dentro como argumento, la operación "todosLosSectores" de costo lineal sobre 'E'. Esto termina resultando
+    -- que el costo total de la función sea 'S log S + log S + E'   
 convertirEnComodin c e = agregarEmpleado (todosLosSectores e) c e
 
 
 esComodin :: CUIL -> Empresa -> Bool
 -- PROP: Dado un CUIL de empleado indica si el empleado está en todos los sectores.
-    -- COSTO: ...
-    -- Siendo...
+    -- COSTO: O(S + E log E).
+    -- Siendo 'C' la cantidad de CUILs que hay en la empresa y 'E' la empresa dada; en 'E' se realiza la operación "todosLosSectores" de costo
+    -- lineal sobre 'E', además que posteriormente, se utiliza la operación "sectores" de costo lineal sobre 'S', y la operación "buscarPorCUIL"
+    -- de costo 'log E'. Esto termina resultando con que el costo total de la función sea 'S + E log E'.
 esComodin c e = let ss = todosLosSectores e
                  in ss == sectores (buscarPorCUIL c e)

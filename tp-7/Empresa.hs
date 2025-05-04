@@ -26,9 +26,9 @@ data Empresa = ConsE (Map SectorId (Set Empleado))
 - todosLosCUIL         O(E)
 - todosLosSectores     O(S)
 - agregarSector        O(log S)
-- agregarEmpleado      O(...)
-- agregarASector       O(...)
-- borrarEmpleado       O(...)
+- agregarEmpleado      O(S log S + log S)
+- agregarASector       O((S log S)^2 + log S)
+- borrarEmpleado       O(S log S * S^2 + log S)
 
 -}
 
@@ -80,14 +80,17 @@ buscarPorCUIL :: CUIL -> Empresa -> Empleado
 -- PROP: Devuelve el empleado con dicho CUIL.
 -- PRECOND: El CUIL es de un empleado de la empresa.
     -- COSTO: O(log E).
-    -- Siendo E la cantidad de empleados,
+    -- Siendo 'E' la cantidad de empleados, en 'E' se realiza la operación de "lookupM" de costo 'log E', es por eso,
+    -- que el costo total de la función termina resultando 'log E', ya que ese es el costo de las operaciones utilizadas. 
 buscarPorCUIL c (ConsE m1 m2) = fromJust (lookupM c m2)
 
 
 empleadosDelSector :: SectorId -> Empresa -> [Empleado]
 -- PROP: Indica los empleados que trabajan en un sector dado.
     -- COSTO: O(log S + E).
-    -- Siendo E la cantidad de empleados y S,
+    -- Siendo 'E' la cantidad de empleados y 'S' la cantidad de sectores de la empresa; en 'S' se realiza la operación "lookupM" de costo 
+    -- 'log S', y después sobre 'E' se utiliza la función "setToList" de costo lineal. Esto termina resultando con que el costo total de la
+    --  función es 'log S + E', ya que en 'S' se realiza una operación de costo 'log S' y dentro una operación lineal de costo 'E'. 
 empleadosDelSector s (ConsE m1 m2) = let empleados = lookupM s m1
                                       in setToList empleados
 
@@ -95,44 +98,55 @@ empleadosDelSector s (ConsE m1 m2) = let empleados = lookupM s m1
 todosLosCUIL :: Empresa -> [CUIL]
 -- PROP: Indica todos los CUIL de empleados de la empresa.
     -- COSTO: O(E).
-    -- Siendo E la cantidad de empleados,
+    -- Siendo 'E' la cantidad de empleados, se utiliza la operación "keys" de costo lineal sobre uno de los map dado. Esto resulta con
+    -- que el costo total de la función es lineal, es decir, 'E'.
 todosLosCUIL (ConsE m1 m2) = keys m2
 
 
 todosLosSectores :: Empresa -> [SectorId]
 -- PROP: Indica todos los sectores de la empresa.
     -- COSTO: O(S).
-    -- Siendo S...
+    -- Siendo 'S' la cantidad de sectores de la empresa, se utiliza la operación "keys" de costo lineal sobre uno de los map dado. Esto resulta 
+    -- con que el costo total de la función es lineal, es decir, 'S'.
 todosLosSectores (ConsE m1 m2) = keys m1
 
 
 agregarSector :: SectorId -> Empresa -> Empresa
 -- PROP: Agrega un sector a la empresa, inicialmente sin empleados.
     -- COSTO: O(log S).
-    -- Siendo ...
+    -- Siendo 'S' la cantidad de sectores de la empresa, se utiliza la operación "assocM" de costo 'log S' sobre uno de los map dados. 
+    -- Esto termina resultando con que el costo total de la función es 'log S', ya que se realiza una operación de dicho costo.
 agregarSector s (ConsE m1 m2) = ConsE (assocM s emptyS m1) m2
 
 
 agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
 -- PROP: Agrega un empleado a la empresa, que trabajará en dichos sectores y tendrá el CUIL dado.
-    -- COSTO: ...
-    -- Siendo ...
+    -- COSTO: O(S log S + log S).
+    -- Siendo 'S' la cantidad de sectores de la empresa, en 'S' se realizan operaciones de costo 'log S' en promedio, ya que para el primer
+    -- map dado se utiliza la función "agregarEmpleadoASectores" de costo 'S log S', y para el segundo la operación "assocM" de costo 'log S'.
+    -- Esto termina resultando con que el costo total de la función es 'S log S + log S'.
 agregarEmpleado ss c (ConsE m1 m2) = let emp = empleadoConSectores ss (consEmpleado c)
                                       in ConsE (agregarEmpleadoASectores emp ss m1) (assocM c emp m2)
 
 
 agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
 -- PROP: Agrega un sector al empleado con dicho CUIL.
-    -- COSTO: ...
-    -- Siendo ...
+    -- COSTO: O((S log S)^2 + log S).
+    -- Siendo 'S' la cantidad de sectores de la empresa, en 'S' se realizan operaciones de costo 'log S' en promedio, ya que para el primer
+    -- map dado se utiliza la función "agregarEmpleadoASectores" de costo 'S log S', además de la operacion "sectores" de costo lineal, e
+    -- "incorporarSector" de costo 'log S', teniendo como argumento "fromJust" (constante) y "lookupM" de costo 'log S'. Para el segundo,
+    -- la operación "assocM" de costo 'log S'. Esto termina resultando con que el costo total de la función es '(S log S)^2 + log S'.
 agregarASector s c (ConsE m1 m2) = let emp = incorporarSector s (fromJust (lookupM c m2))
                                     in ConsE (agregarEmpleadoASectores emp (s:(sectores emp)) m1) (assocM c emp m2)
 
 
 borrarEmpleado :: CUIL -> Empresa -> Empresa
 -- PROP: Elimina al empleado que posee dicho CUIL.
-    -- COSTO: ...
-    -- Siendo ...
+    -- COSTO: O(S log S * S^2 + log S).
+    -- Siendo 'S' la cantidad de sectores de la empresa, en 'S' se realizan operaciones de costo 'log S' en promedio, ya que para el primer
+    -- map dado se utiliza la función "actualizarSectoresDeLaEmpresa" de costo 'S log S', además de la operacion "sectores" de costo lineal, 
+    -- y "fromJust" (constante) sumado a "lookupM" de costo 'log S'. Para el segundo, la operación "deleteM" de costo 'log S'. Esto termina 
+    -- resultando con que el costo total de la función es 'S log S * S^2 + log S'.
 borrarEmpleado c (ConsE m1 m2) = let emp = fromJust (lookupM c m2)
                                   in ConsE (actualizarSectoresDeLaEmpresa (sectores e) e m1) (deleteM c m2)
 
@@ -147,14 +161,18 @@ fromJust (Just x)  = x
 
 
 empleadoConSectores :: [SectorId] -> Empleado -> Empleado
-    -- COSTO: ...
-    -- Siendo ...
+    -- COSTO: O(S log S).
+    -- Siendo 'S' la cantidad de sectores de la empresa, por cada 'S' se realiza la operación "incorporarASector" de costo 'log S'.
+    -- Esto termina resultando que el costo total de la función es 'S log S', ya que para cada 'S' se realizan operaciones de costo 'log S'.
 empleadoConSectores []     e = e
 empleadoConSectores (s:ss) e = empleadoConSectores ss (incorporarASector s e)
 
 agregarEmpleadoASectores :: Empleado -> [SectorId] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
-    -- COSTO: ...
-    -- Siendo ...
+    -- COSTO: O(S log S).
+    -- Siendo 'S' la cantidad de sectores de la empresa, por cada 'S' se realiza la operación "fromJust" de costo constante, aunque como
+    -- argumento tiene la operación "lookupM" de costo 'log S'. Además si el sector está en el map dado, se realiza la operación "assocM"
+    -- de costo 'log S' y dentro la operación "addS" de costo 'log S' (y también tiene lookupM como argumento). Esto resulta en que el costo
+    -- total de la función sea 'S log S'.
 agregarEmpleadoASectores e []     m = m
 agregarEmpleadoASectores e (s:ss) m = let se = fromJust (lookupM s m) 
                                        in if lookupM s m /= Nothing
@@ -163,10 +181,13 @@ agregarEmpleadoASectores e (s:ss) m = let se = fromJust (lookupM s m)
 
 
 actualizarSectoresDeLaEmpresa :: [SectorId] -> Empleado -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
-    -- COSTO: ...
-    -- Siendo ...
+    -- COSTO: O(S log S).
+    -- Siendo 'S' la cantidad de sectores de la empresa, por cada 'S' se realiza la operación "fromJust" de costo constante, aunque como
+    -- argumento tiene la operación "lookupM" de costo 'log S', y sobre esto la operación "removeS" de costo 'log S'. Además si el sector está 
+    -- en el map dado, se realiza la operación "assocM" de costo 'log S' y dentro la operación "removeS" de costo 'log S' (y también tiene lookupM 
+    -- como argumento). Esto resulta en que el costo total de la función sea 'S log S'.
 actualizarSectoresDeLaEmpresa []     e m = m 
-actualizarSectoresDeLaEmpresa (s:ss) e m = let sinE = removeS e (fromJust (lookupM s msise))
+actualizarSectoresDeLaEmpresa (s:ss) e m = let sinEmp = removeS e (fromJust (lookupM s m))
                                             in if lookupM s m /= Nothing
-                                                  then agregarEmpleadoASectores e ss (assocM s sinE m)
+                                                  then agregarEmpleadoASectores e ss (assocM s sinEmp m)
                                                   else agregarEmpleadoASectores e ss m
