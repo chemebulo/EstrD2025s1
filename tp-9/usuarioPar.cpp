@@ -12,14 +12,15 @@ using namespace std;
 */
 
 int main() {
-    Par p= consPar(9, 94);
-    cout << "(" << fst(p) << ", " << snd(p) << ")" << endl;
-    cout << "Primer componente = " << fst(p) << endl;
-    cout << "Segundo componente = " << snd(p) << endl;
-    cout << "Maximo del par = " << maxDelPar(p) << endl;
-    Par pr = swap(p);
-    cout << "Par revertido = (" << fst(pr) << ", " << snd(pr) << ")" << endl;
+    Par p= consPar(10, 3);
+    cout << "Par:                (" << fst(p) << ", " << snd(p) << ")" << endl;
+    cout << "Primer componente:  " << fst(p) << endl;
+    cout << "Segundo componente: " << snd(p) << endl;
+    cout << "Maximo del par:     " << maxDelPar(p) << endl;
+    Par pi = swap(p);
+    cout << "Par invertido:      (" << fst(pi) << ", " << snd(pi) << ")" << endl;
     p = divisionYResto(fst(p), snd(p));
-    cout << "Cociente y resto de dividir 1ro por 2do = Cociente -> " << fst(p) << " Resto -> " << snd(p) << endl;
+    cout << "Dividir primero por segundo: Cociente -> " << fst(p) << endl;
+    cout << "Dividir primero por segundo: Resto    -> " << snd(p) << endl;
     return 0;
 }
