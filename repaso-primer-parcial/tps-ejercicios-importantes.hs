@@ -1,6 +1,6 @@
 -- TRABAJO PRÁCTICO 4:
 
--- ################################## EJERCICIO 1 ##################################
+-- ##################################################### EJERCICIO 1 #####################################################
 
 data Pizza = Prepizza | Capa Ingrediente Pizza
     deriving Show
@@ -8,7 +8,7 @@ data Pizza = Prepizza | Capa Ingrediente Pizza
 data Ingrediente = Salsa | Queso | Jamon | Aceitunas Int
     deriving Show
 
--- ############################## FUNCIONES DE PRUEBA ##############################
+-- ################################################# FUNCIONES DE PRUEBA #################################################
 
 pizza0 :: Pizza
 -- Pizza de Jamón y Morrones con 8 aceitunas.
@@ -22,7 +22,7 @@ pizza2 :: Pizza
 -- Pizza con solo Salsa y Queso.
 pizza2 = Capa Queso (Capa Salsa (Capa Queso Prepizza))
 
--- #################################################################################
+-- #######################################################################################################################
 
 -- EJERCICIO 1.1:
 
@@ -85,7 +85,7 @@ cantCapasPorPizza (p:ps) = let cantCapasP = cantidadDeCapas p
                             in (cantCapasP, p) : cantCapasPorPizza ps
 
 
--- ################################## EJERCICIO 2 ##################################
+-- ##################################################### EJERCICIO 2 #####################################################
 
 data Dir = Izq | Der
     deriving Show
@@ -99,7 +99,7 @@ data Cofre = Cofre [Objeto]
 data Mapa = Fin Cofre | Bifurcacion Cofre Mapa Mapa
     deriving Show
 
--- ############################## FUNCIONES DE PRUEBA ##############################
+-- ################################################# FUNCIONES DE PRUEBA #################################################
 
 mapa0 :: Mapa
 -- Mapa con tres bifurcaciones, con seis cofres y en uno de ellos un tesoro.
@@ -123,10 +123,9 @@ mapa0 = Bifurcacion (Cofre [Chatarra, Chatarra])
   C   C C   C
            / \
           C   C
-
 -}
 
--- #################################################################################
+-- #######################################################################################################################
 
 -- EJERCICIO 2.1:
 
@@ -218,7 +217,7 @@ consACada d []       = []
 consACada d (ds:dss) = (d:ds) : consACada d dss
 
 
--- ################################## EJERCICIO 3 ##################################
+-- ##################################################### EJERCICIO 3 #####################################################
 
 data Componente = LanzaTorpedos | Motor Int | Almacen [Barril]
     deriving Show
@@ -239,31 +238,75 @@ data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
 data Nave = N (Tree Sector)
     deriving Show
 
--- ############################## FUNCIONES DE PRUEBA ##############################
+-- ################################################# FUNCIONES DE PRUEBA #################################################
 
+nave0 :: Nave
+nave0 = N (NodeT (S "NNO118" [LanzaTorpedos, LanzaTorpedos, (Motor 90)] ["Jorge", "Ricardo", "Micaela"]) 
+            (EmptyT) 
+            (NodeT (S "NRG540" [(Motor 10), (Almacen [Combustible])] ["Marcelo", "Analia"])  
+                (EmptyT)
+                (NodeT (S "VYW777" [(Almacen [Comida, Oxigeno, Torpedo]), (Almacen [Combustible])] ["Ricardo"])  
+                    (EmptyT)
+                    (EmptyT)
+                )
+            )
+          )
 
--- #################################################################################
+-- #######################################################################################################################
 
 -- EJERCICIO 3.1:
 
 sectores :: Nave -> [SectorId]
 -- PROPÓSITO: Devuelve todos los sectores de la nave.
-sectores = undefined
+sectores (N ts) = sectoresDeTS ts
+
+sectoresDeTS :: Tree Sector -> [SectorId]
+sectoresDeTS EmptyT            = []
+sectoresDeTS (NodeT s ts1 ts2) = sectorDeS s : (sectoresDeTS ts1 ++ sectoresDeTS ts2)
+
+sectorDeS :: Sector -> SectorId
+sectorDeS (S sid _ _) = sid 
 
 
 -- EJERCICIO 3.2:
 
 poderDePropulsion :: Nave -> Int
 -- PROPÓSITO: Devuelve la suma de poder de propulsión de todos los motores de la nave. 
--- NOTA: el poder de propulsión es el número que acompaña al constructor de motores.
-poderDePropulsion = undefined
+-- NOTA: El poder de propulsión es el número que acompaña al constructor de motores.
+poderDePropulsion (N ts) = poderDePropulsionDeTS ts
+
+poderDePropulsionDeTS :: Tree Sector -> Int
+poderDePropulsionDeTS EmptyT            = 0
+poderDePropulsionDeTS (NodeT s ts1 ts2) = poderDePropulsionDeS s + poderDePropulsionDeTS ts1 + poderDePropulsionDeTS ts2
+
+poderDePropulsionDeS :: Sector -> Int
+poderDePropulsionDeS (S _ cs _) = poderDePropulsionDeCS cs
+
+poderDePropulsionDeCS :: [Componente] -> Int
+poderDePropulsionDeCS []     = 0
+poderDePropulsionDeCS (c:cs) = case c of
+                                 Motor n -> n + poderDePropulsionDeCS cs
+                                 _       -> poderDePropulsionDeCS cs
 
 
 -- EJERCICIO 3.3:
 
 barriles :: Nave -> [Barril]
 -- PROPÓSITO: Devuelve todos los barriles de la nave.
-barriles = undefined
+barriles (N ts) = barrilesDeTS ts
+
+barrilesDeTS :: Tree Sector -> [Barril]
+barrilesDeTS EmptyT            = []
+barrilesDeTS (NodeT s ts1 ts2) = barrilesDeS s ++ barrilesDeTS ts1 ++ barrilesDeTS ts2
+
+barrilesDeS :: Sector -> [Barril]
+barrilesDeS (S _ cs _) = barrilesDeCS cs
+
+barrilesDeCS :: [Componente] -> [Barril]
+barrilesDeCS []     = []
+barrilesDeCS (c:cs) = case c of
+                        Almacen b -> b ++ barrilesDeCS cs
+                        _         -> barrilesDeCS cs
 
 
 -- EJERCICIO 3.4:
@@ -271,7 +314,18 @@ barriles = undefined
 agregarASector :: [Componente] -> SectorId -> Nave -> Nave
 -- PROPÓSITO: Añade una lista de componentes a un sector de la nave.
 -- NOTA: Ese sector puede no existir, en cuyo caso no añade componentes.
-agregarASector = undefined
+agregarASector cs sid (N ts) = N (agregarASectorDeTS cs sid ts)
+
+agregarASectorDeTS :: [Componente] -> SectorId -> Tree Sector -> Tree Sector
+agregarASectorDeTS cs sid EmptyT            = EmptyT
+agregarASectorDeTS cs sid (NodeT s ts1 ts2) = let nuevoS = agregarASectorDeS cs s;
+                                               in if sectorDeS s == sid
+                                                     then NodeT nuevoS ts1 ts2
+                                                     else NodeT s (agregarASectorDeTS cs sid ts1)
+                                                                  (agregarASectorDeTS cs sid ts2)
+
+agregarASectorDeS :: [Componente] -> Sector -> Sector
+agregarASectorDeS cs (S sid cs1 tr) = S sid (cs1 ++ cs) tr 
 
 
 -- EJERCICIO 3.5:
@@ -279,18 +333,62 @@ agregarASector = undefined
 asignarTripulanteA :: Tripulante -> [SectorId] -> Nave -> Nave
 -- PROPÓSITO: Incorpora un tripulante a una lista de sectores de la nave.
 -- PRECONDICIÓN: Todos los id de la lista existen en la nave.
-asignarTripulanteA = undefined
+asignarTripulanteA t sids (N ts) = N (asignarTripulanteTS t sids ts)
+
+asignarTripulanteTS :: Tripulante -> [SectorId] -> Tree Sector -> Tree Sector
+asignarTripulanteTS t _    EmptyT            = EmptyT
+asignarTripulanteTS t []   (NodeT s ts1 ts2) = NodeT s ts1 ts2
+asignarTripulanteTS t sids (NodeT s ts1 ts2) = let nuevoS = asignarTripulanteS t s;
+                                                   nuevoSids = borrarSectorEnSids (sectorDeS s) sids;
+                                                in if elem (sectorDeS s) sids
+                                                      then NodeT nuevoS (asignarTripulanteTS t nuevoSids ts1) 
+                                                                        (asignarTripulanteTS t nuevoSids ts2)
+                                                      else NodeT s (asignarTripulanteTS t sids ts1) 
+                                                                   (asignarTripulanteTS t sids ts2)
+
+asignarTripulanteS :: Tripulante -> Sector -> Sector
+asignarTripulanteS t (S sid cs tr) = S sid cs (t:tr)
+
+borrarSectorEnSids :: SectorId -> [SectorId] -> [SectorId]
+borrarSectorEnSids sd []         = []
+borrarSectorEnSids sd (sid:sids) = if sd == sid
+                                      then sids
+                                      else sid : borrarSectorEnSids sd sids
 
 
 -- EJERCICIO 3.6:
 
 sectoresAsignados :: Tripulante -> Nave -> [SectorId]
 -- PROPÓSITO: Devuelve los sectores en donde aparece un tripulante dado.
-sectoresAsignados = undefined
+sectoresAsignados t (N ts) = sectoresAsignadosEnTS t ts
+
+sectoresAsignadosEnTS :: Tripulante -> Tree Sector -> [SectorId]
+sectoresAsignadosEnTS t EmptyT            = [] 
+sectoresAsignadosEnTS t (NodeT s ts1 ts2) = if estaAsignadoEnS t s
+                                               then (sectorDeS s) : (sectoresAsignadosEnTS t ts1) ++ 
+                                                                    (sectoresAsignadosEnTS t ts2)  
+                                               else (sectoresAsignadosEnTS t ts1) ++ (sectoresAsignadosEnTS t ts2)  
+
+estaAsignadoEnS :: Tripulante -> Sector -> Bool
+estaAsignadoEnS t (S _ _ tr) = elem t tr
 
 
 -- EJERCICIO 3.7:
 
 tripulantes :: Nave -> [Tripulante]
 -- PROPÓSITO: Devuelve la lista de tripulantes, sin elementos repetidos.
-tripulantes = undefined
+tripulantes (N ts) = tripulantesDeTS ts
+
+tripulantesDeTS :: Tree Sector -> [Tripulante]
+tripulantesDeTS EmptyT            = []
+tripulantesDeTS (NodeT s ts1 ts2) = sumarTripulantesA (tripulantesDeS s) (tripulantesDeTS ts1 ++ tripulantesDeTS ts2)
+
+sumarTripulantesA :: [Tripulante] -> [Tripulante] -> [Tripulante]
+sumarTripulantesA []       ts2 = ts2
+sumarTripulantesA ts1      []  = ts1
+sumarTripulantesA (t1:ts1) ts2 = if elem t1 ts2
+                                    then sumarTripulantesA ts1 ts2
+                                    else t1 : sumarTripulantesA ts1 ts2
+
+tripulantesDeS :: Sector -> [Tripulante]
+tripulantesDeS (S _ _ tr) = tr
