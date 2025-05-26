@@ -181,12 +181,11 @@ void primerosNV2(int n, string s, int p = 0){
 // EJERCICIO 4.6 V1:
 bool pertenece(char c, string s){
 // PROPÓSITO: Indica si un char c aparece en el string s.
-    for (int i = 0; i < s.size(); i++) {
-        if (s[i] == c) {
-            return true;
-        }
+    int i = 0;
+    while(i < s.size() && not (s[i] == c)) {
+        i++;
     }
-    return false;
+    return s[i] == c;
 }
 
 // EJERCICIO 4.6 V2:
@@ -207,21 +206,16 @@ int apariciones(char c, string s){
 // PROPÓSITO: Devuelve la cantidad de apariciones de un char c en el string s.
     int resultado = 0;
     for(int i = 0; i < s.size(); i++) {
-        if (c == s[i]){
-            resultado++;
-        }
+        resultado += (c == s[i]);
     }
     return resultado;
 }
 
 // EJERCICIO 4.7 V2:
-int unoSiCeroSiNo(bool b) {
-    return b;
-} 
 int aparicionesV2(char c, string s, int p = 0){
 // PROPÓSITO: Devuelve la cantidad de apariciones de un char c en el string s.
     if(p == s.size()) return 0;
-    return unoSiCeroSiNo(c == s[p]) + aparicionesV2(c, s, p + 1);
+    return (c == s[p]) + aparicionesV2(c, s, p + 1);
 }
 // int main() {
 //     cout << aparicionesV2('C', "Cuento todas las cosas") << endl;
