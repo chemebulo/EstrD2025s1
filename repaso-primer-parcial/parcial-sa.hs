@@ -1,8 +1,3 @@
--- 12:15
-
--- type Esmeralda = Int
--- type 
-
 -- EJERCICIO 1:
 
 partida :: [Comando] -> Personaje
