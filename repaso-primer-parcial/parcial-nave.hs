@@ -211,8 +211,8 @@ componentesSID n (s:ss) = snd (datosDeSector s n) ++ componentesSID n ss
 barrilesC :: [Componente] -> [Barril]
 -- PROPÓSITO: Devuelve todos los barriles de los componentes dados.
 -- COSTO: O(C).
-    -- Siendo C la cantidad de Componentes, por cada C se realiza en el peor caso, la operación "++" de costo lineal.
-    -- Es por eso que el costo de la función es C.
+    -- Siendo C la cantidad de Componentes, por cada C se realiza en el peor caso, la operación "++" de costo lineal. Es por eso
+    -- que el costo de la función es "C".
 barrilesC []     = []
 barrilesC (c:cs) = case c of
                      Almacen b -> b ++ barrilesC cs
