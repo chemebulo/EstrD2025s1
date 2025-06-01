@@ -186,8 +186,8 @@ sinSectoresAsignadosTS :: [Tripulante] -> [Tripulante]
     -- por eso que el costo total de la función es "T". 
 sinSectoresAsignadosTS []     = []
 sinSectoresAsignadosTS (t:ts) = if sizeS (sectoresT t) == 0
-                                then t : sinSectoresAsignadosTS ts
-                                else sinSectoresAsignadosTS ts
+                                   then t : sinSectoresAsignadosTS ts
+                                   else sinSectoresAsignadosTS ts
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 -- EJERCICIO K:
