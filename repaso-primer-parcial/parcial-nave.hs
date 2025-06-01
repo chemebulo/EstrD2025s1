@@ -143,11 +143,9 @@ reemplazarT :: Tripulante -> MaxHeap Tripulante -> MaxHeap Tripulante
 -- COSTO: O(T log T).
     -- Siendo T la cantidad de Tripulantes, por cada T se realiza la operación "insertH" y "deleteMaxH", ambas de costo "log T",
     -- es por eso que el costo total de la función es "T log T".
-reemplazarT t mht = if (isEmptyH mht)
-                       then insertH t mht
-                       else if (nombre (maxH mht)) == (nombre t) 
-                               then insertH t (deleteMaxH mht) 
-                               else insertH (maxH mht) (reemplazarT t (deleteMaxH mht))
+reemplazarT t mht = if (nombre (maxH mht)) == (nombre t) 
+                       then insertH t (deleteMaxH mht) 
+                       else insertH (maxH mht) (reemplazarT t (deleteMaxH mht))
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 -- COMO USUARIO:
@@ -194,17 +192,18 @@ sinSectoresAsignadosTS (t:ts) = if sizeS (sectoresT t) == 0
 
 barriles :: Nave -> [Barril]
 -- PROPÓSITO: Devuelve todos los barriles de los sectores asignados de la nave.
--- COSTO: O(S * log S + S + T * S log S + log T + C).
+-- COSTO: O(S log S + T * S log S + C).
     -- Siendo S la cantidad de SectorId y C la cantidad de Componentes; se utiliza la función "sectores" de costo "T * S log S + log T"
     -- además la operación "setToList" de costo "S", la función "componentesSID" de costo "S * log S + S", y la función "barrilesC"
-    -- de costo "C". Es por eso que el costo total de la función es "S * log S + S + T * S log S + log T + C".
+    -- de costo "C". Es por eso que el costo total de la función es "S * log S + S + T * S log S + log T + C", pero se puede 
+    -- simplificar en "S log S + T * S log S + C".
 barriles n = barrilesC (componentesSID n (setToList (sectores n)))
 
 componentesSID :: Nave -> [SectorId] -> [Componente]
 -- PROPÓSITO: Devuelve todos los componentes de los sectores asignados de la nave.
--- COSTO: O(S * log S + S).
+-- COSTO: O(S log S).
     -- Siendo S la cantidad de SectorId, por cada S se realiza la operación "datosDeSector" de costo "log S", y la operación "++"
-    -- de costo "S". Es por eso que el costo total de la función es "S * log S + S". 
+    -- de costo "S". Es por eso que el costo total de la función es "S * log S + S", pero se puede simplificar en "S log S".
 componentesSID n []     = []
 componentesSID n (s:ss) = snd (datosDeSector s n) ++ componentesSID n ss
 
