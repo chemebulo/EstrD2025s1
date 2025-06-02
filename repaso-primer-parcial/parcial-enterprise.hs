@@ -56,6 +56,7 @@ data Nave = MKN (Map Sector (Set Tripulante)) (Heap Tripulante) (Sector, Int)
         * Todos los Tripulantes en MHT deben existir también en cada Sector correspondiente de MSST.
         * Cada Tripulante puede estar en un Sector como máximo.
         * El Sector del par "SI" debe existir en MSST y tener la misma cantidad de Tripulantes del par.
+        * Para que la nave exista, es necesario que en MSST haya al menos un Sector.
 -}
 
 ----------------------------------------------------------------------------------------------------------------------------------------
@@ -69,8 +70,8 @@ naveVacia :: [Sector] -> Nave
 naveVacia ss = let nMSST = agregarSectoresN ss
                 in MKN nMSST emptyH (head ss, 0)
 
-agregarSectoresN :: [Sector] -> Nave
--- PROPÓSITO: Crea una nave con los sectores dados sin tripulantes. 
+agregarSectoresN :: [Sector] -> Map Sector (Set Tripulante)
+-- PROPÓSITO: Crea una Map con los sectores dados sin tripulantes. 
 -- COSTO: O(S log S).
     -- Siendo S la cantidad de Sectores, por cada S se realiza la operación "assocM" de costo "log S", es por eso que el costo
     -- total de la función es "S log S".
@@ -175,7 +176,9 @@ sectorConMasTripulantes :: Map Sector (Set Tripulante) -> [Sector] -> (Sector, I
     -- Siendo S la cantidad de Sectores, y P la cantidad de Tripulantes; por cada S se realiza operación "lookupM" de costo "log S", 
     -- además en P se realiza la operación "sizeS" de costo constante. Es por eso que el costo total de la función es "S log S".
 sectorConMasTripulantes msst []     = error "No hay sectores, es por eso que no es posible determinar el sector con más tripulantes."
-sectorConMasTripulantes msst (s:ss) = let setT = fromJust(lookupM s msst)
-                                       in if sizeS setT >= snd (sectorConMasTripulantes msst ss)
-                                             then (s, sizeS setT)
-                                             else sectorConMasTripulantes msst ss
+sectorConMasTripulantes msst (s:ss) = let setT = fromJust (lookupM s msst)
+                                          n = sizeS setT
+                                          (s', n') = sectorConMasTripulantes msst ss
+                                       in if n >= n' 
+                                             then (s, n) 
+                                             else (s', n')
