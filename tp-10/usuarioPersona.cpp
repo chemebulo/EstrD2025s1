@@ -28,6 +28,6 @@ int main() {
     cout << "Juan se cambio el nombre a " << nombre(juan) << "." << endl;
     cout << boolalpha << "Es verdad que Mai es mas grande que Juan:    " << esMayorQueLaOtra(mai, juan) << endl;
     cout << boolalpha << "Es verdad que Ricardo es mas grande que Mai: " << esMayorQueLaOtra(ricardo, mai) << endl;
-    cout << "La persona mas grande entre Juan Carlos y Ricardo es " << nombre(mayor) << " con "<< edad(mayor) << " anios." << endl; 
+    cout << "La persona mas grande entre Juan Carlos y Ricardo es " << nombre(mayor) << " con "<< edad(mayor) << " anios." << endl;
     return 0;
 }
