@@ -2,8 +2,9 @@
 
 // EJERCICIO 1.1:
 
+    // Resuelto en Persona.cpp, Persona.h y usuarioPersona.cpp.
 
-
+    
 // EJERCICIO 1.2:
 
 

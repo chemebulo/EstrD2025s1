@@ -3,13 +3,13 @@
 using namespace std;
 
 /* INTERFAZ DE PERSONA:
-     * Persona consPersona(string nombre, int edad);
-     * string nombre(Persona p);
-     * int edad(Persona p);
-     * void crecer(Persona p);
-     * void cambioDeNombre(string nombre, Persona p);
-     * bool esMayorQueLaOtra(Persona p1, Persona p2);
-     * Persona laQueEsMayor(Persona p1, Persona p2);
+    * Persona consPersona(string nombre, int edad)
+    * string nombre(Persona p)
+    * int edad(Persona p)
+    * void crecer(Persona p)
+    * void cambioDeNombre(string nombre, Persona p)
+    * bool esMayorQueLaOtra(Persona p1, Persona p2)
+    * Persona laQueEsMayor(Persona p1, Persona p2)
 */
 
 int main() {
@@ -26,8 +26,8 @@ int main() {
     cambioDeNombre("Juan Carlos", juan);
     Persona mayor = laQueEsMayor(juan, ricardo);
     cout << "Juan se cambio el nombre a " << nombre(juan) << "." << endl;
-    cout << boolalpha << "Es verdad que Mai es mas grande que Juan:    " << esMayorQueLaOtra(mai, juan) << endl;
-    cout << boolalpha << "Es verdad que Ricardo es mas grande que Mai: " << esMayorQueLaOtra(ricardo, mai) << endl;
+    cout << boolalpha << "Mai es mas grande que Juan    -> " << esMayorQueLaOtra(mai, juan) << endl;
+    cout << boolalpha << "Ricardo es mas grande que Mai -> " << esMayorQueLaOtra(ricardo, mai) << endl;
     cout << "La persona mas grande entre Juan Carlos y Ricardo es " << nombre(mayor) << " con "<< edad(mayor) << " anios." << endl;
     return 0;
 }
