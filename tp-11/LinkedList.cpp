@@ -10,7 +10,6 @@ LinkedList nil(){
     xs->cantidad = 0;
     xs->primero = NULL;
     xs->ultimo = NULL;
-    
     return xs;
 }
 
@@ -92,7 +91,6 @@ ListIterator getIterator(LinkedList xs){
 // Siendo de costo constante ya que solamente se inicializa un Iterador y se modifica uno de sus campos.
     IteratorSt* ixs = new IteratorSt();
     ixs->current = xs->primero;
-
     return ixs; 
 }
 

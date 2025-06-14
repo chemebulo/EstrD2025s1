@@ -3,10 +3,10 @@ using namespace std;
 
 struct NodoL{
 /*
-    PROPÓSITO: Esta parte describe dos campos: 
+    PROPÓSITO: Representa a un nodo mediante dos campos: 
         * elem: indica el valor que tiene el nodo.
         * siguiente: describe el puntero al siguiente nodo.
-        */
+*/
     int elem;         
     NodoL* siguiente;
 };
