@@ -20,6 +20,8 @@ struct LinkedListSt{
     INV.REP.: 
       * Cantidad indica la cantidad de nodos que se pueden recorrer desde primero 
         por siguiente hasta alcanzar a NULL.
+      * Primero debe apuntar al primer nodo de la LinkedList.
+      * Ultimo debe apuntar al último nodo de la LinkedList.
 */
     int cantidad;   
     NodoL* primero;
