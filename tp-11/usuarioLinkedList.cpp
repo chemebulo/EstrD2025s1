@@ -40,16 +40,15 @@ bool pertenece(int x, LinkedList xs){
 // Siendo N la cantidad de elementos en la LinkedList, por cada N se realizan las operaciones "current", "atEnd" y 
 // "Next" de costo constante. Es por eso que el costo total de la función es lineal.
     ListIterator ixs = getIterator(xs);
-    bool encontrado = false;
     
     while(!atEnd(ixs)){
         if(current(ixs) == x){
-            encontrado = true;
             break;
         }
         Next(ixs);
     }
 
+    bool encontrado = !atEnd(ixs) && current(ixs) == x;
     DisposeIterator(ixs);
     return encontrado;
 }
