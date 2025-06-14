@@ -16,12 +16,14 @@ struct LinkedListSt{
     PROPÓSITO: Representa la LinkedList mediante dos campos:
       * cantidad: indica la cantidad de elementos. 
       * primero: describe el puntero al primer nodo. 
+      * ultimo: describe el puntero el último nodo.
     INV.REP.: 
       * Cantidad indica la cantidad de nodos que se pueden recorrer desde primero 
         por siguiente hasta alcanzar a NULL.
 */
     int cantidad;   
     NodoL* primero;
+    NodoL* ultimo;
 };
 
 typedef LinkedListSt* LinkedList;
@@ -36,13 +38,13 @@ struct IteratorSt{
     NodoL* current;
 };
 
+typedef IteratorSt* ListIterator; // INV.REP.: El puntero NO es NULL.
 
 // ############################################################################### //
 
 LinkedList nil();
 // PROPÓSITO: Crea una lista vacía.
 
-typedef IteratorSt* ListIterator; // INV.REP.: El puntero NO es NULL.
 bool isEmpty(LinkedList xs);
 // PROPÓSITO: Indica si la lista está vacía.
 

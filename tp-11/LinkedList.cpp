@@ -9,6 +9,7 @@ LinkedList nil(){
     LinkedListSt* xs = new LinkedListSt();
     xs->cantidad = 0;
     xs->primero = NULL;
+    xs->ultimo = NULL;
     
     return xs;
 }
@@ -36,6 +37,11 @@ void Cons(int x, LinkedList xs){
     n->elem = x;
     n->siguiente = xs->primero;
     xs->primero = n;
+
+    if(xs->ultimo == NULL){
+        xs->ultimo = n;
+    }
+
     xs->cantidad++;
 }
 
@@ -46,8 +52,12 @@ void Tail(LinkedList xs){
 // Siendo de costo constante ya que solamente se modifican los campos de la LinkedList dada.
     NodoL* temp = xs->primero;
     xs->primero = xs->primero->siguiente;
-    xs->cantidad--;
 
+    if (xs->primero == NULL){
+        xs->ultimo = NULL;
+    } 
+
+    xs->cantidad--;
     delete temp;
 }
 
@@ -60,24 +70,19 @@ int length(LinkedList xs){
 
 void Snoc(int x, LinkedList xs){
 // PROPÓSITO: Agrega un elemento al final de la lista.
-// COSTO: O(N).
-// Siendo N la cantidad de elementos en la LinkedList dada, por cada N se realizan operaciones de costo constante.
-// Es por eso que el costo total de la función es lineal.
+// COSTO: O(1).
+// Siendo de costo constante ya que solamente se modifican los campos de la LinkedList dada.
     NodoL* nuevo = new NodoL();
     nuevo->elem = x;
     nuevo->siguiente = NULL;
 
-    if (xs->primero == NULL) { xs->primero = nuevo; } 
-    else {
-        NodoL* actual = xs->primero;
-
-        while (actual->siguiente != NULL) {
-            actual = actual->siguiente;
-        }
-        
-        actual->siguiente = nuevo;
+    if (xs->ultimo == NULL) {
+        xs->primero = nuevo;
+    } else {
+        xs->ultimo->siguiente = nuevo;
     }
 
+    xs->ultimo = nuevo;
     xs->cantidad++;
 }
 
@@ -109,7 +114,9 @@ void Next(ListIterator ixs){
 // PROPÓSITO: Pasa al siguiente elemento.
 // COSTO: O(1).
 // Siendo de costo constante ya que solamente se accede a uno de los campos del Iterador dado y se devuelve el valor al que apunta.
-    if (ixs->current != NULL) { ixs->current = ixs->current->siguiente; }
+    if (ixs->current != NULL) { 
+        ixs->current = ixs->current->siguiente; 
+    }
 }
 
 bool atEnd(ListIterator ixs){
@@ -133,11 +140,36 @@ void DestroyL(LinkedList xs){
 // es por eso que el costo total es lineal.
     NodoL* temp = xs->primero;
 
-    while(xs->primero != NULL){
+    while (xs->primero != NULL) {
         xs->primero = xs->primero->siguiente;
         delete temp;
         temp = xs->primero;
     }
-    
+
     delete xs;
 }
+
+/* ###########################################################################################################################
+
+void Append(LinkedList xs, LinkedList ys){
+// PROPÓSITO: Agrega todos los elementos de la segunda lista al final de los de la primera. La segunda lista se destruye.
+// COSTO: O(1).
+// Siendo N la cantidad de elementos en la LinkedList, por cada N se realizan las operaciones "atEnd", "current", "next"
+// y "Snoc" de costo constante. Es por eso que el costo total de la función es lineal.
+    if (ys->primero == NULL) {
+        DestroyL(ys);
+        return;
+    }
+
+    if (xs->primero == NULL) {
+        xs->primero = ys->primero;
+        xs->ultimo = ys->ultimo;
+    } else {
+        xs->ultimo->siguiente = ys->primero;
+        xs->ultimo = ys->ultimo;
+    }
+
+    DestroyL(ys);
+}
+
+########################################################################################################################### */ 
