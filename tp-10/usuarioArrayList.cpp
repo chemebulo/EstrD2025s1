@@ -77,14 +77,14 @@ int minimo(ArrayList xs){
 }
 
 /* INTERFAZ DE ARRAY LIST:
-    * ArrayList newArrayList();
-    * ArrayList newArrayListWith(int capacidad);
-    * int lengthAL(ArrayList xs);
-    * int get(int i, ArrayList xs);
-    * void set(int i, int x, ArrayList xs);
-    * void resize(int capacidad, ArrayList xs);
-    * void add(int x, ArrayList xs);
-    * void remove(ArrayList xs);
+    * ArrayList newArrayList()
+    * ArrayList newArrayListWith(int capacidad)
+    * int lengthAL(ArrayList xs)
+    * int get(int i, ArrayList xs)
+    * void set(int i, int x, ArrayList xs)
+    * void resize(int capacidad, ArrayList xs)
+    * void add(int x, ArrayList xs)
+    * void remove(ArrayList xs)
 */
 
 int main() {
