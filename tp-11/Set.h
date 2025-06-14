@@ -20,7 +20,7 @@ struct SetSt {
     INV.REP.: 
       * Cantidad describe la cantidad de nodos que se pueden recorrer desde primero 
         por siguiente hasta alcanzar a NULL, siendo cada elemento único.
-      * Primero describe al primer nodo del Set.
+      * Primero debe apuntar al primer nodo del Set.
 */
     int cantidad;
     NodoS* primero;
