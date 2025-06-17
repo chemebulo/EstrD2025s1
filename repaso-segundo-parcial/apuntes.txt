@@ -1,0 +1,124 @@
+Clase 9: Modelo Imperativo
+
+Esta clase introduce el modelo de programación imperativo y lo contrasta con el modelo denotacional (funcional), al mismo 
+tiempo que detalla el funcionamiento de la memoria en C/C++.
+
+▪ Modelos de Computación:
+	Modelo Denotacional (Funcional): Se basa en la evaluación de expresiones que describen valores. El programa es una expresión y su resultado es el valor de esa expresión. Las funciones se utilizan para abstraer combinaciones de expresiones y transforman valores.
+
+	Modelo Destructivo (Imperativo): Se centra en la ejecución de comandos que producen efectos o modifican el estado. El programa transita de un estado inicial a un estado final, siendo la memoria el estado general, similar al tablero en Gobstones. Los procedimientos son usados para abstraer secuencias de comandos y alteran el estado. Este modelo es a menudo más eficiente y refleja cómo funcionan las computadoras a bajo nivel. Lenguajes como C, C++, Java, Python, Ruby y Javascript operan bajo este modelo.
+
+▪ Memoria en C/C++:
+
+En el modelo destructivo, el estado que se modifica es usualmente la memoria.
+
+A muy bajo nivel, la memoria es un arreglo de celdas (bytes), cuyo contenido se interpreta en binario.
+
+En C/C++, cada variable se asigna a celdas de memoria y su contenido se codifica en binario.
+
+La abstracción de la memoria permite no preocuparse por los detalles de bajo nivel, como la cantidad de celdas o el código binario.
+
+Los frames (marcos) son espacios de memoria donde se ubican las variables locales de un procedimiento. Las funciones en C/C++ tienen efectos permanentes; las que no devuelven nada (void) son procedimientos.
+
+Cada función tiene su propio frame. Al anidar funciones (incluyendo llamadas recursivas), los frames se apilan, formando lo que se conoce como Stack (pila), y cada frame es un stack frame. Los parámetros de las funciones también ocupan espacio de memoria y se comportan como variables.
+
+La memoria gestionada de esta forma se denomina memoria estática.
+
+Recursión vs. Iteración: Las funciones recursivas en C/C++ consumen una cantidad lineal de memoria (O(x)) debido a la anidación de frames. Se prefieren las iteraciones, que ocupan memoria constante, ya que son más eficientes al evitar la constante asignación y liberación de memoria.
+
+
+Tipos de Datos:
+▪ Strings: Se representan con una celda por carácter y terminan con un carácter nulo (NULL).
+▪ Structs: Son similares a los registros de Gobstones, donde el espacio de memoria de un struct se compone de los espacios de todos sus campos.
+▪ Bajo Nivel: Es necesario considerar el bajo nivel cuando no se respeta el tipo de dato (ej. operar un char como un número) o para acceder a partes específicas de un string usando índices (ej. msg[i]).
+▪ TADs con Memoria Estática (Primera Aproximación): Se puede intentar implementar TADs en C/C++ usando memoria estática, con la interfaz (.h) y la implementación (.cpp) separadas. Sin embargo, esto conlleva la copia de variables y resultados (Persona p; p.nombre = n; return(p);), lo que es ineficiente y puede conducir a duplicaciones de datos no deseadas. Este modelo de memoria estática no es suficiente para la gestión de TADs complejos.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+▪ Clase 10: Punteros y Arrays
+
+Esta clase profundiza en el manejo de memoria en C/C++ introduciendo el concepto de memoria dinámica y punteros, además de explorar los arrays.
+
+	▪ Memoria Estática (Stack): Se reitera que su comportamiento no depende de valores de ejecución. Los frames de las funciones se abren al invocar y se eliminan al terminar, comportándose como una pila.
+
+	▪ Memoria Dinámica (Heap): Es una memoria formada por espacios reservados cuyo comportamiento es controlado explícitamente por el programador.
+
+	▪ Punteros: Un puntero es una dirección de memoria (un número) que indica dónde se encuentra un dato. Se usa con el operador * para declararlos y acceder a la memoria a la que apuntan (ej., int* punteroANum; (*punteroANum)++;). Para acceder a campos de un registro a través de un puntero, se usa (*p).campo o la abreviatura p->campo.
+
+Gestión de Memoria Dinámica: La operación new se utiliza para pedir espacio en la heap y devuelve un puntero al espacio reservado. La operación delete libera la reserva de memoria en la heap; después de delete, el puntero no debe usarse hasta que sea reasignado.
+◦
+Problemas: El principal problema es la memory leak (pérdida de memoria), que ocurre cuando la memoria solicitada ya no puede ser accedida porque se pierde la referencia al puntero. La solución es usar delete cuando la memoria ya no es necesaria.
+•
+TADs con Memoria Dinámica (Segunda Aproximación):
+◦
+En esta aproximación, un tipo como Persona se define como un puntero a una estructura (typedef PersonaSt* Persona;).
+◦
+Las operaciones como nacer asignan la memoria para la persona en la heap y devuelven un puntero, copiando solo el puntero, no toda la estructura.
+◦
+Operaciones como CumplirAnios pueden ser procedimientos (void) que modifican la memoria compartida a través del puntero, sin necesidad de devolver un nuevo valor.
+◦
+Ventajas: Se evitan las copias innecesarias de datos (solo se copian punteros) y se elimina la posibilidad de "clonar" elementos de forma no deseada.
+◦
+Desventajas: La gestión manual de la memoria puede provocar memory leaks si no se libera correctamente.
+•
+Arrays: Son estructuras de datos que almacenan muchos datos del mismo tipo en celdas de memoria contiguas.
+◦
+Se usan corchetes [] para reservarlos y acceder a sus celdas.
+◦
+Pueden ser estáticos (en el stack, desaparecen al terminar la función y no pueden ser retornados) o dinámicos (en la heap, se crean con new y pueden ser retornados).
+◦
+Ventajas: Acceso a cualquier dato en O(1) si se conoce la posición.
+◦
+Desventajas: Debe conocerse la cantidad máxima de antemano (para arrays estáticos), pueden llenarse, y pueden dejar "agujeros" si se eliminan elementos del medio. El concepto de ArrayList surge para solucionar el problema del tamaño máximo, duplicando el espacio cuando es necesario y copiando elementos.
+•
+Arrays Multidimensionales: Se utilizan para manejar colecciones de datos con más de una dimensión (matrices, tensores). C/C++ no los maneja directamente, por lo que se pueden simular con arrays unidimensionales y cálculos de índices (row + col * maxRow) o arrays de punteros a arrays.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Clase 11: Linked Lists y Árboles en Imperativo
+Esta clase se enfoca en la implementación de listas enlazadas y árboles binarios utilizando punteros en el modelo imperativo, explorando sus estructuras, operaciones y recorridos.
+•
+Listas Enlazadas (Linked Lists):
+◦
+Una alternativa a los ArrayLists para tener tamaño variable.
+◦
+Representación: Nodos (NodeL) que contienen un valor (value) y un puntero (next) al siguiente nodo. El último nodo apunta a NULL.
+◦
+Es común tener un encabezado (ListHeaderSt) para la lista, que almacena el puntero al primer nodo (first), el tamaño (size) y, opcionalmente, un puntero al último nodo (last) para un acceso eficiente al final.
+◦
+Interfaz (imperativa): Incluye operaciones como emptyList, Cons (agregar al inicio), Snoc (agregar al final), head (primer elemento), Tail (eliminar primer elemento), isEmptyList, length y Liberar (liberar toda la memoria). Cons, Snoc y Tail suelen ser O(1). Liberar es O(n).
+◦
+Iteradores: Para realizar recorridos no destructivos sobre la lista (sin modificarla), se utilizan iteradores (ListIterator), que son un tipo asociado a la lista que permite avanzar y acceder a elementos. Un iterador tiene un puntero al nodo actual (current) y operaciones como iniciarRecorrido, estaAlFinalDelRecorrido, elementoActual, PasarAlSiguienteElemento y LiberarIterador.
+•
+Árboles en Imperativo:
+◦
+La representación más común es usando punteros para los hijos (left, right) y un valor (value) en cada nodo.
+◦
+Manejo complejo de abstracción e invariantes. Se suelen manejar directamente.
+◦
+Recorridos: La recursión es la forma común de recorrer árboles, tanto para funciones que retornan información sin afectar el árbol (ej. sumT) como para funciones que lo modifican (ej. SuccT).
+◦
+La liberación de memoria (LiberarTree) debe hacerse recorriendo el árbol (ej. en post-orden).
+◦
+Los recorridos lineales (iterativos) son posibles si el resultado no depende de la estructura completa del árbol (ej. sumT, sizeT). Requieren el uso de estructuras auxiliares como pilas (stacks) o colas (queues) para almacenar los nodos pendientes.
+▪
+Recorrido en Profundidad (DFS - Depth First Search): Se comporta como una pila (LIFO). Se explora una rama completamente antes de retroceder. Al agregar hijos a la lista de pendientes, se utiliza una operación Cons (agregar al frente).
+▪
+Recorrido a lo Ancho (BFS - Breadth First Search): Se comporta como una cola (FIFO). Se exploran todos los nodos de un nivel antes de pasar al siguiente. Al agregar hijos a la lista de pendientes, se utiliza una operación Snoc (agregar al final).
+•
+Heaps Binarias en Imperativo:
+◦
+Una Heap Binaria es un árbol que cumple el invariante de heap (la raíz es el mínimo de todos los elementos y sus subárboles también son heaps) y el invariante de árbol lleno (todos los niveles, excepto quizás el último, están completos, y el último no tiene "agujeros" de izquierda a derecha).
+◦
+Pueden representarse eficientemente usando un array, donde la raíz está en la posición 1 y los demás nodos se ubican por niveles.
+◦
+Las posiciones de los hijos de un nodo i son 2*i (izquierdo) y 2*i+1 (derecho), y el padre es i/2.
+◦
+Operaciones:
+▪
+Insertar: El nuevo elemento se agrega en la primera posición libre del array (para mantener el invariante de árbol lleno) y luego "flota" hacia arriba intercambiándose con su padre si es menor, hasta que se cumple el invariante de heap.
+▪
+Borrar el Mínimo: El mínimo (raíz) se elimina, el último elemento del array se mueve a la raíz, y luego se "hunde" hacia abajo, intercambiándose con el menor de sus hijos, hasta que se cumple el invariante de heap.
+◦
+La eficiencia obtenida es alta gracias al uso de arrays y trucos de implementación.
+En resumen, estas clases proporcionan una base fundamental en el modelo imperativo, la gestión de memoria explícita con punteros y las implementaciones de estructuras de datos clave en C/C++, destacando la importancia de la eficiencia y el manejo cuidadoso de la memoria para evitar problemas como los memory leaks.
