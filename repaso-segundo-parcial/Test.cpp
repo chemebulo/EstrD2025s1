@@ -98,3 +98,31 @@ void test(string titulo, vector<Equipo> equipos) {
 
     cout << "FIN ----------------------------------------------------------------------" << endl << endl;
 }
+
+int main() {
+    vector<Equipo> equipos;
+
+    equipos.push_back(crearEquipo(ESTADOSUNIDOS, "A"));
+    equipos.push_back(crearEquipo(COSTARICA, "A"));
+    equipos.push_back(crearEquipo(COLOMBIA, "A"));
+    equipos.push_back(crearEquipo(PARAGUAY, "A"));
+
+    equipos.push_back(crearEquipo(HAITI, "B"));
+    equipos.push_back(crearEquipo(PERU, "B"));
+    equipos.push_back(crearEquipo(BRASIL, "B"));
+    equipos.push_back(crearEquipo(ECUADOR, "B"));
+
+    equipos.push_back(crearEquipo(VENEZUELA, "C"));
+    equipos.push_back(crearEquipo(MEXICO, "C"));
+    equipos.push_back(crearEquipo(URUGUAY, "C"));
+    equipos.push_back(crearEquipo(JAMAICA, "C"));
+
+    equipos.push_back(crearEquipo(ARGENTINA, "D"));
+    equipos.push_back(crearEquipo(BOLIVIA, "D"));
+    equipos.push_back(crearEquipo(CHILE, "D"));
+    equipos.push_back(crearEquipo(PANAMA, "D"));
+
+    test("Copa America", equipos);
+
+    return 0;
+}

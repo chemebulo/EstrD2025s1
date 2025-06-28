@@ -11,6 +11,7 @@ UFSet createUFS(ELEM_TYPE value){
 // COSTO TIEMPO: O().
 // COSTO ESPACIAL: O().
     UFNode* ufset = new UFNode;
+    ufset->valor = value;
     ufset->padre = ufset;
     return ufset;
 }
@@ -19,11 +20,9 @@ UFSet findUFS(UFSet elem){
 // PROPÓSITO: Encuentra el elemento distinguido para el UFSet dado.
 // COSTO TIEMPO: O(n).
 // COSTO ESPACIAL: O(n).
-    
     if (elem->padre != elem) {
         elem->padre = findUFS(elem->padre);
     }
-
     return elem->padre;
 }
 
