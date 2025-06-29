@@ -20,9 +20,9 @@ UFSet createUFS(ELEM_TYPE value){
 
 UFSet findUFS(UFSet elem){
 // PROPÓSITO: Encuentra el elemento distinguido para el UFSet dado.
-// COSTO TIEMPO: O(n).
-// COSTO ESPACIAL: O(n).
-    if (elem->padre != elem) {
+// COSTO TIEMPO: O(1 amortizado).
+// COSTO ESPACIAL: O(log N).
+    if (elem->padre != elem){
         elem->padre = findUFS(elem->padre);
     }
     return elem->padre;
@@ -30,8 +30,8 @@ UFSet findUFS(UFSet elem){
 
 void unionUFS(UFSet ufset1, UFSet ufset2){
 // PROPÓSITO: Calcula la unión entre los conjuntos ufset1 y ufset2.
-// COSTO TIEMPO: O(n).
-// COSTO ESPACIAL: O(n).
+// COSTO TIEMPO: O(1 amortizado).
+// COSTO ESPACIAL: O(1).
     UFSet root1 = findUFS(ufset1);
     UFSet root2 = findUFS(ufset2);
 
