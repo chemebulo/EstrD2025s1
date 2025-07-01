@@ -2,6 +2,8 @@
 #include "Set.h"
 using namespace std;
 
+// #################################################################################################################### \\
+
 /* INTERFAZ DE SET:
     * Set emptyS()
     * bool isEmptyS(Set s)

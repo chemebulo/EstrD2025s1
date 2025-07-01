@@ -2,6 +2,8 @@
 #include "LinkedList.h"
 using namespace std;
 
+// #################################################################################################################### \\
+
 int sumatoria(LinkedList xs){
 // PROPÓSITO: Devuelve la suma de todos los elementos de la lista.
 // COSTO TIEMPO: O(n).
@@ -134,6 +136,8 @@ void Append(LinkedList xs, LinkedList ys){
     DisposeIterator(ixs);
     DestroyL(ys);
 }
+
+// #################################################################################################################### \\
 
 /* INTERFAZ DE LINKEDLIST:
     * LinkedList nil()

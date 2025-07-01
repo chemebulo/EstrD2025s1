@@ -2,6 +2,8 @@
 #include "../LinkedList/LinkedList.h"
 using namespace std;
 
+// #################################################################################################################### \\
+
 struct NodoS {
     int elem;         // Valor del nodo.
     NodoS* siguiente; // Puntero al siguiente nodo.
@@ -17,6 +19,8 @@ struct SetSt {
 };
 
 typedef SetSt* Set;
+
+// #################################################################################################################### \\
 
 Set emptyS();
 // PROPÓSITO: Crea un conjunto vacío.

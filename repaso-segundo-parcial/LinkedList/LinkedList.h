@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+// #################################################################################################################### \\
+
 struct NodoL {
     int elem;         // Es el valor del nodo.
     NodoL* siguiente; // Es el puntero al siguiente nodo.
@@ -94,3 +96,5 @@ void DestroyL(LinkedList xs);
 // PROPÓSITO: Libera la memoria ocupada por la lista.
 // COSTO TIEMPO: O(n).
 // COSTO ESPACIO: O(1).
+
+// #################################################################################################################### \\
