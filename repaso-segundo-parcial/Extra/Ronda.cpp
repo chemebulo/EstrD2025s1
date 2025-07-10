@@ -20,7 +20,7 @@ int current(Ronda ronda){
 
 void move(int steps, Ronda ronda){
 // PROPÓSITO: Mueve el puntero del nodo actual hacia adelante la cantidad de veces dada.
-// COSTO TIEMPO: O(length).
+// COSTO TIEMPO: O(steps).
 // COSTO ESPACIO: O(1).
     for(int i = 0; i < steps; i++){
         ronda->current = ronda->current->next;

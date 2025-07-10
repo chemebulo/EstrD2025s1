@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-struct PokeSt{
+struct PokeStr{
 // INVARIANTES DE REPRESENTACIÓN:
 //  * La vida no puede ser menor a 0.
 //  * El rango de cada pókemon está determinado por la jerarquía de su nombre.
@@ -9,7 +9,7 @@ struct PokeSt{
     string nombre;  // Representa el nombre del pókemon.
 };
 
-typedef PokeSt* Pokemon;
+typedef PokeStr* Pokemon;
 
 // #################################################################################################################### \\
 
@@ -18,12 +18,12 @@ Pokemon crearPokemon(string nombre);
 // COSTO TIEMPO: O(1).
 // COSTO ESPACIO: O(1).
 
-void restarVida(Pokemon& p);
+void restarVida(Pokemon p);
 // PROPÓSITO: Le resta 10 de vida al pókemon dado.
 // COSTO TIEMPO: O(1).
 // COSTO ESPACIO: O(1).
 
-void cambiarNombre(Pokemon& p, string nombre);
+void cambiarNombre(Pokemon p, string nombre);
 // PROPÓSITO: Le cambia el nombre al pókemon dado por el string dado.
 // COSTO TIEMPO: O(1).
 // COSTO ESPACIO: O(1).
@@ -43,17 +43,17 @@ int getVida(Pokemon p);
 // COSTO TIEMPO: O(1).
 // COSTO ESPACIO: O(1).
 
-void luchar(Pokemon& p, Pokemon& r);
+void luchar(Pokemon p, Pokemon r);
 // PROPÓSITO: Dos pókemon dados luchan entre sí, quitándole 10 de vida al que tenga un nombre de menor rango.
 // COSTO TIEMPO: O(1).
 // COSTO ESPACIO: O(1).
 
-void lucharN(int n, Pokemon& p, Pokemon& r);
+void lucharN(int n, Pokemon p, Pokemon r);
 // PROPÓSITO: Dos pókemon dados luchan entre sí la cantidad de veces dadas.
 // COSTO TIEMPO: O(N). Siendo n el número dado por parámetro.
 // COSTO ESPACIO: O(1).
 
-void destruir(Pokemon& p);
+void destruir(Pokemon p);
 // PROPÓSITO: Destruye al pókemon dado.
 // COSTO TIEMPO: O(1).
 // COSTO ESPACIO: O(1).
