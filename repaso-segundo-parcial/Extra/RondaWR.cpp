@@ -50,6 +50,7 @@ void insert(int value, Ronda ronda){
 
         // Puede que haya dado la vuelta a la ronda, o no, me interesa saber si el valor de donde estoy parado no es el valor a ingresar. 
         if(value != current->value){
+            // Si dio vuelta la ronda y el último nodo no tiene el valor dado, esto va a dar verdadero y se va a agregar el nuevo nodo.
             RondaNode* node = new RondaNode;
             node->value = value;
             node->next = current->next;

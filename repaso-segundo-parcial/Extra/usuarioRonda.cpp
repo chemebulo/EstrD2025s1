@@ -2,7 +2,12 @@
 #include "Ronda.h"
 using namespace std;
 
+// #################################################################################################################### \\
+
+// EJERCICIO 1:
+
 int* toArray(Ronda ronda){
+// PROPÓSITO: Describe la ronda dada como un array.
     int l = length(ronda);
     int* r = NULL;
 
@@ -18,7 +23,10 @@ int* toArray(Ronda ronda){
     return r;
 }
 
+// EJERCICIO 2:
+
 Ronda fromArray(int len, int* arr){
+// PROPÓSITO: Describe el array dado como una ronda.
     Ronda r = mkRonda();
     
     for(int i = 0; i < len; i++){
