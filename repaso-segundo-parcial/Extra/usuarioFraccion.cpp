@@ -18,6 +18,7 @@ using namespace std;
 // #################################################################################################################### \\
 
 int main(){
+    // Fraccion ceroFraccion = fraccion(32, 0);
     Fraccion primeraFraccion = fraccion(32, 6);
     Fraccion segundaFraccion = fraccion(25, 5);
     Fraccion terceraFraccion = sumar(primeraFraccion, segundaFraccion);
