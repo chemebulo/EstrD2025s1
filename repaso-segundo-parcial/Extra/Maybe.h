@@ -5,7 +5,7 @@ using namespace std;
 
 struct MaybeIntStr{
 // INVARIANTES DE REPRESENTACIÓN:
-//  * 
+//  * Todo maybe con haveValue true debe tener un valor asignado.
     bool haveValue; // Representa si el dato tiene un valor o no.
     int value;      // Representa el valor que tenga el dato, que puede tenerlo o no.
 };
