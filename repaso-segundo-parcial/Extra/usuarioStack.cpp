@@ -103,7 +103,7 @@ void PrintStack(Stack s){
 
 // #################################################################################################################### \\
 
-/* INVARIANTES DE REPRESENTACIÓN:
+/* INTERFAZ STACK:
     * Stack emptyS();
     * bool isEmptyS(Stack s);
     * void push(int x, Stack s);
