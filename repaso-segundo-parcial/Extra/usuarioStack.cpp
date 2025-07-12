@@ -73,7 +73,7 @@ void insertarEnPosicion(Stack s, int x, int posicion){
 void PrintStack(Stack s){
 // PROPÓSITO: Imprime todos los elementos en el Stack.
 // COSTO TIEMPO: O(N).
-// COSTO ESPACIO: O(N).
+// COSTO ESPACIO: O(1).
     Stack auxS = emptyS();
 
     // Quito lo que haya en el Stack original para copiarlo en un Stack auxiliar (quedan en orden inverso).
