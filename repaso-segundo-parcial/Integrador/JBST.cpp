@@ -41,7 +41,7 @@ void insertar(string nuevo, string superior, JerarquiaBST t){
 // PRECONDICIONES: 
 //   * Existe una persona en la jerarquía con el nombre del superior dado.
 //   * No existe una persona en la jararquía con el nombre nuevo.
-// COSTO TIEMPO: O(n).
+// COSTO TIEMPO: O(N).
 // COSTO ESPACIO: O(1).
     JBSTNodeStr* supNode = find(superior, t->root);
     JBSTNodeStr* nuevoNodo = new JBSTNodeStr;
@@ -75,7 +75,7 @@ bool esSubordinadoDe(string empleado, string superior, JerarquiaBST bst){
 // PRECONDICIONES:
 //   * Existe una persona en la jararquía con el nombre del superior dado.
 //   * Existe una persona en la jerarquía con el nombre del empleado dado.
-// COSTO TIEMPO: O(n).
+// COSTO TIEMPO: O(N).
 // COSTO ESPACIO: O(1).
     JBSTNodeStr* empleadoNode = find(empleado, bst->root);
     JBSTNodeStr* superiorNode = find(superior, bst->root);

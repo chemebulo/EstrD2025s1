@@ -27,7 +27,7 @@ void insertar(string nuevo, string superior, JerarquiaBST t);
 // PRECONDICIONES: 
 //   * Existe una persona en la jerarquía con el nombre del superior dado.
 //   * No existe una persona en la jararquía con el nombre nuevo.
-// COSTO TIEMPO: O().
+// COSTO TIEMPO: O(N).
 // COSTO ESPACIO: O(1).
 
 bool esSubordinadoDe(string empleado, string superior, JerarquiaBST bst);
@@ -36,5 +36,5 @@ bool esSubordinadoDe(string empleado, string superior, JerarquiaBST bst);
 // PRECONDICIONES:
 //   * Existe una persona en la jararquía con el nombre del superior dado.
 //   * Existe una persona en la jerarquía con el nombre del empleado dado.
-// COSTO TIEMPO: O().
+// COSTO TIEMPO: O(N).
 // COSTO ESPACIO: O(1).
