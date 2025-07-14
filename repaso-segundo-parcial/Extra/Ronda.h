@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+// #################################################################################################################### \\
+
 struct RondaNode{
 // INVARIANTES DE REPRESENTACIÓN:
 //  * Next y Prev no pueden ser NULL.

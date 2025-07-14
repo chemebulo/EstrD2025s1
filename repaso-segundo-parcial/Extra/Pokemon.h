@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+// #################################################################################################################### \\
+
 struct PokeStr{
 // INVARIANTES DE REPRESENTACIÓN:
 //  * La vida no puede ser menor a 0.

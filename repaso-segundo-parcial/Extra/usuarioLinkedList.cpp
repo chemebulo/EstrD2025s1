@@ -100,7 +100,7 @@ void PrintLinkedList(LinkedList xs){
 
 // #################################################################################################################### \\
 
-// IMPLEMENTACIÓN DESTRUCTUVA:
+// IMPLEMENTACIÓN DESTRUCTIVA:
 
 int sumarDSTR(LinkedList xs){
 // PROPÓSITO: Describe la suma de todos los elementos de la LinkedList dada.
